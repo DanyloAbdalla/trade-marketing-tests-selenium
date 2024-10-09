@@ -40,7 +40,7 @@ public class SmartIaTest
     /// Dado que eu tenho espaços disponíveis para realização de uma nova campanha no SmartIA
     /// Quando eu criar a campanha
     /// E preencher os campos Nome da Campanha, Inicio/Fim Vigência, Email, WhatsApp, Data Limite e Responsável da Campanha
-    /// E clicar no botão Salvar
+    /// E clicar no botão Salvar Campanha
     /// Então uma campanha será criada com Status = Criando
     /// </summary>
     [Test]
@@ -63,14 +63,15 @@ public class SmartIaTest
     /// Testar a inclusão dos ativos na campanha
     /// 
     /// Como comercial de trade marketing
-    /// Eu quero adicionar na campanha, os ativos com disponibilidade no inventário da loja
+    /// Eu quero adicionar na campanha, o varejo e os ativos com disponibilidade no inventário da loja
     /// Para começar a montar meu pacote, que será enviado para os fornecedores
     /// 
-    /// Dado que eu tenho espaços disponíveis para realização de uma nova campanha no SmartIA
-    /// Quando eu criar uma campanha
-    /// E relacionar os ativos a campanha
-    /// E clicar no botão Salvar
-    /// Então os ativos com disponibilidade de inventário serão relacionados a campanha, como pacote de venda
+    /// Dado que eu tenho uma campanha criada no SmartIA
+    /// Quando eu editar a campanha
+    /// E selecionar o varejo 
+    /// E reservar os ativos para as lojas
+    /// E clicar no botão Salvar Campanha
+    /// Então o varejo E os ativos com disponibilidade de inventário serão reservados para a campanha, como um pacote de venda
     /// </summary>
     [Test]
     public void TestAdicionarVarejoEAtivosNaCampanha()
