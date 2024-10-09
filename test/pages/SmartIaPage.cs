@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using OpenQA.Selenium;
 
 namespace MeuClienteWebTestProject;
@@ -13,7 +14,7 @@ public class SmartIaPage
     private string whatsAppResponsavel = "15988086091";
     private string nomeResponsavel = "Danylo Homologacao";
     private string mensagemCabecalho = "Campanha Homologacao";
-
+    private string[] nomesAtivos = { "Display de Chão", "Panfleto", "Ponta de gondola" };
 
     public SmartIaPage(IWebDriver webDriver)
     {
@@ -175,21 +176,93 @@ public class SmartIaPage
     {
         Thread.Sleep(500);
 
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MenuSuspensoVarejos);
         webDriver.FindElement(By.XPath(GlobalVariables.EditarCampanha)).Click();
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.AbasPlano);
 
         return this;
     }
 
     /// <summary>
-    /// Método para adicionar o Varejo e realizar a varredura de ativos
+    /// Método para adicionar o varejo
     /// </summary>
     /// <returns></returns>
-    public SmartIaPage SelecionarEAdicionarVarejo()
+    public SmartIaPage AdicionarVarejo()
     {
+        Thread.Sleep(2000);
+
+        webDriver.FindElement(By.XPath(GlobalVariables.MenuSuspensoVarejos)).Click();
         webDriver.FindElement(By.XPath(GlobalVariables.PesquisarVarejo)).SendKeys("Meu Cliente");
+        Thread.Sleep(500);
+
         webDriver.FindElement(By.XPath(GlobalVariables.SelecionarVarejo)).Click();
         webDriver.FindElement(By.XPath(GlobalVariables.AdicionarVarejo)).Click();
+
+        var varejoSelecionado = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.VarejoSelecionado);
+
+        Assert.That(varejoSelecionado.Equals(1), "Display com o varejo selecionado não foi apresentado na tela");
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para realizar a varredura dos ativos que estão com disponibilidade de inventário, para possa ser reservados na campanha
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage RealizarVarredura()
+    {
+        var mensagemSucessoEsperada = "Campanhaeditadacomsucesso!";
+
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.VarrerAtivos);
+        webDriver.FindElement(By.XPath(GlobalVariables.VarrerAtivos)).Click();
+
+        var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.Mensagens);
+
+        Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para selecionar e reservar os ativos
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage SelecionarEReservarAtivos()
+    {
+
+        webDriver.FindElement(By.XPath(GlobalVariables.SelecionarAtivosCampanha)).Click();
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SalvarAtivosCampanha);
+
+        foreach (var nomeAtivo in nomesAtivos)
+        {
+            Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivosCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
+            
+            webDriver.FindElement(By.XPath(GlobalVariables.SelecionarAtivoCampanha)).Click();
+            webDriver.FindElement(By.XPath(GlobalVariables.ReservarQuantidadeAtivoLojasCampanha)).Click();
+            ReservarAtivoLojas();
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para reservar os ativos
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage ReservarAtivoLojas()
+    {
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.ReservarAtivoLojasCampanha);
+
+        var valorReservaEsperado = Dsl.ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(webDriver, GlobalVariables.QuantidadeLojasReservaCampanha);
+
+        webDriver.FindElement(By.XPath(GlobalVariables.PreencherReservarTodasLojasCampanha)).SendKeys("1");
+        webDriver.FindElement(By.XPath(GlobalVariables.ReservarAtivoLojasCampanha)).Click();
+        webDriver.FindElement(By.XPath(GlobalVariables.FecharReservaAtivoLojaCampanha)).Click();
+
+        var valor = Dsl.ObterDadosDoAtributoValueDoElemento(webDriver, GlobalVariables.QuantidadeReservadaAtivoCampanha);
+        var valorReservaAtual = Convert.ToInt16(valor);
+
+        Debug.Assert(valorReservaAtual == valorReservaEsperado, "Quantidade de reservas calculada incorretamente");
+
         return this;
     }
 
@@ -225,9 +298,14 @@ public class SmartIaPage
     /// Método para salvar a campanha
     /// </summary>
     /// <returns></returns>
-    public SmartIaPage SalvarCampanha()
+    public SmartIaPage SalvarCampanha(string contexto)
     {
-        var mensagemSucessoEsperada = "Campanhacriadacomsucesso!";
+        var mensagemSucessoEsperada = "";
+
+        if(contexto.Contains("NovaCampanha"))
+            mensagemSucessoEsperada = "Campanhacriadacomsucesso!";
+        if(contexto.Contains("EditarCampanha"))
+            mensagemSucessoEsperada = "Campanhaeditadacomsucesso!";
 
         webDriver.FindElement(By.XPath(GlobalVariables.SalvarRegistro)).Click();
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.Mensagens);
@@ -235,7 +313,25 @@ public class SmartIaPage
         var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.Mensagens);
 
         Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
-        Thread.Sleep(2000);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para salvar os ativos selecionados e reservados para a campanha
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage SalvarAtivosReservados()
+    {
+        var mensagemSucessoEsperada = "AtivosSelecionadoscomSucesso!";
+
+        webDriver.FindElement(By.XPath(GlobalVariables.SalvarAtivosCampanha)).Click();
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.Mensagens);
+
+        var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.Mensagens);
+
+        Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
+        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.Mensagens);
 
         return this;
     }

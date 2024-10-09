@@ -176,8 +176,8 @@ public class Dsl
     /// </summary>
     /// <param name="driver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna uma número inteiro</returns>
-    public static int ObterQuantidadeLinhasNoElementoTabela(IWebDriver webDriver, string XPath)
+    /// <returns>Retorna um número inteiro</returns>
+    public static int ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(IWebDriver webDriver, string XPath)
     {
         EsperarVisibilidadeDoElemento(webDriver, XPath);
 
@@ -190,12 +190,12 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para obter a quantilidade de linhas em um elemento do tipo tabela de ativos alocados no plano
+    /// Método para obter a quantilidade de linhas em um elemento do tipo tabela
     /// </summary>
     /// <param name="driver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna uma número inteiro</returns>
-    public static int ObterQuantidadeLinhasNoElementoTabelaAtivosAlocados(IWebDriver webDriver, string XPath)
+    /// <returns>Retorna um número inteiro</returns>
+    public static int ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(IWebDriver webDriver, string XPath)
     {
         EsperarVisibilidadeDoElemento(webDriver, XPath);
 
@@ -205,6 +205,18 @@ public class Dsl
         var qtdLinhas = linhas.Count();
 
         return qtdLinhas;
+    }
+
+    /// <summary>
+    /// Método para retornar os dados do atributo value de um elemento
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <returns>Retorna os dados contidos no atributo como uma string</returns>
+    public static string ObterDadosDoAtributoValueDoElemento(IWebDriver webDriver, string XPath)
+    {
+        var dados = webDriver.FindElement(By.XPath(XPath)).GetAttribute("value");
+        return dados;
     }
 
     /// <summary>
@@ -366,13 +378,29 @@ public class Dsl
     /// <param name="xPathFiltrar"></param>
     /// <param name="xPathPesquisar"></param>
     /// <param name="xPathBuscar"></param>
-    /// <param name="nomeCampanha"></param>
-    public static void BuscarRegistros(IWebDriver webDriver, string xPathFiltrar, string xPathPesquisar, string xPathBuscar, string nomeCampanha)
+    /// <param name="nomeRegistro"></param>
+    public static void BuscarRegistros(IWebDriver webDriver, string xPathFiltrar, string xPathPesquisar, string xPathBuscar, string nomeRegistro)
     {
         webDriver.FindElement(By.XPath(xPathFiltrar)).Click();
-        webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(nomeCampanha);
+        webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(Keys.Control + "a");
+        webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(nomeRegistro);
         webDriver.FindElement(By.XPath(xPathBuscar)).Click();
 
-        Thread.Sleep(2000);
+        Thread.Sleep(1000);
+    }
+
+    /// <summary>
+    /// Método para esperar até que um único registro seja retornado na tabela de registros
+    /// </summary>
+    /// <param name="webDriver"></param>
+    public static void EsperarBuscaPorUmRegistro(IWebDriver webDriver)
+    {
+        var qtdRegistros = 0;
+
+        do
+        {
+            qtdRegistros = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaRegistros);
+
+        } while (qtdRegistros > 1);
     }
 }

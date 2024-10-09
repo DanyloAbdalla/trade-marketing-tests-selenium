@@ -46,12 +46,13 @@ public class SmartIaTest
     [Test]
     public void TestCriarCampanhaSmartIA()
     {
+        var contexto = "NovaCampanha";
         var statusCampanha = "Criando";
 
         new SmartIaPage(webDriver)
         .NovaCampanhaSmartIA()
         .PreencherCamposCampanha()
-        .SalvarCampanha()
+        .SalvarCampanha(contexto)
         .FecharCampanha()
         .BuscarCampanhas()
         .ValidarStatusDaCampanha(statusCampanha);
@@ -74,8 +75,18 @@ public class SmartIaTest
     [Test]
     public void TestAdicionarVarejoEAtivosNaCampanha()
     {
+        var contexto = "EditarCampanha";
+
         new SmartIaPage(webDriver)
-        .BuscarCampanhas();
+        .BuscarCampanhas()
+        .AbrirEditacaoDaCampanha()
+        .AdicionarVarejo()
+        .RealizarVarredura()
+        .SelecionarEReservarAtivos()
+        .SalvarAtivosReservados()
+        .SalvarCampanha(contexto);
+
+        Dsl.Esperar1Segundo();
     }
 
 

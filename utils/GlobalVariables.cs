@@ -15,7 +15,9 @@ public class GlobalVariables
     public static string SalvarRegistro { get; set; } = "//button/*[text()='Salvar']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
     public static string FecharTela { get; set; } = "//button/*[text()='Fechar']";
+    public static string PreencherFiltro { get; set; } = "//*[@class='ant-table-filter-dropdown']//input";
     public static string BuscarRegistro { get; set; } = "//button/*[text()='Buscar']";
+    public static string TabelaRegistros { get; set; } = "//tbody";
     #endregion
 
     #region Elementos de página - Login
@@ -136,13 +138,30 @@ public class GlobalVariables
     public static string DataLimiteCampanha { get; set; } = "(//div[contains(@class,'date-picker')])[3]";
     public static string DataLimiteCampanhaAvancarData { get; set; } = "(//*[contains(@class,'header-next-btn')])[3]";
     public static string MensagemCabecalhoCampanha { get; set; } = "//*[@name='Cabecalho']";
-    public static string PesquisarVarejo { get; set; } = "//div/*[text()='Adicionar Varejo:']/following-sibling::div//input";
-    public static string SelecionarVarejo { get; set; } = "//*[text()='Meu Cliente']";
-    public static string AdicionarVarejo { get; set;} = "(//form/div/div[2]//button)[1]";
-    public static string VarrerAtivos { get; set;} = "//*[@class='Varredura']/button";
     #endregion
 
-    #region Elementos de página - SmartIA - Campanha
+    #region Elementos de página - SmartIA - Nova Campanha - Selecionar Varejo e Varrer Ativos
     public static string EditarCampanha { get; set; } = "//tbody/tr[2]/td[9]/div[1]/button[1]";
+    public static string MenuSuspensoVarejos { get; set; } = "//*[text()='Varejos']";
+    public static string PesquisarVarejo { get; set; } = "//div/*[text()='Adicionar Varejo:']/following-sibling::div//input";
+    public static string SelecionarVarejo { get; set; } = "//div[@title='Meu Cliente']";
+    public static string AdicionarVarejo { get; set; } = "(//form/div/div[2]//button)[1]";
+    public static string VarejoSelecionado { get; set; } = "//div[contains(@style,'display')]//span[text()='Meu Cliente']";
+    public static string VarrerAtivos { get; set; } = "//*[@class='button-varredura-ativo']";
+    #endregion
+
+    #region Elementos de página - SmartIA - Nova Campanha - Selecionar Ativos
+    public static string SelecionarAtivosCampanha { get; set; } = "//div[contains(@style,'display')]//span[text()='Meu Cliente']/../..//*[@aria-label='appstore']";
+    public static string SalvarAtivosCampanha { get; set; } = "(//button/*[text()='Salvar'])[2]";
+    public static string FiltrarAtivosCampanha { get; set; } = "(//*[text()='Ativo'])[3]/..//*[@aria-label='search']";
+    public static string PreencherFiltroAtivosCampanha { get; set; } = "(//*[text()='Ativo'])[3]/..//*[@aria-label='search']";
+    public static string BuscarAtivosCampanha { get; set; } = "(//*[text()='Ativo'])[3]/..//*[@aria-label='search']";
+    public static string SelecionarAtivoCampanha { get; set; } = "(//input[@class='ant-checkbox-input'])[2]";
+    public static string ReservarQuantidadeAtivoLojasCampanha { get; set; } = "//tbody/tr/td[4]/span";
+    public static string PreencherReservarTodasLojasCampanha { get; set; } = "//*[text()='Reservar para Todos:']/../input";
+    public static string ReservarAtivoLojasCampanha { get; set; } = "//button/*[text()='Reservar']";
+    public static string FecharReservaAtivoLojaCampanha { get; set; } = "(//button/*[text()='Fechar'])[2]";
+    public static string QuantidadeReservadaAtivoCampanha { get; set; } = "//tbody/tr/td[5]/input";
+    public static string QuantidadeLojasReservaCampanha { get; set; } = "(//tbody)[2]";
     #endregion
 }

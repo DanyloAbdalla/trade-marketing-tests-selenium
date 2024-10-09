@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using OpenQA.Selenium;
 
@@ -113,7 +114,7 @@ public class PlanosContratosPage
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MenuLojas);
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
 
-        var qtdLojas = Dsl.ObterQuantidadeLinhasNoElementoTabela(webDriver, GlobalVariables.QuantidadeLojas);
+        var qtdLojas = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.QuantidadeLojas);
 
         for (var i = 1; i <= qtdLojas; i++)
         {
@@ -289,7 +290,7 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage EditarQuantidadesDosAtivosNoPlano()
     {
-        var qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaAtivosAlocados(webDriver, GlobalVariables.TabelaAtivosAlocados);
+        var qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosAlocados);
 
         for (var i = 1; i <= qtdAtivosAlocados; i++)
         {
@@ -452,7 +453,7 @@ public class PlanosContratosPage
     {
         var mensagemAlertaExcluirPlanoEsperada = "DesejarealmenteexcluirestePlano?";
         var mensagemSucessoEsperada = "Planodeletadocomsucesso";
-        var quantidadeLinhasTabela = Dsl.ObterQuantidadeLinhasNoElementoTabela(webDriver, GlobalVariables.TabelaPlanos);
+        var quantidadeLinhasTabela = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaPlanos);
 
         for (var i = 1; i <= quantidadeLinhasTabela; i++)
         {
@@ -479,9 +480,9 @@ public class PlanosContratosPage
     {
         var mensagemAlertaEsperada = "Algumaslojasnãoteminventáriosuficientedisponível";
         var quantidadeAlertas = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AlertaInventario);
-        var quantidadeLojas = Dsl.ObterQuantidadeLinhasNoElementoTabela(webDriver, GlobalVariables.QuantidadeLojas);
+        var quantidadeLojas = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.QuantidadeLojas);
 
-        Assert.That(quantidadeAlertas.Equals(quantidadeLojas), "Quantidade de alertas não foram apresentadas corretamente");
+        Debug.Assert(quantidadeAlertas == quantidadeLojas, "Quantidade de alertas não foram apresentadas corretamente");
 
         var mensagemAlertaAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagensDadosPlano);
         ValidarMensagemDeSucessoEAlerta(mensagemAlertaAtual, mensagemAlertaEsperada);
