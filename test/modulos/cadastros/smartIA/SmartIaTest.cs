@@ -64,14 +64,14 @@ public class SmartIaTest
     /// 
     /// Como comercial de trade marketing
     /// Eu quero adicionar na campanha, o varejo e os ativos com disponibilidade no inventário da loja
-    /// Para começar a montar meu pacote, que será enviado para os fornecedores
+    /// Para montar minha venda por unidade ou por pacote
     /// 
     /// Dado que eu tenho uma campanha criada no SmartIA
     /// Quando eu editar a campanha
     /// E selecionar o varejo 
     /// E reservar os ativos para as lojas
     /// E clicar no botão Salvar Campanha
-    /// Então o varejo E os ativos com disponibilidade de inventário serão reservados para a campanha, como um pacote de venda
+    /// Então os ativos com disponibilidade de inventário serão reservados para a campanha, com venda por unidade OU por pacote, para o varejo selecionado
     /// </summary>
     [Test]
     public void TestAdicionarVarejoEAtivosNaCampanha()
@@ -80,17 +80,68 @@ public class SmartIaTest
 
         new SmartIaPage(webDriver)
         .BuscarCampanhas()
-        .AbrirEditacaoDaCampanha()
+        .AbrirEdicaoDaCampanha()
         .AdicionarVarejo()
         .RealizarVarredura()
         .SelecionarEReservarAtivos()
         .SalvarAtivosReservados()
         .SalvarCampanha(contexto);
-
-        Dsl.Esperar1Segundo();
     }
 
+    /// <summary>
+    /// Testar a edição das quantidades dos ativos reservados na campanha
+    /// 
+    /// Como comercial de trade marketing
+    /// Eu quero alterar as quantidades dos ativos reservados
+    /// Para atualizar minha campanha
+    /// 
+    /// Dado que eu tenho uma campanha criada no SmartIA
+    /// Quando acessar a tela de edição
+    /// E alterar as quantidades dos ativos reservados para as lojas
+    /// E clicar no botão Salvar Campanha
+    /// Então a campanha será salva com as novas quantidades
+    /// </summary>
+    [Test]
+    public void TestEditarAtivosReservadosNaCampanhaExistente()
+    {
+        var contexto = "EditarCampanha";
 
+        new SmartIaPage(webDriver)
+        .BuscarCampanhas()
+        .AbrirEdicaoDaCampanha()
+        .AbrirMenuSuspensoVarejos()
+        .EditarQuantidadesDosAtivosReservados()
+        .SalvarAtivosReservados()
+        .SalvarCampanha(contexto);
+    }
+
+    /// <summary>
+    /// Testar a reserva de um novo ativo em uma campanha existente
+    /// 
+    /// Como comercial de trade marketing
+    /// Eu quero reservar um novo ativo para as lojas
+    /// Para os valores da minha campanha, com o novo ativo
+    /// 
+    /// Dado que eu tenho uma campanha criada no SmartIA
+    /// Quando acessar a tela de edição
+    /// E reservar um novo ativo para as lojas
+    /// E clicar no botão Salvar Campanha
+    /// Então a campanha será salva com o novo ativo
+    /// </summary>
+    [Test]
+    public void TestReservarNovoAtivoNaCampanhaExistente()
+    {
+        var contexto = "EditarCampanha";
+        var nomeAtivo = "Aplicativo";
+
+        new SmartIaPage(webDriver)
+        .BuscarCampanhas()
+        .AbrirEdicaoDaCampanha()
+        .AbrirMenuSuspensoVarejos()
+        .ReservarNovosAtivosPorLoja(nomeAtivo)
+        .SalvarAtivosReservados()
+        .SalvarCampanha(contexto);
+    }
     /// <summary>
     /// Método que será executado ao final de cada teste
     /// </summary>

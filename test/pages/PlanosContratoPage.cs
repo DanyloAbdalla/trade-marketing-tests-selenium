@@ -198,7 +198,7 @@ public class PlanosContratosPage
     /// Método para abrir a edição de um plano existente
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage AbrirEditacaoDoPlano()
+    public PlanosContratosPage AbrirEdicaoDoPlano()
     {
         Thread.Sleep(500);
 

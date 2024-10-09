@@ -172,7 +172,7 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para obter a quantilidade de linhas em um elemento do tipo tabela
+    /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
     /// </summary>
     /// <param name="driver"></param>
     /// <param name="XPath"></param>
@@ -190,7 +190,9 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para obter a quantilidade de linhas em um elemento do tipo tabela
+    /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
+    /// Existem tabelas que são apresentadas no sistema com uma tag tr a mais (que não é apresentada em tela)
+    /// Nesse cenário essa tag tr a mais é desconsiderada, retornando a quantidade real de linhas apresentadas em tela
     /// </summary>
     /// <param name="driver"></param>
     /// <param name="XPath"></param>
@@ -381,6 +383,8 @@ public class Dsl
     /// <param name="nomeRegistro"></param>
     public static void BuscarRegistros(IWebDriver webDriver, string xPathFiltrar, string xPathPesquisar, string xPathBuscar, string nomeRegistro)
     {
+        Thread.Sleep(500);
+
         webDriver.FindElement(By.XPath(xPathFiltrar)).Click();
         webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(Keys.Control + "a");
         webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(nomeRegistro);

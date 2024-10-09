@@ -172,7 +172,7 @@ public class SmartIaPage
     /// Método para abrir a edição de um plano existente
     /// </summary>
     /// <returns></returns>
-    public SmartIaPage AbrirEditacaoDaCampanha()
+    public SmartIaPage AbrirEdicaoDaCampanha()
     {
         Thread.Sleep(500);
 
@@ -183,14 +183,25 @@ public class SmartIaPage
     }
 
     /// <summary>
-    /// Método para adicionar o varejo
+    /// Método para abrir o menu suspenso Varejos
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage AbrirMenuSuspensoVarejos()
+    {
+        Thread.Sleep(2000);
+        webDriver.FindElement(By.XPath(GlobalVariables.MenuSuspensoVarejos)).Click();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para adicionar o varejo na campanha
     /// </summary>
     /// <returns></returns>
     public SmartIaPage AdicionarVarejo()
     {
-        Thread.Sleep(2000);
+        AbrirMenuSuspensoVarejos();
 
-        webDriver.FindElement(By.XPath(GlobalVariables.MenuSuspensoVarejos)).Click();
         webDriver.FindElement(By.XPath(GlobalVariables.PesquisarVarejo)).SendKeys("Meu Cliente");
         Thread.Sleep(500);
 
@@ -199,7 +210,7 @@ public class SmartIaPage
 
         var varejoSelecionado = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.VarejoSelecionado);
 
-        Assert.That(varejoSelecionado.Equals(1), "Display com o varejo selecionado não foi apresentado na tela");
+        Debug.Assert(varejoSelecionado == 1, "Display com o varejo selecionado não foi apresentado na tela");
 
         return this;
     }
@@ -228,33 +239,81 @@ public class SmartIaPage
     /// <returns></returns>
     public SmartIaPage SelecionarEReservarAtivos()
     {
-
-        webDriver.FindElement(By.XPath(GlobalVariables.SelecionarAtivosCampanha)).Click();
-        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SalvarAtivosCampanha);
+        AbrirSelecaoDeAtivosReservados();
 
         foreach (var nomeAtivo in nomesAtivos)
         {
             Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivosCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
-            
+
             webDriver.FindElement(By.XPath(GlobalVariables.SelecionarAtivoCampanha)).Click();
             webDriver.FindElement(By.XPath(GlobalVariables.ReservarQuantidadeAtivoLojasCampanha)).Click();
-            ReservarAtivoLojas();
+            ReservarAtivoPorLojas(1); //reservando 1 espaço para o ativo nas lojas
         }
 
         return this;
     }
 
     /// <summary>
-    /// Método para reservar os ativos
+    /// Método para editar a quantidade dos ativos reservados
     /// </summary>
     /// <returns></returns>
-    public SmartIaPage ReservarAtivoLojas()
+    public SmartIaPage EditarQuantidadesDosAtivosReservados()
+    {
+        AbrirSelecaoDeAtivosReservados();
+
+        foreach (var nomeAtivo in nomesAtivos)
+        {
+            Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivosCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
+
+            webDriver.FindElement(By.XPath(GlobalVariables.ReservarQuantidadeAtivoLojasCampanha)).Click();
+            ReservarAtivoPorLojas(2); //reservando 2 espaços para o ativo nas lojas
+        }
+
+        return this;
+    }
+
+
+    /// <summary>
+    /// Método para reservar um novo ativo para as lojas da campanha
+    /// </summary>
+    /// <param name="nomeAtivo"></param>
+    /// <returns></returns>
+    public SmartIaPage ReservarNovosAtivosPorLoja(string nomeAtivo)
+    {
+        AbrirSelecaoDeAtivosReservados();
+        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivosCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
+
+        webDriver.FindElement(By.XPath(GlobalVariables.SelecionarAtivoCampanha)).Click();
+        webDriver.FindElement(By.XPath(GlobalVariables.ReservarQuantidadeAtivoLojasCampanha)).Click();
+        ReservarAtivoPorLojas(2); //reservando 1 espaço para o ativo nas lojas
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para abrir a seleção de ativos à serem reservados para a campanha, com o varejo pré-selecionado
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage AbrirSelecaoDeAtivosReservados()
+    {
+        webDriver.FindElement(By.XPath(GlobalVariables.SelecionarAtivosCampanha)).Click();
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SalvarAtivosCampanha);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para reservar os ativos por loja
+    /// </summary>
+    /// <returns></returns>
+    public SmartIaPage ReservarAtivoPorLojas(int quantidadeReserva)
     {
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.ReservarAtivoLojasCampanha);
 
-        var valorReservaEsperado = Dsl.ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(webDriver, GlobalVariables.QuantidadeLojasReservaCampanha);
+        var quantidadeLojas = Dsl.ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(webDriver, GlobalVariables.QuantidadeLojasReservaCampanha);
+        var valorReservaEsperado = quantidadeLojas * quantidadeReserva;
 
-        webDriver.FindElement(By.XPath(GlobalVariables.PreencherReservarTodasLojasCampanha)).SendKeys("1");
+        webDriver.FindElement(By.XPath(GlobalVariables.PreencherReservarTodasLojasCampanha)).SendKeys(quantidadeReserva.ToString());
         webDriver.FindElement(By.XPath(GlobalVariables.ReservarAtivoLojasCampanha)).Click();
         webDriver.FindElement(By.XPath(GlobalVariables.FecharReservaAtivoLojaCampanha)).Click();
 
@@ -302,9 +361,9 @@ public class SmartIaPage
     {
         var mensagemSucessoEsperada = "";
 
-        if(contexto.Contains("NovaCampanha"))
+        if (contexto.Contains("NovaCampanha"))
             mensagemSucessoEsperada = "Campanhacriadacomsucesso!";
-        if(contexto.Contains("EditarCampanha"))
+        if (contexto.Contains("EditarCampanha"))
             mensagemSucessoEsperada = "Campanhaeditadacomsucesso!";
 
         webDriver.FindElement(By.XPath(GlobalVariables.SalvarRegistro)).Click();

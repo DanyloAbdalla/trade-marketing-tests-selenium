@@ -26,6 +26,9 @@ public class PlanosTest
         .PreencherEmailUsuario(GlobalVariables.emailUsuario)
         .PreencherSenhaUsuario(GlobalVariables.senhaUsuario)
         .SubmeterLogin();
+
+        new HomePage(webDriver)
+        .AbrirCadastroPlanos();
     }
 
     /// <summary>
@@ -47,9 +50,6 @@ public class PlanosTest
     {
         var statusPlanoEsperado = "Simulado";
         var farolPlanoEsperado = "PLANEJADO";
-
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
@@ -73,7 +73,7 @@ public class PlanosTest
     /// Eu quero alterar a vigência
     /// Para negociar um novo período
     /// 
-    /// Dado que eu tenho um plano criado
+    /// Dado que eu tenho um plano criado na Negociação
     /// Quando acessar a tela de edição
     /// E alterar as datas início e fim da vigência
     /// E clicar no botão Salvar Plano
@@ -84,12 +84,9 @@ public class PlanosTest
     {
         var contexto = "EditarPlano";
 
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
-        .AbrirEditacaoDoPlano()
+        .AbrirEdicaoDoPlano()
         .EditarInicioVigencia(contexto)
         .EditarFimVigencia(contexto)
         .SalvarPlano()
@@ -97,28 +94,24 @@ public class PlanosTest
     }
 
     /// <summary>
-    /// Testar edição dos ativos alocados em um plano existente
+    /// Testar edição das quantidades dos ativos alocados em um plano existente
     /// 
     /// Como comercial de trade marketing
     /// Eu quero alterar as quantidades dos ativos alocados por loja
     /// Para negociar a alocação de novos espaços
     /// 
-    /// Dado que eu tenho um plano criado com valor de receita\despesa
+    /// Dado que eu tenho um plano criado na Negociação
     /// Quando acessar a tela de edição
     /// E alterar as quantidades dos ativos
     /// E clicar no botão Salvar Plano
-    /// Então o plano será salvo
-    /// E o valor de receita/despesa será atualizado conforme as novas quantidades
+    /// Então o plano será salvo com as novas quantidades
     /// </summary>
     [Test, Order(3)]
     public void TestEditarAtivosAlocadosNoPlanoExistente()
     {
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
-        .AbrirEditacaoDoPlano()
+        .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
         .EditarQuantidadesDosAtivosNoPlano()
         .SalvarPlano()
@@ -129,27 +122,23 @@ public class PlanosTest
     /// Testar alocação de um novo ativo em um plano existente
     /// 
     /// Como comercial de trade marketing
-    /// Eu quero alocar um novo ativo nas lojas
-    /// Para simular os novos valores, com o novo ativo
+    /// Eu quero alocar um novo ativo para as lojas
+    /// Para atualizar meu plano com um novo ativo
     /// 
-    /// Dado que eu tenho um plano criado com ativos em 5 lojas
+    /// Dado que eu tenho um plano criado na Negociação
     /// Quando acessar a tela de edição
     /// E incluir um novo ativo para as lojas
     /// E clicar no botão Salvar Plano
-    /// Então o plano será salvo
-    /// E o valor de receita/despesa será atualizado conforme o novo ativo
+    /// Então o plano será salvo com o novo ativo
     /// </summary>
     [Test, Order(4)]
     public void TestAlocarNovoAtivoNoPlanoExistente()
     {
         var nomeAtivo = "Aplicativo";
 
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
-        .AbrirEditacaoDoPlano()
+        .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
         .AlocarNovosAtivosNoPlano(nomeAtivo)
         .SalvarPlano()
@@ -176,12 +165,9 @@ public class PlanosTest
         var statusPlanoEsperado = "Aprovado";
         var farolPlanoEsperado = "APROVADO";
 
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
-        .AbrirEditacaoDoPlano()
+        .AbrirEdicaoDoPlano()
         .EditarSituacaoDoPlano(contextoSituacao)
         .SalvarPlano()
         .FecharDadosDoPlano()
@@ -205,9 +191,6 @@ public class PlanosTest
     public void TestCriarPlanoComAlertaDeInventario()
     {
         var contexto = "NovoPlano";
-
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
@@ -242,9 +225,6 @@ public class PlanosTest
         var statusPlanoEsperado = "Cancelado";
         var farolPlanoEsperado = "CANCELADO";
 
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
-
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
@@ -256,7 +236,7 @@ public class PlanosTest
         .SalvarPlano()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
-        .AbrirEditacaoDoPlano()
+        .AbrirEdicaoDoPlano()
         .EditarSituacaoDoPlano(situacaoPlano)
         .SalvarPlano()
         .FecharDadosDoPlano()
@@ -278,9 +258,6 @@ public class PlanosTest
     [Test, Order(8)]
     public void TestExcluirPlano()
     {
-        new HomePage(webDriver)
-        .AbrirCadastroPlanos();
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .ConfirmarExclusaoDoPlano();
