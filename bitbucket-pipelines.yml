@@ -33,7 +33,7 @@ pipelines:
             - unzip chromedriver-linux64.zip
             - ls -al
             - export CHROMEDRIVER_PATH="/usr/local/bin"
-            - mv cromedriver-linux64 $CHROMEDRIVER_PATH/
+            - mv chromedriver-linux64 $CHROMEDRIVER_PATH/
             - chmod +x $CHROMEDRIVER_PATH/chromedriver
             - dotnet test MeuClienteWebTestProject.csproj
 
