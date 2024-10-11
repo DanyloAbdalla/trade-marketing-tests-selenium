@@ -34,7 +34,7 @@ pipelines:
             - ls -al
             - export CHROMEDRIVER_PATH="/usr/local/bin"
             - mv chromedriver-linux64 $CHROMEDRIVER_PATH/
-            - chmod +x $CHROMEDRIVER_PATH/chromedriver-linux64
+            - chmod +x $CHROMEDRIVER_PATH/chromedriver
             - dotnet test MeuClienteWebTestProject.csproj
 
 definitions:
