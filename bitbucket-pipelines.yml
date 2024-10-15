@@ -27,7 +27,7 @@ pipelines:
           caches:
             - dotnetcore
           services:
-            - standalone-chrome
+            - selenium/standalone-chrome
           script:
             - google-chrome --version
             - chromedriver --version
