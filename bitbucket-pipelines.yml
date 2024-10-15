@@ -7,7 +7,6 @@
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
 
 # image: mcr.microsoft.com/dotnet/sdk:8.0
-image: selenium/standalone-chrome:latest
 image: mcr.microsoft.com/dotnet/sdk:8.0
 
 pipelines:
@@ -34,6 +33,10 @@ pipelines:
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.PlanosTest
 
 definitions:
+  services:
+    selenium:
+      image: selenium/standalone-chrome:latest
+      
   caches:
     dotnetcore: ~/.nuget/packages
     # selenium: ~/chrome
