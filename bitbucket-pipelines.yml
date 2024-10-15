@@ -21,7 +21,7 @@ pipelines:
             - dotnet build --configuration Release
 
       - step:
-          name: Run UI Tests
+          name: Steup Test Environment
           caches:
             - dotnetcore
           script:
@@ -35,6 +35,12 @@ pipelines:
             - export CHROMEDRIVER_PATH="/usr/local/bin"
             - mv chromedriver-linux64 $CHROMEDRIVER_PATH/chromedriver
             - chmod +x $CHROMEDRIVER_PATH/chromedriver
+      
+      - step:
+          name: Run UI Tests
+          caches:
+            - dotnetcore
+          script:
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.PlanosTest
 
 definitions:

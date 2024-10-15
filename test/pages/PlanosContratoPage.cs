@@ -360,6 +360,7 @@ public class PlanosContratosPage
 
         AumentarQuantidadeAtivosPorLoja();
 
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
         webDriver.FindElement(By.XPath(GlobalVariables.SalvarAlocacaoLoja)).Click();
         Dsl.Esperar1Segundo();
 
