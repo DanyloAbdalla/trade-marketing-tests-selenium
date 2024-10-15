@@ -20,32 +20,32 @@ pipelines:
             - dotnet restore
             - dotnet build --configuration Release
 
-      - step:
-          name: Steup Test Environment
-          caches:
-            - dotnetcore
-            - chrome
-            - chromedriver
-          script:
-            - apt-get update
-            - apt-get install -y wget unzip
+      # - step:
+      #     name: Steup Test Environment
+      #     caches:
+      #       - dotnetcore
+      #       - chrome
+      #       - chromedriver
+      #     script:
+      #       - apt-get update
+      #       - apt-get install -y wget unzip
 
-            # Verificando se o Chrome já está no cache
-            - if [ ! -f "/usr/local/bin/chrome/google-chrome" ]; then
-                wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb;
-                apt install -y ./google-chrome-stable_current_amd64.deb;
-                mkdir -p /usr/local/bin/chrome;
-                mv /usr/bin/google-chrome /usr/local/bin/chrome/;
-              fi
+      #       # Verificando se o Chrome já está no cache
+      #       - if [ ! -f "/usr/local/bin/chrome/google-chrome" ]; then
+      #           wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb;
+      #           apt install -y ./google-chrome-stable_current_amd64.deb;
+      #           mkdir -p /usr/local/bin/chrome;
+      #           mv /usr/bin/google-chrome /usr/local/bin/chrome/;
+      #         fi
             
-            # Verificando se o ChromeDriver já está no cache
-            - if [ ! -f "/usr/local/bin/chromedriver-cache/chromedriver-linux64" ]; then
-                wget -q https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.100/linux64/chromedriver-linux64.zip;
-                unzip chromedriver-linux64.zip;
-                mkdir -p /usr/local/bin/chromedriver-cache;
-                mv chromedriver-linux64 /usr/local/bin/chromedriver-cache/;
-                chmod +x /usr/local/bin/chromedriver-cache/chromedriver-linux64;
-              fi
+      #       # Verificando se o ChromeDriver já está no cache
+      #       - if [ ! -f "/usr/local/bin/chromedriver-cache/chromedriver-linux64" ]; then
+      #           wget -q https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.100/linux64/chromedriver-linux64.zip;
+      #           unzip chromedriver-linux64.zip;
+      #           mkdir -p /usr/local/bin/chromedriver-cache;
+      #           mv chromedriver-linux64 /usr/local/bin/chromedriver-cache/;
+      #           chmod +x /usr/local/bin/chromedriver-cache/chromedriver-linux64;
+      #         fi
       
       - step:
           name: Run UI Tests
@@ -67,5 +67,5 @@ pipelines:
 definitions:
   caches:
     dotnetcore: ~/.nuget/packages
-    chrome: /usr/local/bin/chrome
-    chromedriver: /usr/local/bin/chromedriver-cache
+    chrome: /usr/local/bin/chrome/google-chrome
+    chromedriver: /usr/local/bin/chromedriver-cache/chromedriver-linux64
