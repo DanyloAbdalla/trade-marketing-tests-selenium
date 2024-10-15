@@ -26,8 +26,6 @@ pipelines:
           name: Run UI Tests
           caches:
             - dotnetcore
-          services:
-            - dotnetcore
           script:
             - google-chrome --version
             - chromedriver --version
