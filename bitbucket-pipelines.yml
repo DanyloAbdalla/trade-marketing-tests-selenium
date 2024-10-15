@@ -6,6 +6,7 @@
 # To run your pipeline on a Windows machine, create a self-hosted Windows runner.
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
 
+image: docker:20.10.7
 image: mcr.microsoft.com/dotnet/sdk:8.0
 image: selenium/standalone-chrome:latest
 
