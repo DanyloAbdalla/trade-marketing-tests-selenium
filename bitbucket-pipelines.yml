@@ -11,14 +11,14 @@ image: selenium/standalone-chrome:latest
 pipelines:
   custom:
     automated:
-      - step:
-          name: Setup .NET Build
-          caches:
-            - dotnetcore
-          script:
-            - echo "Starting build..."
-            - dotnet restore
-            - dotnet build --configuration Release
+      # - step:
+      #     name: Setup .NET Build
+      #     caches:
+      #       - dotnetcore
+      #     script:
+      #       - echo "Starting build..."
+      #       - dotnet restore
+      #       - dotnet build --configuration Release
 
       # - step:
       #     name: Steup Test Environment
