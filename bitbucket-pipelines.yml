@@ -58,7 +58,7 @@ pipelines:
             - ln -s /usr/local/bin/chromedriver-cache/chromedriver-linux64 /usr/local/bin/chromedriver
 
             # - google-chrome --version
-            - /usr/local/bin/chromedriver --version
+            # - /usr/local/bin/chromedriver --version
 
             - export CHROMEDRIVER_PATH="/usr/local/bin"
             - chmod +x $CHROMEDRIVER_PATH/chromedriver
