@@ -23,4 +23,5 @@ pipelines:
         services:
           - docker
         script:
+          - docker login
           - docker run --rm meuclientetesteautomatizado/meuclientetesteautomatizado dotnet test MeuClienteWebTestProject.csproj
