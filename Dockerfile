@@ -5,10 +5,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 RUN apt-get update && apt-get install -y wget unzip \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome.deb \
     && apt install -y /tmp/google-chrome.deb \
-    && wget -q https://chromedriver.storage.googleapis.com/129.0.6668.100/chromedriver_linux64.zip -O /tmp/chromedriver.zip \
-    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
-    && chmod +x /usr/local/bin/chromedriver \
-    && rm -rf /var/lib/apt/lists/* /tmp/google-chrome.deb /tmp/chromedriver.zip
+    && wget -q https://chromedriver.storage.googleapis.com/129.0.6668.100/chromedriver_linux64.zip -O /tmp/chromedriver_linux64.zip \
+    && unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ \
+    && chmod +x /usr/local/bin/chromedriver_linux64 \
+    && rm -rf /var/lib/apt/lists/* /tmp/google-chrome.deb /tmp/chromedriver_linux64.zip
 
 # Defina o diretório de trabalho
 WORKDIR /app
