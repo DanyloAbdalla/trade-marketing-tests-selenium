@@ -7,38 +7,16 @@
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
 
 # image: mcr.microsoft.com/dotnet/sdk:8.0
-image: mcr.microsoft.com/dotnet/sdk:8.0
-
-definitions:
-  services:
-    selenium:
-      image: selenium/standalone-chrome:latest
-      ports:
-        - "4444:4444"
-
-  caches:
-    dotnetcore: ~/.nuget/packages
+image: docker:20.10.7
 
 pipelines:
-  custom:
-    automated:
-      # - step:
-      #     name: Setup .NET Build
-      #     caches:
-      #       - dotnetcore
-      #     script:
-      #       - echo "Starting build..."
-      #       - dotnet restore
-      #       - dotnet build --configuration Release
-     
-      - step:
-          name: Run UI Tests
-          services:
-            - selenium
-          caches:
-            - dotnetcore
-          script:
-            - export SELENIUM_URL="http://selenium:4444/wd/hub"
-            - google-chrome --version
-            - chromedriver --version
-            - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.PlanosTest
+  default:
+    - step:
+        name: Build Docker Image
+        script:
+          - docker build -t teste-automatizado/steste-automatizado .
+    
+    - step:
+        name: Run Tests
+        script:
+          - docker run --rm teste-automatizado/steste-automatizado dotnet test MeuClienteWebTestProject.csproj
