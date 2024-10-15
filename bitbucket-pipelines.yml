@@ -67,5 +67,5 @@ pipelines:
 definitions:
   caches:
     dotnetcore: ~/.nuget/packages
-    chrome: /usr/local/bin/chrome/google-chrome
-    chromedriver: /usr/local/bin/chromedriver-cache/chromedriver-linux64
+    chrome: /usr/local/bin/chrome
+    chromedriver: /usr/local/bin/chromedriver-cache
