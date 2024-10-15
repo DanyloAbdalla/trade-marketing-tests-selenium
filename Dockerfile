@@ -35,5 +35,12 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/google-chrome.deb /tmp/chromedriver-linux64
 # Defina o diretório de trabalho
 WORKDIR /app
 
-# Comando de entrada padrão (opcional)
-CMD ["dotnet", "--version"]
+COPY MeuClienteWebTestProject.csproj ./
+RUN dotnet restore
+
+# Copia o restante dos arquivos e compila
+COPY . ./
+RUN dotnet build --configuration Release -o out
+
+# Define o comando padrão
+CMD ["dotnet", "test", "MeuClienteWebTestProject.csproj"]

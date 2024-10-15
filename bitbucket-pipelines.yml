@@ -16,11 +16,11 @@ pipelines:
         services:
           - docker
         script:
-          - docker build -t teste-automatizado/teste-automatizado .
+          - docker build -t meuclientetesteautomatizado/meuclientetesteautomatizado .
     
     - step:
         name: Run Tests
         services:
           - docker
         script:
-          - docker run --rm teste-automatizado/teste-automatizado dotnet test MeuClienteWebTestProject.csproj
+          - docker run --rm meuclientetesteautomatizado/meuclientetesteautomatizado dotnet test MeuClienteWebTestProject.csproj
