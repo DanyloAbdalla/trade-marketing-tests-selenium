@@ -34,7 +34,7 @@ public class DriverFactory
                     options.AddArgument("--headless"); //desativa a abertura do navegador
                     options.AddArgument("--no-sandbox"); //desativa o recurso de segurança sandbox do Chrome para o uso do mesmo em contêineres Docker
                     options.AddArgument("--disable-dev-shm-usage"); //direciona o Chrome a usar o diretório /tmp, previnindo falhas em ambientes com memória compartilhada limitada em contêineres Docker
-                    options.AddArgument("--window-size=1920x1080");
+                    options.AddArgument("--start-maximized");
                 }
 
                 webDriver = new ChromeDriver(options);
