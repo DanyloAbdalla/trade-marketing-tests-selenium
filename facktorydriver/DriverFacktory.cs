@@ -38,7 +38,7 @@ public class DriverFactory
                 }
 
                 webDriver = new ChromeDriver(options);
-                webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
                 webDriver.Navigate().GoToUrl(GlobalVariables.urlPlataforma);
                 break;
             default:

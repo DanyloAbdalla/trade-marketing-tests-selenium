@@ -77,20 +77,12 @@ public class Dsl
     /// <exception cref="WebDriverTimeoutException"></exception>
     public static void DigitarNoCampoTextoComboList(IWebDriver webDriver, string XPath, string textoValor)
     {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(10),
-            PollingInterval = TimeSpan.FromMilliseconds(500)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
         try
         {
             for (int i = 0; i < textoValor.Length; i++)
             {
                 webDriver.FindElement(By.XPath(XPath)).SendKeys(textoValor[i].ToString());
-                Thread.Sleep(TimeSpan.FromMicroseconds(1000));
+                Thread.Sleep(TimeSpan.FromMilliseconds(100));
             }
         }
         catch (WebDriverTimeoutException ex)
@@ -105,14 +97,6 @@ public class Dsl
     /// <exception cref="WebDriverTimeoutException"></exception>
     public static void DigitarNoCampoTexto(IWebDriver webDriver, string XPath, string textoValor)
     {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(10),
-            PollingInterval = TimeSpan.FromMilliseconds(500)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
         try
         {
             Actions action = new Actions(webDriver);

@@ -37,6 +37,7 @@ public class PlanosContratosPage
     public PlanosContratosPage PreencherCampoIndustria()
     {
         webDriver.FindElement(By.XPath(GlobalVariables.PesquisarIndustria)).Click();
+        Dsl.Esperar1Segundo();
         Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "ALIMENTOS ZAELI LTDA");
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SelecionarIndustria);
 
