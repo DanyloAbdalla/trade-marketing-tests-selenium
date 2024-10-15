@@ -6,7 +6,7 @@
 # To run your pipeline on a Windows machine, create a self-hosted Windows runner.
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
 
-image: mcr.microsoft.com/dotnet/sdk:8.0
+image: selenium/standalone-chrome:latest
 
 pipelines:
   custom:
@@ -54,14 +54,14 @@ pipelines:
             - chrome
             - chromedriver
           script:
-            - ln -s /usr/local/bin/chrome/google-chrome /usr/bin/google-chrome
-            - ln -s /usr/local/bin/chromedriver-cache/chromedriver-linux64 /usr/local/bin/chromedriver
+            # - ln -s /usr/local/bin/chrome/google-chrome /usr/bin/google-chrome
+            # - ln -s /usr/local/bin/chromedriver-cache/chromedriver-linux64 /usr/local/bin/chromedriver
 
-            # - google-chrome --version
-            # - /usr/local/bin/chromedriver --version
+            - google-chrome --version
+            - chromedriver --version
 
-            - export CHROMEDRIVER_PATH="/usr/local/bin"
-            - chmod +x $CHROMEDRIVER_PATH/chromedriver
+            # - export CHROMEDRIVER_PATH="/usr/local/bin"
+            # - chmod +x $CHROMEDRIVER_PATH/chromedriver
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.PlanosTest
 
 definitions:
