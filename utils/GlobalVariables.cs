@@ -51,7 +51,7 @@ public class GlobalVariables
 
     #region Elementos de página - Planos - Novo Plano
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/span/input[@type='search']";
-    public static string SelecionarIndustria { get; set; } = "//div[@aria-selected='false' and @title='ALIMENTOS ZAELI LTDA']";
+    public static string SelecionarIndustria { get; set; } = "//div[@title='ALIMENTOS ZAELI LTDA']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div)[1]";
     public static string FimVigenciaNovoPlano { get; set; } = "(//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div)[2]";
