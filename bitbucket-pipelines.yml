@@ -34,3 +34,4 @@ pipelines:
 definitions:
   caches:
     dotnetcore: ~/.nuget/packages
+    selenium: ~/chrome
