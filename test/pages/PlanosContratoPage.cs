@@ -148,14 +148,17 @@ public class PlanosContratosPage
     {
         var qtdAbasPlanos = 1;
 
+        Dsl.Esperar1Segundo();
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
+
         foreach (var abaPlano in abasPlano)
         {
             webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{qtdAbasPlanos}]")).Click();
 
-            var valorAtual = webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{qtdAbasPlanos}]")).Text;
-            var valorEsperado = abaPlano;
+            var tituloAbaAtual = webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{qtdAbasPlanos}]")).Text;
+            var tituloAbaEsperado = abaPlano;
 
-            Assert.That(valorAtual, Does.Contain(valorEsperado));
+            Assert.That(tituloAbaAtual, Does.Contain(tituloAbaEsperado));
             Thread.Sleep(500);
 
             qtdAbasPlanos++;
