@@ -6,7 +6,8 @@
 # To run your pipeline on a Windows machine, create a self-hosted Windows runner.
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
 
-image: mcr.microsoft.com/dotnet/sdk:8.0
+# image: mcr.microsoft.com/dotnet/sdk:8.0
+image: docker:20.10.7
 
 pipelines:
   custom:
@@ -32,6 +33,12 @@ pipelines:
             - wget -q https://storage.googleapis.com/chrome-for-testing-public/129.0.6668.100/linux64/chromedriver-linux64.zip
             - unzip chromedriver-linux64.zip
             - ls -al
+      
+      - step:
+          name: Run UI Tests
+          caches:
+            - dotnetcore
+          script:
             - export CHROMEDRIVER_PATH="/usr/local/bin"
             - mv chromedriver-linux64 $CHROMEDRIVER_PATH/chromedriver
             - chmod +x $CHROMEDRIVER_PATH/chromedriver
