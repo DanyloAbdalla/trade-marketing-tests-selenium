@@ -10,7 +10,7 @@ namespace MeuClienteWebTestProject;
 public class PlanosContratosPage
 {
     private IWebDriver webDriver;
-    private string[] nomesAtivos = { "Display de Chão", "Panfleto", "Ponta de gondola" };
+    private string[] nomesAtivos = { "Display de Chão", "Woobler", "Ponta de Gôndola" };
     private string[] abasPlano = { "Dados do Plano", "Ativos Alocados", "Preços Serviços", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria" };
 
     public PlanosContratosPage(IWebDriver webDriver)
