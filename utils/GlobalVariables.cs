@@ -60,8 +60,8 @@ public class GlobalVariables
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
     public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
-    public static string InicioVigenciaNovoPlano { get; set; } = "(//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div)[1]";
-    public static string FimVigenciaNovoPlano { get; set; } = "(//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div)[2]";
+    public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
+    public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
     public static string AvancarCalendarioMesInicioVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[1]";
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
@@ -101,7 +101,7 @@ public class GlobalVariables
     public static string SelecionarTipoCampanha { get; set; } = "//*[text()='Tipo Campanha 01']";
     public static string QuantidadeParcelas { get; set; } = "//*[@name='QuantidadeParcelas']";
     public static string Setor { get; set; } = "//*[@name='SetorId']//input";
-    public static string SelecionarSetor { get; set; } = "(//*[text()='Geral'])[1]";
+    public static string SelecionarSetor { get; set; } = "(//*[text()='Geral'])[2]";
     public static string Departamento { get; set; } = "//*[@name='DepartamentoId']//input";
     public static string SelecionarDepartamento { get; set; } = "(//*[text()='Geral'])[3]";
     public static string Categoria { get; set; } = "//*[@name='CategoriaId']//input";

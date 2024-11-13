@@ -79,6 +79,8 @@ public class Dsl
     {
         try
         {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
+
             for (int i = 0; i < textoValor.Length; i++)
             {
                 webDriver.FindElement(By.XPath(XPath)).SendKeys(textoValor[i].ToString());
@@ -98,6 +100,7 @@ public class Dsl
     {
         try
         {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
             Actions action = new Actions(webDriver);
             action.SendKeys(webDriver.FindElement(By.XPath(XPath)), textoValor).Perform();
         }
@@ -106,13 +109,13 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para esperar ate que um elemento esteja apto a receber um clique
+    /// Método que espera o elemento para receber o clique
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="xpath"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static void EsperarElementoFicarClicavel(IWebDriver webDriver, string xpath)
+    public static void EsperarElementoParaClicar(IWebDriver webDriver, string xpath, string nomeElemento)
     {
         var fluentWait = new DefaultWait<IWebDriver>(webDriver)
         {
@@ -124,10 +127,10 @@ public class Dsl
 
         try
         {
-            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(xpath)));
+            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(xpath))).Click();
         }
-        catch (WebDriverTimeoutException ex)
-        { throw new WebDriverTimeoutException(ex.Message); }
+        catch (FormatException ex)
+        { throw new FormatException(ex.Message + nomeElemento); }
     }
 
     /// <summary>
@@ -138,10 +141,9 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static bool ValidarExistenciaDoElemento(IWebDriver webDriver, string XPath)
     {
-        webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(100);
-
         try
         {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
             IList<IWebElement> elements = webDriver.FindElements(By.XPath(XPath));
 
             return elements.Count > 0;
@@ -158,10 +160,9 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static int ContarExistenciaDoElemento(IWebDriver webDriver, string XPath)
     {
-        webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(100);
-
         try
         {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
             IList<IWebElement> elements = webDriver.FindElements(By.XPath(XPath));
 
             return elements.Count;
@@ -177,6 +178,8 @@ public class Dsl
     /// <param name="XPath"></param>
     public static void ScrollParaElemento(IWebDriver webDriver, string XPath)
     {
+        EsperarVisibilidadeDoElemento(webDriver, XPath);
+
         IWebElement webElement = webDriver.FindElement(By.XPath(XPath));
 
         Actions action = new Actions(webDriver);
@@ -229,28 +232,10 @@ public class Dsl
     /// <returns>Retorna os dados contidos no atributo como uma string</returns>
     public static string ObterDadosDoAtributoValueDoElemento(IWebDriver webDriver, string XPath)
     {
+        EsperarVisibilidadeDoElemento(webDriver, XPath);
         var dados = webDriver.FindElement(By.XPath(XPath)).GetAttribute("value");
+
         return dados;
-    }
-
-    /// <summary>
-    /// Método para selecionar datas em campos do tipo calendario
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
-    /// <param name="qtdAvancarMeses"></param>
-    public static void PreencherCalendarios(IWebDriver webDriver, string XPath, int qtdAvancarMes)
-    {
-        DateTime dataCorrente = DateTime.Now;
-        var diaCorrente = dataCorrente.Day;
-
-        for (int i = 0; i < qtdAvancarMes; i++)
-        {
-            webDriver.FindElement(By.XPath(XPath)).Click();
-            Thread.Sleep(500);
-        }
-
-        webDriver.FindElement(By.XPath($"//div[@class='ant-picker-body']/table/tbody/tr/td/div[text()='{diaCorrente}']")).Click();
     }
 
     /// <summary>
@@ -264,6 +249,8 @@ public class Dsl
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
+
+        EsperarVisibilidadeDoElemento(webDriver, XPath);
 
         if (qtdAvancarMeses == 0)
         {
@@ -292,6 +279,8 @@ public class Dsl
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
 
+        EsperarVisibilidadeDoElemento(webDriver, XPath);
+
         if (qtdAvancarMeses == 0)
         {
             webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
@@ -309,31 +298,12 @@ public class Dsl
             {
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
             }
-            else 
+            else
             {
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
             }
 
         }
-    }
-
-    /// <summary>
-    /// Método para selecionar a data de inicio vigência, quando for criado um novo plano
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
-    /// <param name="qtdAvancarMes"></param>
-    public static void PreencherCalendarioInicioVigencia(IWebDriver webDriver, string XPath, int qtdAvancarMes)
-    {
-        DateTime dataAtual = DateTime.Now;
-        var diaAtual = dataAtual.Day;
-
-        for (int i = 0; i < qtdAvancarMes; i++)
-        {
-            webDriver.FindElement(By.XPath(XPath)).Click();
-        }
-
-        webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
     }
 
     /// <summary>
@@ -417,20 +387,5 @@ public class Dsl
         webDriver.FindElement(By.XPath(xPathBuscar)).Click();
 
         Thread.Sleep(1000);
-    }
-
-    /// <summary>
-    /// Método para esperar até que um único registro seja retornado na tabela de registros
-    /// </summary>
-    /// <param name="webDriver"></param>
-    public static void EsperarBuscaPorUmRegistro(IWebDriver webDriver)
-    {
-        var qtdRegistros = 0;
-
-        do
-        {
-            qtdRegistros = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaRegistros);
-
-        } while (qtdRegistros > 1);
     }
 }
