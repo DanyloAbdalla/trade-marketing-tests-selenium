@@ -20,7 +20,6 @@ public class PlanosTest
     public void Setup()
     {
         webDriver = DriverFactory.CreateDriver(browserType);
-        webDriver.Navigate().GoToUrl(GlobalVariables.urlPlataforma);
 
         new LoginPage(webDriver)
         .PreencherEmailUsuario(GlobalVariables.emailUsuario)
@@ -32,18 +31,20 @@ public class PlanosTest
     }
 
     /// <summary>
-    /// Testar a criação de um plano
+    /// Testar a criação de um plano, estando o cliente sem permissão de planta de loja
     /// 
     /// Como comercial de trade marketing
     /// Eu quero criar um novo plano
     /// E inicar uma nova negociação
     /// Para enviar a proposta para o cliente
     /// 
-    /// Dado que eu tenho espaços disponíveis para realização de trade marketing na loja
-    /// Quando eu criar um plano
+    /// Dado que eu não tenho permissão de planta de loja
+    /// E que eu tenho disponibilidade de inventário, em um determinado período de vigência
+    /// Quando eu simular um novo plano
     /// E escolher os ativos, colocar as quantidades, selecionar as lojas
-    /// E clicar no botão Gerar Pré-Plano
-    /// Então um novo plano será criado com Status = Simulado e Farol = Planejado, com o incicio da vigência em d(data corrente), com fim em d+30
+    /// Então será apresentado o botão de sucesso para as lojas com disponibilidade, com o botão Gerar Pré-Plano habilitado
+    /// Quando eu clicar no botão “Gerar Pré-Plano”
+    /// Então o plano\contrato será criado com o ativo, com Status = Simulado e Farol = Planejado, com vigência em d+30
     /// </summary>
     [Test, Order(1)]
     public void TestCriarPlano()
@@ -94,20 +95,21 @@ public class PlanosTest
     }
 
     /// <summary>
-    /// Testar edição das quantidades dos ativos alocados em um plano existente
+    /// Testar edição das quantidades dos ativos alocados em um plano existente, estando o cliente sem permissão de planta de loja
     /// 
     /// Como comercial de trade marketing
     /// Eu quero alterar as quantidades dos ativos alocados por loja
-    /// Para negociar a alocação de novos espaços
+    /// Para negociar a alocação de mais espaços
     /// 
-    /// Dado que eu tenho um plano criado na Negociação
-    /// Quando acessar a tela de edição
-    /// E alterar as quantidades dos ativos
+    /// Dado que eu não tenho permissão de planta de loja
+    /// E que eu tenho um plano criado, contendo um ativo com disponibilidade de inventário
+    /// Quando eu acessar a tela de edição do plano
+    /// E alterar a quantidade do ativo
     /// E clicar no botão Salvar Plano
-    /// Então o plano será salvo com as novas quantidades
+    /// Então o plano será salvo com sucesso com a nova quantidade
     /// </summary>
     [Test, Order(3)]
-    public void TestEditarAtivosAlocadosNoPlanoExistente()
+    public void TestEditarAtivoDisponivelAlocadoNoPlanoExistente()
     {
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
@@ -119,22 +121,22 @@ public class PlanosTest
     }
 
     /// <summary>
-    /// Testar alocação de um novo ativo em um plano existente
+    /// Testar alocação de um novo ativo em um plano existente, estando o cliente sem permissão de planta de loja
     /// 
     /// Como comercial de trade marketing
     /// Eu quero alocar um novo ativo para as lojas
     /// Para atualizar meu plano com um novo ativo
     /// 
-    /// Dado que eu tenho um plano criado na Negociação
-    /// Quando acessar a tela de edição
-    /// E incluir um novo ativo para as lojas
-    /// E clicar no botão Salvar Plano
-    /// Então o plano será salvo com o novo ativo
+    /// Dado que eu não tenho permissão de planta de loja
+    /// E que eu tenho um plano criado
+    /// Quando eu acessar a tela de edição do plano
+    /// E incluir um novo ativo para a loja com disponibilidade de inventário
+    /// Então o plano será salvo com sucesso com o novo ativo
     /// </summary>
     [Test, Order(4)]
-    public void TestAlocarNovoAtivoNoPlanoExistente()
+    public void TestIncluirNovoAtivoDisponivelNoPlanoExistente()
     {
-        var nomeAtivo = "Aplicativo";
+        var nomeAtivo = "Cestão 01 - ";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
@@ -171,18 +173,20 @@ public class PlanosTest
         .EditarSituacaoDoPlano(contextoSituacao)
         .SalvarPlano()
         .FecharDadosDoPlano()
+        .BuscarPlanos(nomeCampanha)
         .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
     }
 
     /// <summary>
-    /// Testar alerta de inventário na criação de planos
+    /// Testar alerta de inventário na criação de planos, estando o cliente sem permissão de planta de loja
     /// 
     /// Como comercial de trade marketing
-    /// Eu quero selecionar ativos sem disponibilidade de alocação
+    /// Eu quero selecionar ativos sem indisponibilidade de alocação
     /// Para que eu seja informado de que não há quantidade suficente no inventário
     /// 
-    /// Dado que eu não tenho espaços disponíveis para realização de trade marketing na loja, em um determinado período de vigência
-    /// Quando eu criar um novo plano
+    /// Dado que eu não tenho permissão de planta de loja
+    /// E que eu não tenho disponibilidade de inventário, em um determinado período de vigência
+    /// Quando eu simular um novo plano
     /// E escolher os ativos, colocar as quantidades, selecionar as lojas
     /// Então será apresentado o botão de alerta para as lojas com indisponibilidade
     /// E uma mensagem será apresentada ao lado do botão Gerar Pré-Plano, com o mesmo desabilitado
@@ -209,7 +213,7 @@ public class PlanosTest
     /// Testar cancelamento de plano
     /// 
     /// Como comercial de trade marketing
-    /// Eu quero cancelar uma plano
+    /// Eu quero cancelar um plano
     /// Para que o mesmo seja desconsiderado, gerenciando as minhas negociações
     /// 
     /// Dado que eu tenho um plano
@@ -226,20 +230,12 @@ public class PlanosTest
         var farolPlanoEsperado = "CANCELADO";
 
         new PlanosContratosPage(webDriver)
-        .NovaSimulacaoDePlano()
-        .PreencherCampoIndustria()
-        .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos()
-        .PreencherQuantidadeAtivos()
-        .SelecionarLojas()
-        .GerarPrePlano()
-        .SalvarPlano()
-        .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .EditarSituacaoDoPlano(situacaoPlano)
         .SalvarPlano()
         .FecharDadosDoPlano()
+        .BuscarPlanos(nomeCampanha)
         .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
     }
 
@@ -268,5 +264,5 @@ public class PlanosTest
     /// </summary>
     [TearDown]
     public void TearDown()
-    { webDriver.Close(); }
+    { webDriver.Close(); System.Diagnostics.Process.Start("taskkill_chromedriver.bat"); }
 }

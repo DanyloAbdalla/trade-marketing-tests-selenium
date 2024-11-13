@@ -14,7 +14,7 @@ public class SmartIaPage
     private string whatsAppResponsavel = "15988086091";
     private string nomeResponsavel = "Danylo Homologacao";
     private string mensagemCabecalho = "Campanha Homologacao";
-    private string[] nomesAtivos = { "Display de Chão", "Panfleto", "Ponta de gondola" };
+    private string[] nomesAtivos = { "Display de Chão", "Woobler", "Ponta de Gôndola" };
 
     public SmartIaPage(IWebDriver webDriver)
     {
