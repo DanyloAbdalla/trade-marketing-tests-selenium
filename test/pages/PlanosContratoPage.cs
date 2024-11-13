@@ -11,7 +11,7 @@ public class PlanosContratosPage
 {
     private IWebDriver webDriver;
     private string[] nomesAtivos = { "Adesivo de Check Out", "Ponta de Gôndola", "Woobler" };
-    private string[] abasPlano = { "Dados do Plano", "Ativos Alocados", "Preços Serviços", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria" };
+    private string[] abasPlano = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria" };
 
     public PlanosContratosPage(IWebDriver webDriver)
     {

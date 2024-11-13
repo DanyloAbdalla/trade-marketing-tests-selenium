@@ -5,8 +5,8 @@ public class GlobalVariables
 {
     #region Projeto
     public static bool handLessMode = false; //Executa o Browser em tela se false
-    public static bool devMode = true;
-    public static bool hmlMode = false;
+    public static bool devMode = false;
+    public static bool hmlMode = true;
     public static bool prodMode = false;
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
@@ -57,7 +57,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Novo Plano
-    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/span/input[@type='search']";
+    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
     public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div)[1]";
@@ -66,7 +66,7 @@ public class GlobalVariables
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//button/*[text()='Selecionar Ativos']";
-    public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas, Frete, Instalação e Elétrica']";
+    public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas']";
     public static string AlertaInventario { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
     public static string GerarPrePlano { get; set; } = "//button/*[text()='Gerar Pré-Plano']";
     public static string MensagensDadosPlano { get; set; } = "//*[@class='form-action'][2]/span[3]";
