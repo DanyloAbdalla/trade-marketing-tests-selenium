@@ -115,7 +115,7 @@ public class Dsl
     /// <param name="xpath"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static void EsperarElementoParaClicar(IWebDriver webDriver, string xpath, string nomeElemento)
+    public static void EsperarElementoParaClicar(IWebDriver webDriver, string XPath, string nomeElemento)
     {
         var fluentWait = new DefaultWait<IWebDriver>(webDriver)
         {
@@ -127,10 +127,28 @@ public class Dsl
 
         try
         {
-            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(xpath))).Click();
+            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
         }
-        catch (FormatException ex)
-        { throw new FormatException(ex.Message + nomeElemento); }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + nomeElemento); }
+    }
+
+    /// <summary>
+    /// Método para clicar em um elemento do campo
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="xpath"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static void Clicar(IWebDriver webDriver, string XPath, string nomeElemento)
+    {
+        try
+        {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
+            webDriver.FindElement(By.XPath(XPath)).Click();
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + nomeElemento); }
     }
 
     /// <summary>
@@ -143,7 +161,6 @@ public class Dsl
     {
         try
         {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
             IList<IWebElement> elements = webDriver.FindElements(By.XPath(XPath));
 
             return elements.Count > 0;

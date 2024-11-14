@@ -36,13 +36,11 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage PreencherCampoIndustria()
     {
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PesquisarIndustria, "Campo Indústria");
+        Dsl.Clicar(webDriver, GlobalVariables.CampoIndustria, "Campo Indústria");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustria);
 
         Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustria, "Campo Selecionar Indústria");
-
-        webDriver.FindElement(By.XPath(GlobalVariables.SelecionarIndustria)).Click();
 
         return this;
     }
@@ -82,7 +80,6 @@ public class PlanosContratosPage
         }
 
         /*webDriver.FindElement(By.XPath(GlobalVariables.OkFiltroAtivos)).Click();
-        webDriver.FindElement(By.XPath(GlobalVariables.SelecionarTodosAtivos)).Click();
         webDriver.FindElement(By.XPath(GlobalVariables.AplicarAtivos)).Click();*/
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.OkFiltroAtivos, "Botão OK Ativos Selecionados no Filtro");
@@ -98,9 +95,6 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage PreencherQuantidadeAtivos()
     {
-        if(Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.FecharDetalhamento) > 0)
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharDetalhamento, "Botão Fechar Detalhamento");
-
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
 
         foreach (var nomeAtivo in nomesAtivos)

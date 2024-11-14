@@ -44,7 +44,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de Página - Planos
-    public static string TabelaPlanos { get; set; } = "//table/tbody";
+    public static string TabelaPlanos { get; set; } = "//table/tbody/tr[2]";
     public static string FiltrarPlanoPorCampanha { get; set; } = "//thead//th[@title='Nome Campanha']//span[@role='button']";
     public static string PesquisarNomeCampanha { get; set; } = "//div[@class='ant-table-filter-dropdown']//input";
     public static string ColunaFimVigencia { get; set; } = "//*[text()='Fim Vigência']";
@@ -57,6 +57,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Novo Plano
+    public static string CampoIndustria { get; set; } = "//div[@label='Indústria']";
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
     public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
@@ -78,7 +79,7 @@ public class GlobalVariables
     public static string SelecionarAtivosFiltro { get; set; } = "//li[@class='ant-dropdown-menu-item']";
     public static string TabelaFiltro { get; set; } = "//div[@class='ant-table-filter-dropdown-btns']";
     public static string OkFiltroAtivos { get; set; } = "//button/*[text()='OK']";
-    public static string SelecionarTodosAtivos { get; set; } = "//*[contains(@style,'width: 60')]//div[@class='ant-modal-body']//div[@class='ant-table-wrapper']//th[1]//input[@class='ant-checkbox-input']";
+    public static string SelecionarTodosAtivos { get; set; } = "(//span[@class='ant-checkbox'])[1]";
     public static string ResetarFiltroAtivo { get; set; } = "//button/*[text()='Resetar']";
     public static string AplicarAtivos { get; set; } = "//*[contains(@style,'width: 60')]//button[@class='ant-btn ant-btn-primary']";
     #endregion
