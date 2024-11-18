@@ -28,7 +28,7 @@ public class HomePage
         webDriver.FindElement(By.XPath(GlobalVariables.CadastroPlanosContratos)).Click();
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.NovoRegistro);
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaPlanos);
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano");
 
         return new PlanosContratosPage(webDriver);
     }

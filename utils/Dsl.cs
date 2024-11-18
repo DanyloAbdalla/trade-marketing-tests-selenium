@@ -109,6 +109,31 @@ public class Dsl
     }
 
     /// <summary>
+    /// Método que espera o elemento ficar disponível para o click
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="xpath"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static void EsperarElementoFicarClicavel(IWebDriver webDriver, string XPath, string nomeElemento)
+    {
+        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
+        {
+            Timeout = TimeSpan.FromSeconds(30),
+            PollingInterval = TimeSpan.FromMilliseconds(500)
+        };
+
+        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+        try
+        {
+            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath)));
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + nomeElemento); }
+    }
+
+    /// <summary>
     /// Método que espera o elemento para receber o clique
     /// </summary>
     /// <param name="webDriver"></param>
@@ -134,7 +159,7 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para clicar em um elemento do campo
+    /// Método para clicar em um elemento
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="xpath"></param>
