@@ -65,7 +65,10 @@ public class GlobalVariables
     public static string AtivosVinculados {get; set; } = "(//tbody)[9]/tr[2]/td[9]/button";
     public static string DetalhesContratosAtivosTotalReceita {  get; set; } = "//*[contains(text(),'Total de Receita')]/following-sibling::div//button[1]";
     public static string TextoCardTotalReceita { get; set; } = "//div[@class='DashBoardCards']//*[contains(text(),'índice de Crescimento')]";
-    public static string DetalhesAterrissagemReceita {  get; set; } = "(//*[contains(text(),'Evolução Perfomance Receita')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesAterrissagemReceita {  get; set; } = "(//*[contains(text(),'Perfomance Receita')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesAterrissagemReceitaBandeira {  get; set; } = "(//*[contains(text(),'Receita Bandeira')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesAterrissagemReceitaTipoFornecedor {  get; set; } = "(//*[contains(text(),'Receita Tipo Fornecedor')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesListaParceiros {  get; set; } = "(//*[contains(text(),'Perfomance Parceiro)]/following-sibling::div//button[1])[1]";
     #endregion
 
     #region Elementos de Página - Planos

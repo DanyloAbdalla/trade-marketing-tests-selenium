@@ -88,7 +88,7 @@ public class DashboardOperacoesTest
     /// Dado que eu tenho acesso ao Dashboarde de Operações
     /// Quando acessar o Dashboard
     /// E clicar no botão "Visualizar Contratos Ativos" 
-    /// E clicar no botão "Visualizar Contratos Vencendo" 
+    /// E clicar no botão "Visualizar Contratos Vencendo" no card Contratos Vigentes 
     /// Então a tela será apresentada, mostrando os contratos ativos
     /// E os contratos vencendo
     /// </summary>
@@ -130,21 +130,31 @@ public class DashboardOperacoesTest
     /// Testar acesso aos detalhes da evolução da receita no Dashboard de Operações
     /// 
     /// Como gerente de loja
-    /// Eu quero acessar os detalhes do card Evolução Performance Receita no Dashboard de Operações
+    /// Eu quero acessar os detalhes do card Evolução Performance Receita
+    /// E acessar os detalhes do card Evolução Performance Receita Bandeira
+    /// E acessar os detalhes do card Evolução Performance Receita Tipo Fornecedor no Dashboard de Operações
     /// Para visualizar a evolução da receita para cada mês do ano
     /// 
     /// Dado que eu tenho acesso ao Dashboarde de Operações
     /// Quando acessar o Dashboard
     /// E clicar no botão "Visualizar Listagem de Aterrisagem Receita" no card Evolução Performance Receita
+    /// E clicar no botão "Visualizar Listagem de Aterrisagem Receita" no card Evolução Performance Receita Bandeira
+    /// E clicar no botão "Visualizar Listagem de Aterrisagem Receita" no card Evolução Performance Receita Tipo Fornecedor
     /// Então a tela será apresentada, mostrando a evolução da receita de cada mês do ano
     /// </summary>
     [Test, Order(5)]
     public void TestAcessarVisãoDetalhadaAterrissagemReceita()
     {
-        var contexto = "PerformanceReceita";
+        var cardReceita = "EvolucaoReceita";
+        var cardReceitaBandeira = "EvolucaoReceitaBandeira";
+        var cardReceitaTipoFornecedor = "EvolucaoReceitaTipoFornecedor";
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeAterrissagemReceita()
+        .AcessarDetalhesDeAterrissagemReceita(cardReceita)
+        .FecharDetalhes()
+        .AcessarDetalhesDeAterrissagemReceita(cardReceitaBandeira)
+        .FecharDetalhes()
+        .AcessarDetalhesDeAterrissagemReceita(cardReceitaTipoFornecedor)
         .FecharDetalhes();
     }
 

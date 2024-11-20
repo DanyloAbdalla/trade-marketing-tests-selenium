@@ -140,10 +140,24 @@ public class DashboardOperacoesPage
     /// Método para acessar a tela de Detalhes de Aterrissagem de Receita no card Evolução Performance Receita
     /// </summary>
     /// <returns></returns>
-    public DashboardOperacoesPage AcessarDetalhesDeAterrissagemReceita()
+    public DashboardOperacoesPage AcessarDetalhesDeAterrissagemReceita(string card)
     {
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardTotalReceita);
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceita, "Botão Visualizar Listagem de Aterrisagem Receita");
+        if (card.Contains("EvolucaoReceita"))
+        {
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardTotalReceita);
+            Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceita, "Botão Visualizar Listagem de Aterrisagem Receita");
+        }
+        else if (card.Contains("EvolucaoReceitaBandeira"))
+        {
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesListaParceiros);
+            Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaBandeira, "Botão Visualizar Listagem de Aterrisagem Receita");
+        }
+        else if (card.Contains("EvolucaoReceitaTipoFornecedor"))
+        {
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesListaParceiros);
+            Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaBandeira, "Botão Visualizar Listagem de Aterrisagem Receita");
+        }
+
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
 
         //Validando se a tabela é apresentada em tela
