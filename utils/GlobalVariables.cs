@@ -6,7 +6,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = false; //Executa o Browser em tela se false
+    public static bool handLessMode = true; //Executa e mostra o Browser na tela se false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -15,8 +15,6 @@ public class GlobalVariables
     public static string urlPrdPlataforma = "https://login.meucliente.app.br/";
     public static string emailUsuario = "homologacao@meucliente.app.br";
     public static string senhaUsuario = "Meucliente@hml@123";
-    
-    public static string nomeIndustria = "";
     #endregion
 
     #region Elementos de página - Elementos Comuns
@@ -24,10 +22,14 @@ public class GlobalVariables
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//button/*[text()='Salvar']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
-    public static string FecharPlano { get; set; } = "//button/*[text()='Fechar']";
+    public static string FecharTela { get; set; } = "//button/*[text()='Fechar']";
     public static string PreencherFiltro { get; set; } = "//*[@class='ant-table-filter-dropdown']//input";
     public static string BuscarRegistro { get; set; } = "//button/*[text()='Buscar']";
     public static string TabelaRegistros { get; set; } = "//tbody";
+    public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
+    public static string PrimeiraLinhaTabelaColuna1 {get; set; } = "(//tbody)[9]/tr[2]/td[1]";
+    public static string PrimeiraLinhaTabelaColuna2 {get; set; } = "(//tbody)[9]/tr[2]/td[2]";
+    public static string AvisoInexistenciaDados { get; set; } = "//*[text()='Não há dados']";
     #endregion
 
     #region Elementos de página - Login
@@ -39,10 +41,44 @@ public class GlobalVariables
     #region Elementos de página - HomePage
     public static string MenuPrincipal { get; set; } = "//header/div[1]/div[1]/div/div";
     public static string MenuVarejo { get; set; } = "//div/span[text()='Varejo']";
+    public static string MenuGestao { get; set; } = "//div/span[text()='Gestão']";
+    public static string DashboardOperacoes { get; set; } = "//div/span[text()='Dashboard Operação']";
     public static string MenuNegociacao { get; set; } = "//div/span[text()='Negociação']";
-    public static string MenuCadastros { get; set; } = "//div/span[text()='Cadastros']";
     public static string CadastroPlanosContratos { get; set; } = "//div/span[text()='Plano']";
+    public static string MenuCadastros { get; set; } = "//div/span[text()='Cadastros']";
     public static string CadastroSmartIa { get; set; } = "//div/span[text()='SmartIa']";
+    #endregion
+
+    #region Elemetos de Página - Dashboard de Operações
+    public static string TextoCardAtivosAlocados { get; set; } = "//div[@class='DashBoardCards']//*[contains(text(),'Índice de Aproveitamento')]";
+    public static string DetalhesLojasAtivas {  get; set; } = "//span[text()='Lojas Ativas']/following-sibling::div//button";
+    public static string TabelaListagemLojasAtivas {get; set; } = "(//tbody)[9]/tr";
+    public static string DetalhesDisponibilidadeAtivos {  get; set; } = "//*[contains(text(),'Ativos Alocados')]/following-sibling::div//button[1]";
+    public static string DetalhesNegociacaoAtivos {  get; set; } = "//*[contains(text(),'Ativos Alocados')]/following-sibling::div//button[2]";
+    public static string DetalhesPotencialReceitaAtivos {  get; set; } = "//*[contains(text(),'Ativos Alocados')]/following-sibling::div//button[3]";
+    public static string FiltrarAtivoPorNome { get; set; } = "//span[text()='Ativo']/following-sibling::span[@role='button']";
+    public static string FiltrarAtivoPorNomePotencialReceita { get; set; } = "//th[@aria-label='Nome']/div/span[@role='button']";
+    public static string ContratosVinculados {get; set; } = "(//tbody)[9]/tr[2]/td[10]/button";
+    public static string FecharTelaContratosEAtivosVinculados { get; set; } = "(//button/*[text()='Fechar'])[2]";
+    public static string DetalhesContratosAtivosContratosVigentes {  get; set; } = "//*[contains(text(),'Contratos Vigentes')]/following-sibling::div//button[1]";
+    public static string DetalhesContratosVencendo {  get; set; } = "//*[contains(text(),'Contratos Vigentes')]/following-sibling::div//button[2]";
+    public static string FiltrarContratoPorCampanha { get; set; } = "//span[text()='Contrato']/following-sibling::span[@role='button']";
+    public static string AtivosVinculados {get; set; } = "(//tbody)[9]/tr[2]/td[9]/button";
+    public static string DetalhesContratosAtivosTotalReceita {  get; set; } = "//*[contains(text(),'Total de Receita')]/following-sibling::div//button[1]";
+    public static string TextoCardTotalReceita { get; set; } = "//div[@class='DashBoardCards']//*[contains(text(),'índice de Crescimento')]";
+    public static string DetalhesAterrissagemReceita {  get; set; } = "(//*[contains(text(),'Perfomance Receita')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesAterrissagemReceitaPorBandeira {  get; set; } = "(//*[contains(text(),'Receita Bandeira')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesAterrissagemReceitaPorTipoFornecedor {  get; set; } = "(//*[contains(text(),'Receita Tipo Fornecedor')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesListaParceirosPerformance {  get; set; } = "(//*[contains(text(),'Perfomance Parceiro')]/following-sibling::div//button[1])[1]";
+    public static string FiltrarNegociacoes { get; set; } = "//button/span[text()='Filtrar']";
+    public static string DetalhesListaParceirosInvestimento {  get; set; } = "(//*[contains(text(),'Investimento por Parceiro')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesDesempenhoPorLoja {  get; set; } = "(//*[contains(text(),'Desempenho por Loja')]/following-sibling::div//button[1])[1]";
+    public static string GraficoDesempenhoLoja { get; set; } = "//*[@class='ant-modal-content']//*[@class='Chart']";
+    public static string FiltroDesempenhoLoja { get; set; } = "//*[@class='ant-modal-content']//*[text()='Maior Retorno']";
+    public static string DetalhesDesempenhoDosAtivos {  get; set; } = "(//*[contains(text(),'Desempenho de Ativos')]/following-sibling::div//button[1])[1]";
+    public static string GraficoDesempenhoAtivo { get; set; } = "//*[@class='ant-modal-content']//*[@class='Chart']";
+    public static string FiltroDesempenhoAtivo { get; set; } = "//*[@class='ant-modal-content']//*[text()='Maior Retorno']";
+    public static string TextoCardMaisVendidosDepartamento { get; set; } = "//*[text()='Mais vendidos do Departamento']";
     #endregion
 
     #region Elementos de Página - Planos
