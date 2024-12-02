@@ -6,7 +6,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se a variável for = false
+    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se a variável for = false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -18,7 +18,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Elementos Comuns
-    public static string Mensagens { get; set; } = "//*[@class='ant-message']//*[@class='ant-message-notice']";
+    public static string Mensagens { get; set; } = "//*[@class='ant-message-notice']";
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//button/*[text()='Salvar']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";

@@ -424,7 +424,7 @@ public class PlanosContratosPage
 
             var mensagemAlertaParcelaAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.Mensagens, "Mensagem Parcela Pagamentos");
             ValidarMensagemDeSucessoEAlerta(mensagemAlertaParcelaAtual, mensagemAlertaParcelaEsperado);
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.Mensagens);
+            Thread.Sleep(3000);
 
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarRegistro);
 

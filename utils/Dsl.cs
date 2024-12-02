@@ -27,7 +27,7 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <exception cref="Exception"></exception>
-    public static void EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath)
+    public static bool EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
         var fluentWait = new DefaultWait<IWebDriver>(webDriver)
         {
@@ -43,6 +43,8 @@ public class Dsl
         }
         catch (WebDriverTimeoutException)
         { Console.WriteLine("O elemento não foi localizado na página"); }
+
+        return false;
     }
 
     /// <summary>
@@ -67,7 +69,6 @@ public class Dsl
         }
         catch (WebDriverTimeoutException)
         { Console.WriteLine("O elemento não foi localizado na página"); }
-
     }
 
     /// <summary>
@@ -437,7 +438,7 @@ public class Dsl
             {
                 var texto = ObterDadosDoAtributoValueDoElemento(webDriver, XPath, nomeElemento);
                 var textoTratado = Regex.Replace(texto, @"[a-zA-Z\s:$]", "");
-                
+
                 if (int.TryParse(textoTratado, out int numeroInteiro))
                     retorno = numeroInteiro;
                 else if (double.TryParse(textoTratado, out double numeroDecimal))
