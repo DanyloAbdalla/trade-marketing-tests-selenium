@@ -3,6 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using OpenQA.Selenium.Interactions;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace MeuClienteWebTestProject;
 
@@ -171,7 +172,7 @@ public class Dsl
         try
         {
             var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
-            
+
             return textoElemento;
         }
         catch (Exception ex)
@@ -306,12 +307,16 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <returns>Retorna os dados contidos no atributo como uma string</returns>
-    public static string ObterDadosDoAtributoValueDoElemento(IWebDriver webDriver, string XPath)
+    public static string ObterDadosDoAtributoValueDoElemento(IWebDriver webDriver, string XPath, string nomeElemento)
     {
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
-        var dados = webDriver.FindElement(By.XPath(XPath)).GetAttribute("value");
-
-        return dados;
+        try
+        {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
+            var dados = webDriver.FindElement(By.XPath(XPath)).GetAttribute("value");
+            return dados;
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + nomeElemento); }
     }
 
     /// <summary>
@@ -387,14 +392,14 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna o texto somente com letras maiúsculas e minúsculas</returns>
-    public static string RemoverNumerosEspacosDeUmTexto(IWebDriver webDriver, string XPath)
+    /// <returns>Retorna o texto somente com letras maiúsculas ou minúsculas</returns>
+    public static string RemoverNumerosEspacosDeUmTexto(IWebDriver webDriver, string XPath, string nomeElemento)
     {
         try
         {
             EsperarVisibilidadeDoElemento(webDriver, XPath);
 
-            var texto = webDriver.FindElement(By.XPath(XPath)).Text;
+            var texto = PegarTextoDoElemento(webDriver, XPath, nomeElemento);
             var textoTratado = Regex.Replace(texto, @"[\d\s:]", "");
 
             if (textoTratado.Any(char.IsLetter) || textoTratado.Any(char.IsPunctuation))
@@ -414,26 +419,48 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para remover lestras maiúsculas, minúsculas e espaços em branco de um texto
+    /// Método para remover lestras maiúsculas, minúsculas, caracteres especiais e espaços em branco de um valor numérico int ou double
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna os números dentro de um texto</returns>
-    public static int RemoverLetrasEspacosDeUmTexto(IWebDriver webDriver, string XPath)
+    /// <param name="nomeElemento"></param>
+    /// <param name="captura">0 - atributo valor OU 1 - texto no elemento</param>
+    /// <returns>Retorna o valor numérico</returns>
+    public static object RemoverLetrasEspacosDeUmTexto(IWebDriver webDriver, string XPath, string nomeElemento, int captura)
     {
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
-
-        var texto = webDriver.FindElement(By.XPath(XPath)).Text;
-        var textoTratado = Regex.Replace(texto, @"[a-zA-Z\s:]", "");
-
-        if (int.TryParse(textoTratado, out int numero))
+        object retorno = null;
+        try
         {
-            return numero;
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
+
+            if (captura == 0)
+            {
+                var texto = ObterDadosDoAtributoValueDoElemento(webDriver, XPath, nomeElemento);
+                var textoTratado = Regex.Replace(texto, @"[a-zA-Z\s:$]", "");
+                
+                if (int.TryParse(textoTratado, out int numeroInteiro))
+                    retorno = numeroInteiro;
+                else if (double.TryParse(textoTratado, out double numeroDecimal))
+                    retorno = numeroDecimal;
+                else
+                    throw new FormatException("A string não tem um número válido");
+            }
+            else if (captura == 1)
+            {
+                var texto = PegarTextoDoElemento(webDriver, XPath, nomeElemento);
+                var textoTratado = Regex.Replace(texto, @"[a-zA-Z\s:$]", "");
+
+                if (int.TryParse(textoTratado, out int numeroInteiro))
+                    retorno = numeroInteiro;
+                else if (double.TryParse(textoTratado, out double numeroDecimal))
+                    retorno = numeroDecimal;
+                else
+                    throw new FormatException("A string não tem um número válido");
+            }
+            return retorno;
         }
-        else
-        {
-            throw new FormatException("A string não tem um número válido");
-        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + nomeElemento); }
     }
 
     /// <summary>
@@ -448,15 +475,40 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para validar mensagens de sucesso e mensagens de alertas em telas
+    /// Método para validar textos dentro de um elemento
     /// </summary>
-    /// <param name="mensagemAtual"></param>
-    /// <param name="mensagemEsperada"></param>
-    /// <returns></returns>
-    public static void ValidarTextosNoElemento(IWebDriver webDriver, string XPath, string textoEsperado)
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <param name="textoEsperado"></param>
+    /// <param name="elementoCampo"></param>
+    public static void ValidarTextosNoElemento(IWebDriver webDriver, string XPath, string textoEsperado, string elementoCampo)
     {
-        var textoAtual = PegarTextoDoElemento(webDriver, XPath, "Coluna Ativo");
-        Assert.That(textoAtual, Does.Contain(textoEsperado), "Nome do ativo não corresponde a busca");
+        var textoAtual = RemoverNumerosEspacosDeUmTexto(webDriver, XPath, elementoCampo);
+        Assert.That(textoAtual, Does.Contain(textoEsperado), "Textos não correspondem");
+    }
+
+    /// <summary>
+    /// Método para validar valor inteiro ou valor decimal dentro de um elemento
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <param name="numeroEsperado"></param>
+    /// <param name="elementoCampo"></param>
+    public static void ValidarNumerosNoElemento(IWebDriver webDriver, string XPath, object numeroEsperado, string elementoCampo)
+    {
+        object numeroAtual = RemoverLetrasEspacosDeUmTexto(webDriver, XPath, elementoCampo, 0);
+        if (numeroAtual is int)
+        {
+            int valorAtual = (int)numeroAtual;
+            int valorEsperado = (int)numeroEsperado;
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem: ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
+        }
+        else if (numeroAtual is double)
+        {
+            double valorAtual = (double)numeroAtual;
+            double valorEsperado = (double)numeroEsperado;
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem: ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
+        }
     }
 
     /// <summary>

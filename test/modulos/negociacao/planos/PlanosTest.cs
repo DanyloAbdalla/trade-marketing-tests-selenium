@@ -50,6 +50,7 @@ public class PlanosTest
     {
         var statusPlanoEsperado = "Simulado";
         var farolPlanoEsperado = "PLANEJADO";
+        var contexto = "NovoPlano";
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
@@ -59,7 +60,7 @@ public class PlanosTest
         .PreencherQuantidadeAtivos()
         .SelecionarLojas()
         .GerarPrePlano()
-        .SalvarPlano()
+        .SalvarPlano(contexto)
         .ValidarPlanoCriado()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
@@ -80,7 +81,7 @@ public class PlanosTest
     /// Então um o plano será salvo com a nova vigência
     /// </summary>
     [Test, Order(2)]
-    public void TestEditarVigenciaNoPlanoExistente()
+    public void TestEditarPlanoExistenteAlterandoVigencia()
     {
         var contexto = "EditarPlano";
 
@@ -108,14 +109,16 @@ public class PlanosTest
     /// Então o plano será salvo com sucesso com a nova quantidade
     /// </summary>
     [Test, Order(3)]
-    public void TestEditarAtivoDisponivelAlocadoNoPlanoExistente()
+    public void TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel()
     {
+        var contexto = "EditarPlanoAlterandoAtivo";
+
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
         .EditarQuantidadesDosAtivosNoPlano()
-        .SalvarPlano()
+        .SalvarPlano(contexto)
         .FecharDadosDoPlano();
     }
 
@@ -133,16 +136,17 @@ public class PlanosTest
     /// Então o plano será salvo com sucesso com o novo ativo
     /// </summary>
     [Test, Order(4)]
-    public void TestIncluirNovoAtivoDisponivelNoPlanoExistente()
+    public void TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel()
     {
         var nomeAtivo = "Cestão 01 - ";
+        var contexto = "EditarPlanoIncluindoAtivo";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
         .AlocarNovosAtivosNoPlano(nomeAtivo)
-        .SalvarPlano()
+        .SalvarPlano(contexto)
         .FecharDadosDoPlano();
     }
 

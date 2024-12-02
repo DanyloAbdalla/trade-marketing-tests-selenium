@@ -6,14 +6,14 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = true; //Executa e mostra o Browser na tela se false
+    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se a variável for = false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
     public static string urlPrdPlataforma = "https://login.meucliente.app.br/";
-    public static string emailUsuario = "homologacao@meucliente.app.br";
+    public static string emailUsuario = "homologacao.sp@meucliente.app.br";
     public static string senhaUsuario = "Meucliente@hml@123";
     #endregion
 
@@ -136,6 +136,8 @@ public class GlobalVariables
     public static string InicioVigenciaEditarPlano { get; set; } = "//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div";
     public static string FimVigenciaEditarPlano { get; set; } = "//form[@class='ant-form ant-form-vertical']//div[6]//div[contains(@class,'date-picker')]/div";
     public static string AvancarCalendarioMes { get; set; } = "//*[contains(@class,'header-next-btn')]";
+    public static string ReceitaAtivos { get; set; } = "//*[@name='VendaCalculada']";
+    public static string ReceitaPlano { get; set; } = "//*[@name='ValorTotalContrato']";
     public static string TipoCampanha { get; set; } = "//*[@name='SubTipoFornecedorId']";
     public static string SelecionarTipoCampanha { get; set; } = "//*[text()='Tipo Campanha 01']";
     public static string QuantidadeParcelas { get; set; } = "//*[@name='QuantidadeParcelas']";
