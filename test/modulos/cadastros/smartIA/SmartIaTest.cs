@@ -21,8 +21,8 @@ public class SmartIaTest
         webDriver = DriverFactory.CreateDriver(browserType);
 
         new LoginPage(webDriver)
-        .PreencherEmailUsuario(GlobalVariables.emailUsuario)
-        .PreencherSenhaUsuario(GlobalVariables.senhaUsuario)
+        .PreencherEmailUsuario(GlobalVariables.emailUsuarioSemPlanta)
+        .PreencherSenhaUsuario(GlobalVariables.senhaUsuarioSemPlanta)
         .SubmeterLogin();
 
         new HomePage(webDriver)

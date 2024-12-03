@@ -224,34 +224,6 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para contar quantas vezes o elemento existe em um modal
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
-    /// <exception cref="Exception"></exception>
-    public static long ContarExistenciaDoElementoEmModal(IWebDriver webDriver, string XPathModal, string XPathElement)
-    {
-        try
-        {
-            EsperarVisibilidadeDoElemento(webDriver, XPathModal);
-
-            // Definindo o script JavaScript usando XPath para consultar os elementos
-            string script = $@"
-                var xpath = ""{XPathElement.Replace("\"", "\\\"")}"";
-                var elements = document.evaluate(xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                return elements.snapshotLength;";
-
-            // Executando o script JavaScript para contar os elementos
-            IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
-            long elementCount = (long)jsExecutor.ExecuteScript(script);
-
-            return elementCount;
-        }
-        catch (WebDriverTimeoutException ex)
-        { throw new WebDriverTimeoutException(ex.Message); }
-    }
-
-    /// <summary>
     /// Método para realizar scroll até um elemento específico
     /// </summary>
     /// <param name="webDriver"></param>

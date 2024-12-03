@@ -13,8 +13,10 @@ public class GlobalVariables
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
     public static string urlPrdPlataforma = "https://login.meucliente.app.br/";
-    public static string emailUsuario = "homologacao.sp@meucliente.app.br";
-    public static string senhaUsuario = "Meucliente@hml@123";
+    public static string emailUsuarioSemPlanta = "homologacao.sp@meucliente.app.br";
+    public static string senhaUsuarioSemPlanta = "Meucliente@hml@123";
+    public static string emailUsuarioComPlanta = "homologacao.cp@meucliente.app.br";
+    public static string senhaUsuarioComPlanta = "Meucliente@hml@123";
     #endregion
 
     #region Elementos de página - Elementos Comuns
@@ -25,7 +27,6 @@ public class GlobalVariables
     public static string FecharTela { get; set; } = "//button/*[text()='Fechar']";
     public static string PreencherFiltro { get; set; } = "//*[@class='ant-table-filter-dropdown']//input";
     public static string BuscarRegistro { get; set; } = "//button/*[text()='Buscar']";
-    public static string TabelaRegistros { get; set; } = "//tbody";
     public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
     public static string PrimeiraLinhaTabelaColuna1 {get; set; } = "(//tbody)[9]/tr[2]/td[1]";
     public static string PrimeiraLinhaTabelaColuna2 {get; set; } = "(//tbody)[9]/tr[2]/td[2]";
@@ -155,7 +156,7 @@ public class GlobalVariables
 
     #region Elementos de página - Planos - Ativos Alocados
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
-    public static string TabelaAtivosAlocados { get; set; } = "//div[@class='ant-modal-content']//tbody";
+    public static string TabelaAtivosPlano { get; set; } = "//div[@class='ant-modal-content']//tbody";
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados - Editar Alocação do Ativo por Loja

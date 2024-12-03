@@ -5,12 +5,19 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes para o Cadastro de Planos\Contratos
 /// </summary>
-[TestFixture]
+[TestFixture("SemPlantaLoja")]
+[TestFixture("ComPlantaLoja")]
 public class PlanosTest
 {
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
     private string nomeCampanha = "MassaAutomatizada";
+    private string contextoDeTeste = "";
+
+    public PlanosTest(string contextoDeTeste)
+    {
+        this.contextoDeTeste = contextoDeTeste;
+    }
 
     /// <summary>
     /// Método que será executado antes de cada teste
@@ -20,13 +27,26 @@ public class PlanosTest
     {
         webDriver = DriverFactory.CreateDriver(browserType);
 
-        new LoginPage(webDriver)
-        .PreencherEmailUsuario(GlobalVariables.emailUsuario)
-        .PreencherSenhaUsuario(GlobalVariables.senhaUsuario)
-        .SubmeterLogin();
+        if (contextoDeTeste.Contains("SemPlantaLoja"))
+        {
+            new LoginPage(webDriver)
+            .PreencherEmailUsuario(GlobalVariables.emailUsuarioSemPlanta)
+            .PreencherSenhaUsuario(GlobalVariables.senhaUsuarioSemPlanta)
+            .SubmeterLogin();
 
-        new HomePage(webDriver)
-        .AcessarCadastroPlanos();
+            new HomePage(webDriver)
+            .AcessarCadastroPlanos();
+        }
+        else if (contextoDeTeste.Contains("ComPlantaLoja"))
+        {
+            new LoginPage(webDriver)
+            .PreencherEmailUsuario(GlobalVariables.emailUsuarioComPlanta)
+            .PreencherSenhaUsuario(GlobalVariables.senhaUsuarioComPlanta)
+            .SubmeterLogin();
+
+            new HomePage(webDriver)
+            .AcessarCadastroPlanos();
+        }
     }
 
     /// <summary>
@@ -50,17 +70,17 @@ public class PlanosTest
     {
         var statusPlanoEsperado = "Simulado";
         var farolPlanoEsperado = "PLANEJADO";
-        var contexto = "NovoPlano";
+        var contextoDeExecucao = "NovoPlano";
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
         .SelecionarAtivos()
-        .PreencherQuantidadeAtivos()
+        .PreencherQuantidadeAtivos(contextoDeTeste)
         .SelecionarLojas()
         .GerarPrePlano()
-        .SalvarPlano(contexto)
+        .SalvarPlano(contextoDeExecucao, contextoDeTeste)
         .ValidarPlanoCriado()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
@@ -83,13 +103,13 @@ public class PlanosTest
     [Test, Order(2)]
     public void TestEditarPlanoExistenteAlterandoVigencia()
     {
-        var contexto = "EditarPlano";
+        var contextoDeExecucao = "EditarPlano";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .EditarInicioVigencia(contexto)
-        .EditarFimVigencia(contexto)
+        .EditarInicioVigencia(contextoDeExecucao)
+        .EditarFimVigencia(contextoDeExecucao)
         .SalvarPlano()
         .FecharDadosDoPlano();
     }
@@ -111,14 +131,14 @@ public class PlanosTest
     [Test, Order(3)]
     public void TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel()
     {
-        var contexto = "EditarPlanoAlterandoAtivo";
+        var contextoDeExecucao = "EditarPlanoAlterandoAtivo";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
         .EditarQuantidadesDosAtivosNoPlano()
-        .SalvarPlano(contexto)
+        .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano();
     }
 
@@ -139,14 +159,14 @@ public class PlanosTest
     public void TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel()
     {
         var nomeAtivo = "Cestão 01 - ";
-        var contexto = "EditarPlanoIncluindoAtivo";
+        var contextoDeExecucao = "EditarPlanoIncluindoAtivo";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
         .AlocarNovosAtivosNoPlano(nomeAtivo)
-        .SalvarPlano(contexto)
+        .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano();
     }
 
@@ -197,16 +217,16 @@ public class PlanosTest
     [Test, Order(6)]
     public void TestCriarPlanoComAlertaDeInventario()
     {
-        var contexto = "NovoPlano";
+        var contextoDeExecucao = "NovoPlano";
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
-        .EditarInicioVigencia(contexto)
-        .EditarFimVigencia(contexto)
+        .EditarInicioVigencia(contextoDeExecucao)
+        .EditarFimVigencia(contextoDeExecucao)
         .SelecionarAtivos()
-        .PreencherQuantidadeAtivos()
+        .PreencherQuantidadeAtivos(contextoDeTeste)
         .SelecionarLojas()
         .ValidarAlertaInventario()
         .FecharDadosDoPlano();
@@ -231,13 +251,13 @@ public class PlanosTest
         var situacaoPlano = "Cancelado";
         var statusPlanoEsperado = "Cancelado";
         var farolPlanoEsperado = "CANCELADO";
-        var contexto = "CancelarPlano";
+        var contextoDeExecucao = "CancelarPlano";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .EditarSituacaoDoPlano(situacaoPlano)
-        .SalvarPlano(contexto)
+        .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
