@@ -89,8 +89,10 @@ public class GlobalVariables
     public static string ColunaFimVigencia { get; set; } = "//*[text()='Fim Vigência']";
     public static string StatusPlano { get; set; } = "//tbody/tr[2]/td[6]";
     public static string FarolPlano { get; set; } = "//tbody/tr[2]/td[7]/div";
-    public static string EditarPlano { get; set; } = "//tbody/tr[2]/td[23]/div[1]/button[1]";
-    public static string ExcluirPlano { get; set; } = "//table/tbody/tr[2]/td[23]/div//button//*[@aria-label='delete']";
+    //public static string EditarPlano { get; set; } = "//tbody/tr[2]/td[24]/div[1]/button[1]";
+    //public static string ExcluirPlano { get; set; } = "//table/tbody/tr[2]/td[24]/div//button//*[@aria-label='delete']";
+    public static string EditarPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='zoom-in']";
+    public static string ExcluirPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='delete']";
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
     public static string OkExclusao { get; set; } = "//*[text()='OK']";
     #endregion

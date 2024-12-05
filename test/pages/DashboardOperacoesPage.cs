@@ -9,7 +9,8 @@ namespace MeuClienteWebTestProject;
 public class DashboardOperacoesPage
 {
     private IWebDriver webDriver;
-    private string nomeAtivo = "AdesivodeCheckOut";
+    private string nomeAtivo = "Adesivo de Check Out";
+    private string nomeAtivoEsperado = "AdesivodeCheckOut";
     private string nomeCampanha = "CampanhaInd04NF";
 
     public DashboardOperacoesPage(IWebDriver webDriver)
@@ -45,7 +46,7 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Thread.Sleep(3000);
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivo, "Coluna Ativo");
+        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivoEsperado, "Coluna Ativo");
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -61,7 +62,7 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Thread.Sleep(3000);
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivo, "Coluna Ativo");
+        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivoEsperado, "Coluna Ativo");
 
         Dsl.Clicar(webDriver, GlobalVariables.ContratosVinculados, "Botão Visualizar Contratos Vinculados");
         Dsl.Clicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Contratos Vinculados");
@@ -81,7 +82,7 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNomePotencialReceita, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Thread.Sleep(3000);
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivo, "Coluna Ativo");
+        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivoEsperado, "Coluna Ativo");
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -104,7 +105,7 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeCampanha);
         Thread.Sleep(2000);
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeCampanha, "Coluna Indústria");
+        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeCampanha, "Coluna Contrato");
 
         Dsl.Clicar(webDriver, GlobalVariables.AtivosVinculados, "Botão Visualizar Ativos Vinculados");
         Dsl.Clicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
