@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace MeuClienteWebTestProject;
@@ -158,7 +157,7 @@ public class PlanosContratosPage
     {
         var contadorAbaPlano = 1;
 
-        Dsl.Esperar1Segundo();
+        Dsl.Esperar();
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
 
         foreach (var abaPlano in abasPlano)
@@ -288,12 +287,12 @@ public class PlanosContratosPage
     public PlanosContratosPage FecharDadosDoPlano()
     {
         Dsl.Clicar(webDriver, GlobalVariables.FecharTela, "Botão Fechar Plano");
-        Dsl.Esperar1Segundo();
+        Dsl.Esperar();
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.FecharPlanoConfirmacao) > 0)
             Dsl.Clicar(webDriver, GlobalVariables.FecharPlanoConfirmacao, "Botão Confirmar Fechar Plano");
 
-        Dsl.Esperar1Segundo();
+        Dsl.Esperar();
 
         return this;
     }
@@ -314,7 +313,7 @@ public class PlanosContratosPage
             Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
 
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
-            Dsl.Esperar1Segundo();
+            Dsl.Esperar();
             var qtdAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo", 1); //Descobrindo a quantidade de lojas no plano para o ativo alocado
 
             int qtd = (int)qtdAtivosAlocadosLoja;
@@ -360,7 +359,7 @@ public class PlanosContratosPage
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarAtivoAlocacao);
         Dsl.Clicar(webDriver, GlobalVariables.SelecionarAtivoAlocacao, "Campo Selecionar Ativo");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
-        Dsl.Esperar1Segundo();
+        Dsl.Esperar();
 
         AumentarQuantidadeAtivosPorLoja();
 
@@ -369,7 +368,7 @@ public class PlanosContratosPage
 
         var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Alocação Ativo");
         Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
-        Dsl.Esperar1Segundo();
+        Dsl.Esperar();
 
         return this;
     }
@@ -492,7 +491,7 @@ public class PlanosContratosPage
             var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.Mensagens, "Mensagem Excluir Plano");
             ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
 
-            Dsl.Esperar1Segundo();
+            Dsl.Esperar();
         }
         return this;
     }

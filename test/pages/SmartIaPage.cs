@@ -39,7 +39,7 @@ public class SmartIaPage
     /// <returns></returns>
     public SmartIaPage PreencherCamposCampanha()
     {
-        Dsl.Esperar1Segundo();
+        Dsl.Esperar();
         webDriver.FindElement(By.XPath(GlobalVariables.Campanhas)).Click();
 
         CarregarImagemCampanha();

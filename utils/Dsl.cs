@@ -16,9 +16,9 @@ public class Dsl
     /// <summary>
     /// Método com uma espera padrão de 1 segundo
     /// </summary>
-    public static void Esperar1Segundo()
+    public static void Esperar(int time = 1000)
     {
-        Thread.Sleep(1000);
+        Thread.Sleep(time);
     }
 
     /// <summary>
@@ -72,46 +72,6 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para digitar nos elementos campos de texto que possuem lista de registros
-    /// Filtrando os registros conforme o campo é preenchido
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
-    /// <exception cref="Exception"></exception>
-    public static void DigitarNoCampoTextoComboList(IWebDriver webDriver, string XPath, string textoValor)
-    {
-        try
-        {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
-
-            for (int i = 0; i < textoValor.Length; i++)
-            {
-                webDriver.FindElement(By.XPath(XPath)).SendKeys(textoValor[i].ToString());
-            }
-        }
-        catch (Exception ex)
-        { throw new Exception(ex.Message); }
-    }
-
-    /// <summary>
-    /// Método para digitar nos elementos campos de texto
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
-    /// <exception cref="Exception"></exception>
-    public static void DigitarNoCampoTexto(IWebDriver webDriver, string XPath, string textoValor)
-    {
-        try
-        {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
-            Actions action = new Actions(webDriver);
-            action.SendKeys(webDriver.FindElement(By.XPath(XPath)), textoValor).Perform();
-        }
-        catch (Exception ex)
-        { throw new Exception(ex.Message); }
-    }
-
-    /// <summary>
     /// Método que espera o elemento ficar disponível para o click
     /// </summary>
     /// <param name="webDriver"></param>
@@ -140,7 +100,8 @@ public class Dsl
     /// Método que espera o elemento para receber o clique
     /// </summary>
     /// <param name="webDriver"></param>
-    /// <param name="xpath"></param>
+    /// <param name="XPath"></param>
+    /// <param name="nomeElemento"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     public static void EsperarElementoParaClicar(IWebDriver webDriver, string XPath, string nomeElemento)
@@ -156,25 +117,6 @@ public class Dsl
         try
         {
             fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
-        }
-        catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + nomeElemento); }
-    }
-
-    /// <summary>
-    /// Método que espera até que um texto específico seja apresentado no elemento
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="xpath"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public static string PegarTextoDoElemento(IWebDriver webDriver, string XPath, string nomeElemento)
-    {
-        try
-        {
-            var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
-
-            return textoElemento;
         }
         catch (Exception ex)
         { throw new Exception(ex.Message + "\n" + nomeElemento); }
@@ -224,18 +166,22 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para realizar scroll até um elemento específico
+    /// Método que espera até que um texto específico seja apresentado no elemento
     /// </summary>
     /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
-    public static void ScrollParaElemento(IWebDriver webDriver, string XPath)
+    /// <param name="xpath"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static string PegarTextoDoElemento(IWebDriver webDriver, string XPath, string nomeElemento)
     {
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
+        try
+        {
+            var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
 
-        IWebElement webElement = webDriver.FindElement(By.XPath(XPath));
-
-        Actions action = new Actions(webDriver);
-        action.MoveToElement(webElement).Perform();
+            return textoElemento;
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + nomeElemento); }
     }
 
     /// <summary>
@@ -279,6 +225,7 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
+    /// <param name="nomeElemento"></param>
     /// <returns>Retorna os dados contidos no atributo como uma string</returns>
     public static string ObterDadosDoAtributoValueDoElemento(IWebDriver webDriver, string XPath, string nomeElemento)
     {
@@ -290,6 +237,46 @@ public class Dsl
         }
         catch (Exception ex)
         { throw new Exception(ex.Message + "\n" + nomeElemento); }
+    }
+
+    /// <summary>
+    /// Método para digitar nos elementos campos de texto que possuem lista de registros
+    /// Filtrando os registros conforme o campo é preenchido
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <exception cref="Exception"></exception>
+    public static void DigitarNoCampoTextoComboList(IWebDriver webDriver, string XPath, string textoValor)
+    {
+        try
+        {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
+
+            for (int i = 0; i < textoValor.Length; i++)
+            {
+                webDriver.FindElement(By.XPath(XPath)).SendKeys(textoValor[i].ToString());
+            }
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message); }
+    }
+
+    /// <summary>
+    /// Método para digitar nos elementos campos de texto
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <exception cref="Exception"></exception>
+    public static void DigitarNoCampoTexto(IWebDriver webDriver, string XPath, string textoValor)
+    {
+        try
+        {
+            EsperarVisibilidadeDoElemento(webDriver, XPath);
+            Actions action = new Actions(webDriver);
+            action.SendKeys(webDriver.FindElement(By.XPath(XPath)), textoValor).Perform();
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message); }
     }
 
     /// <summary>
@@ -457,7 +444,7 @@ public class Dsl
     public static void ValidarTextosNoElemento(IWebDriver webDriver, string XPath, string textoEsperado, string elementoCampo)
     {
         var textoAtual = RemoverNumerosEspacosDeUmTexto(webDriver, XPath, elementoCampo);
-        Assert.That(textoAtual, Does.Contain(textoEsperado), "Textos não correspondem");
+        Assert.That(textoAtual, Does.Contain(textoEsperado), "Textos não correspondem - TextoAtual: " + textoAtual + " TextoEsperado: " + textoEsperado);
     }
 
     /// <summary>
@@ -474,16 +461,16 @@ public class Dsl
         {
             int valorAtual = (int)numeroAtual;
             int valorEsperado = (int)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem: ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem - ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
         }
         else if (numeroAtual is double)
         {
             double valorAtual = (double)numeroAtual;
             double valorEsperado = (double)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem: ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
         }
     }
-
+    
     /// <summary>
     /// Método para buscar registros dentro do grid das telas
     /// </summary>
@@ -494,12 +481,27 @@ public class Dsl
     /// <param name="textoValor"></param>
     public static void BuscarRegistros(IWebDriver webDriver, string xPathFiltrar, string xPathPesquisar, string xPathBuscar, string textoValor)
     {
-        Esperar1Segundo();
+        Esperar();
         Clicar(webDriver, xPathFiltrar, "Botão Filtrar Plano");
         webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(Keys.Control + "a" + Keys.Backspace);
         DigitarNoCampoTexto(webDriver, xPathPesquisar, textoValor);
         Clicar(webDriver, xPathBuscar, "Botão Buscar Plano");
 
         Thread.Sleep(1000);
+    }
+
+    /// <summary>
+    /// Método para realizar scroll até um elemento específico
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    public static void ScrollParaElemento(IWebDriver webDriver, string XPath)
+    {
+        EsperarVisibilidadeDoElemento(webDriver, XPath);
+
+        IWebElement webElement = webDriver.FindElement(By.XPath(XPath));
+
+        Actions action = new Actions(webDriver);
+        action.MoveToElement(webElement).Perform();
     }
 }

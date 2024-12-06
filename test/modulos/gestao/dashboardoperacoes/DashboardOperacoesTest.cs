@@ -229,6 +229,6 @@ public class DashboardOperacoesTest
     /// </summary>
     [TearDown]
     public void TearDown()
-    { Dsl.Esperar1Segundo(); webDriver.Close(); System.Diagnostics.Process.Start("taskkill_chromedriver.bat"); }
+    { Dsl.Esperar(); webDriver.Close(); System.Diagnostics.Process.Start("taskkill_chromedriver.bat"); }
 
 }

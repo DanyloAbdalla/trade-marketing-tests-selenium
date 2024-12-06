@@ -1,6 +1,4 @@
 
-using System.Runtime.InteropServices;
-
 namespace MeuClienteWebTestProject;
 
 public class GlobalVariables

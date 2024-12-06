@@ -105,7 +105,10 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeCampanha);
         Thread.Sleep(2000);
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeCampanha, "Coluna Contrato");
+        var contratoAtual = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, "Coluna Contrato");
+        var contratoEsperado = nomeCampanha;
+        Assert.That(contratoAtual, Does.Contain(contratoEsperado), "Contratos não correspondem");
+        //Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeCampanha, "Coluna Contrato");
 
         Dsl.Clicar(webDriver, GlobalVariables.AtivosVinculados, "Botão Visualizar Ativos Vinculados");
         Dsl.Clicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
