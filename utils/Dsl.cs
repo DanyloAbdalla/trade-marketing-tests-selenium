@@ -55,20 +55,19 @@ public class Dsl
     /// <exception cref="WebDriverTimeoutException"></exception>
     public static void EsperarInvisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(500)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+        bool isDisplayed;
 
         try
         {
-            fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)));
+            do
+            {
+                IWebElement element = webDriver.FindElement(By.XPath(XPath));
+                IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
+                isDisplayed = (bool)jsExecutor.ExecuteScript("return arguments[0].offsetParent !== null;", element);
+            } while (!isDisplayed);
         }
-        catch (WebDriverTimeoutException)
-        { Console.WriteLine("O elemento não foi localizado na página"); }
+        catch (Exception)
+        { Console.WriteLine("Erro ao processar a invisibilidade do elemento"); }
     }
 
     /// <summary>
@@ -120,6 +119,17 @@ public class Dsl
         }
         catch (Exception ex)
         { throw new Exception(ex.Message + "\n" + nomeElemento); }
+    }
+
+    /// <summary>
+    /// Método para aguardar o load da tela
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="xpath"></param>*
+    public static void EsperarLoadDaTela(IWebDriver webDriver, string xpath)
+    {
+        EsperarVisibilidadeDoElemento(webDriver, xpath);
+        EsperarInvisibilidadeDoElemento(webDriver, xpath);
     }
 
     /// <summary>
@@ -470,7 +480,7 @@ public class Dsl
             Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
         }
     }
-    
+
     /// <summary>
     /// Método para buscar registros dentro do grid das telas
     /// </summary>
@@ -504,4 +514,6 @@ public class Dsl
         Actions action = new Actions(webDriver);
         action.MoveToElement(webElement).Perform();
     }
+
+
 }

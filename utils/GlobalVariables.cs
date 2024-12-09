@@ -1,10 +1,12 @@
 
+using System.Security;
+
 namespace MeuClienteWebTestProject;
 
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se a variável for = false
+    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se a variável for = false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -29,6 +31,7 @@ public class GlobalVariables
     public static string PrimeiraLinhaTabelaColuna1 {get; set; } = "(//tbody)[9]/tr[2]/td[1]";
     public static string PrimeiraLinhaTabelaColuna2 {get; set; } = "(//tbody)[9]/tr[2]/td[2]";
     public static string AvisoInexistenciaDados { get; set; } = "//*[text()='Não há dados']";
+    public static string LoadDeTela { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
     #endregion
 
     #region Elementos de página - Login
@@ -39,6 +42,7 @@ public class GlobalVariables
 
     #region Elementos de página - HomePage
     public static string MenuPrincipal { get; set; } = "//header/div[1]/div[1]/div/div";
+    public static string UltimoCadastroAcessado { get; set; } = "//header/div[1]/div/span";
     public static string MenuVarejo { get; set; } = "//div/span[text()='Varejo']";
     public static string MenuGestao { get; set; } = "//div/span[text()='Gestão']";
     public static string DashboardOperacoes { get; set; } = "//div/span[text()='Dashboard Operação']";
@@ -65,9 +69,13 @@ public class GlobalVariables
     public static string AtivosVinculados {get; set; } = "(//tbody)[9]/tr[2]/td[9]/button";
     public static string DetalhesContratosAtivosTotalReceita {  get; set; } = "//*[contains(text(),'Total de Receita')]/following-sibling::div//button[1]";
     public static string TextoCardTotalReceita { get; set; } = "//div[@class='DashBoardCards']//*[contains(text(),'índice de Crescimento')]";
+    public static string TabelaListagemAterrissagem { get; set; } = "//*[@role='tabpanel']/div/div";
+    public static string ColunaMesAterrissagem {get; set; } = "//*[text()='JANEIRO']";
     public static string DetalhesAterrissagemReceita {  get; set; } = "(//*[contains(text(),'Perfomance Receita')]/following-sibling::div//button[1])[1]";
     public static string DetalhesAterrissagemReceitaPorBandeira {  get; set; } = "(//*[contains(text(),'Receita Bandeira')]/following-sibling::div//button[1])[1]";
     public static string DetalhesAterrissagemReceitaPorTipoFornecedor {  get; set; } = "(//*[contains(text(),'Receita Tipo Fornecedor')]/following-sibling::div//button[1])[1]";
+    public static string TabelaListagemParceiros { get; set; } = "//*[@role='tabpanel']/div/div";
+    public static string ColunaIndustriaParcerio {get; set; } = "//*[text()='Indústria/Parceiro']";
     public static string DetalhesListaParceirosPerformance {  get; set; } = "(//*[contains(text(),'Perfomance Parceiro')]/following-sibling::div//button[1])[1]";
     public static string FiltrarNegociacoes { get; set; } = "//button/span[text()='Filtrar']";
     public static string DetalhesListaParceirosInvestimento {  get; set; } = "(//*[contains(text(),'Investimento por Parceiro')]/following-sibling::div//button[1])[1]";
@@ -96,8 +104,8 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Novo Plano
-    public static string CampoIndustria { get; set; } = "//div[@label='Indústria']";
-    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
+    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']";
+    public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
     public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";

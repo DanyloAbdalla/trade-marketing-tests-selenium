@@ -11,7 +11,7 @@ public class DashboardOperacoesPage
     private IWebDriver webDriver;
     private string nomeAtivo = "Adesivo de Check Out";
     private string nomeAtivoEsperado = "AdesivodeCheckOut";
-    private string nomeCampanha = "CampanhaInd04NF";
+    private string nomeConratoCampanha = "CampanhaInd04NF";
 
     public DashboardOperacoesPage(IWebDriver webDriver)
     {
@@ -24,12 +24,13 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesLojasAtivas()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesLojasAtivas, "Botão Visualizar Lojas Ativas");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TextoCardAtivosAlocados);
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesLojasAtivas, "Botão Visualizar Lojas Ativas");
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
 
         var lojasAtivas = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaListagemLojasAtivas) - 1;
 
-        Thread.Sleep(2000);
+        Dsl.Esperar(2000);
         Debug.Assert(lojasAtivas == 6, "Lojas não foram exibidas corretamente");
 
         return new DashboardOperacoesPage(webDriver);
@@ -41,11 +42,11 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDaDiponibilidade()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesDisponibilidadeAtivos, "Botão Visualizar Disponibilidade de Ativos");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesDisponibilidadeAtivos, "Botão Visualizar Disponibilidade de Ativos");
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarAtivoPorNome, "Botão Filtro");
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
-        Thread.Sleep(3000);
+        Dsl.Esperar(3000);
         Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivoEsperado, "Coluna Ativo");
 
         return new DashboardOperacoesPage(webDriver);
@@ -57,16 +58,16 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDasNegociacoes()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesNegociacaoAtivos, "Botão Visualizar Ativos Negociados");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesNegociacaoAtivos, "Botão Visualizar Ativos Negociados");
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarAtivoPorNome, "Botão Filtro");
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
-        Thread.Sleep(3000);
+        Dsl.Esperar(3000);
         Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivoEsperado, "Coluna Ativo");
 
-        Dsl.Clicar(webDriver, GlobalVariables.ContratosVinculados, "Botão Visualizar Contratos Vinculados");
-        Dsl.Clicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Contratos Vinculados");
-        Thread.Sleep(500);
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ContratosVinculados, "Botão Visualizar Contratos Vinculados");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Contratos Vinculados");
+        Dsl.Esperar(500);
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -77,11 +78,11 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDoPotencialDeReceita()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesPotencialReceitaAtivos, "Botão Visualizar Listagem Potencial Receita");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesPotencialReceitaAtivos, "Botão Visualizar Listagem Potencial Receita");
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarAtivoPorNomePotencialReceita, "Botão Filtro");
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNomePotencialReceita, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
-        Thread.Sleep(3000);
+        Dsl.Esperar(3000);
         Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna1, nomeAtivoEsperado, "Coluna Ativo");
 
         return new DashboardOperacoesPage(webDriver);
@@ -94,25 +95,24 @@ public class DashboardOperacoesPage
     public DashboardOperacoesPage AcessarDetalhesDeContratosAtivos(string contexto)
     {
         if (contexto.Contains("ContratosVigentes"))
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesContratosAtivosContratosVigentes, "Botão Visualizar Contratos Ativos");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesContratosAtivosContratosVigentes, "Botão Visualizar Contratos Ativos");
         if (contexto.Contains("TotalReceita"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardTotalReceita);
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesContratosAtivosTotalReceita, "Botão Visualizar Contratos Ativos");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesContratosAtivosTotalReceita, "Botão Visualizar Contratos Ativos");
         }
 
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarContratoPorCampanha, "Botão Filtro");
 
-        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeCampanha);
-        Thread.Sleep(2000);
+        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeConratoCampanha);
+        Dsl.Esperar(2000);
         var contratoAtual = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, "Coluna Contrato");
-        var contratoEsperado = nomeCampanha;
+        var contratoEsperado = nomeConratoCampanha;
         Assert.That(contratoAtual, Does.Contain(contratoEsperado), "Contratos não correspondem");
-        //Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeCampanha, "Coluna Contrato");
 
-        Dsl.Clicar(webDriver, GlobalVariables.AtivosVinculados, "Botão Visualizar Ativos Vinculados");
-        Dsl.Clicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
-        Thread.Sleep(500);
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AtivosVinculados, "Botão Visualizar Ativos Vinculados");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
+        Dsl.Esperar(500);
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -123,18 +123,18 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDeContratosVencendo()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesContratosVencendo, "Botão Visualizar Contratos Vencendo");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesContratosVencendo, "Botão Visualizar Contratos Vencendo");
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AtivosVinculados) > 0)
         {
             Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarContratoPorCampanha, "Botão Filtro");
 
-            Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeCampanha);
-            Thread.Sleep(2000);
-            Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeCampanha, "Coluna Indústria");
+            Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeConratoCampanha);
+            Dsl.Esperar(2000);
+            Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.PrimeiraLinhaTabelaColuna2, nomeConratoCampanha, "Coluna Indústria");
 
-            Dsl.Clicar(webDriver, GlobalVariables.AtivosVinculados, "Botão Visualizar Ativos Vinculados");
-            Dsl.Clicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
-            Thread.Sleep(500);
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AtivosVinculados, "Botão Visualizar Ativos Vinculados");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
+            Dsl.Esperar(500);
         }
 
         return new DashboardOperacoesPage(webDriver);
@@ -149,24 +149,26 @@ public class DashboardOperacoesPage
         if (card.Contains("EvolucaoReceita"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardTotalReceita);
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceita, "Botão Visualizar Listagem de Aterrisagem Receita");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesAterrissagemReceita, "Botão Visualizar Listagem de Aterrisagem Receita");
         }
         else if (card.Contains("EvolucaoReceitaBandeira"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesListaParceirosPerformance);
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaPorBandeira, "Botão Visualizar Listagem de Aterrisagem Receita");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaPorBandeira, "Botão Visualizar Listagem de Aterrisagem Receita");
         }
         else if (card.Contains("EvolucaoReceitaTipoFornecedor"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesListaParceirosPerformance);
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaPorTipoFornecedor, "Botão Visualizar Listagem de Aterrisagem Receita");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaPorTipoFornecedor, "Botão Visualizar Listagem de Aterrisagem Receita");
         }
 
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
 
-        //Validando se a tabela é apresentada em tela
-        webDriver.FindElement(By.XPath("//*[@role='tabpanel']/div/div"));
-        webDriver.FindElement(By.XPath("//*[text()='JANEIRO']"));
+        var countTabelaDeDados = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaListagemAterrissagem);
+        Debug.Assert(countTabelaDeDados > 0, "Tabela de dados não foi apresentada corretamente");
+
+        var countColunaMes = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ColunaMesAterrissagem);
+        Debug.Assert(countColunaMes > 0, "Dado na coluna Mês não foi apresentado corretamente");
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -180,12 +182,12 @@ public class DashboardOperacoesPage
         if (card.Contains("EvolucaoPerformanceParceiros"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.FiltrarNegociacoes);
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesListaParceirosPerformance, "Botão Visualizar Lista Parceiro");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesListaParceirosPerformance, "Botão Visualizar Lista Parceiro");
         }
         else if (card.Contains("InvestimentoParceiro"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesDesempenhoDosAtivos);
-            Dsl.Clicar(webDriver, GlobalVariables.DetalhesListaParceirosInvestimento, "Botão Visualizar Lista Parceiro");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesListaParceirosInvestimento, "Botão Visualizar Lista Parceiro");
         }
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados);
@@ -193,9 +195,11 @@ public class DashboardOperacoesPage
         if (!(Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0))
             Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
 
-        //Validando se a tabela é apresentada em tela
-        webDriver.FindElement(By.XPath("//*[@role='tabpanel']/div/div"));
-        webDriver.FindElement(By.XPath("//*[text()='Indústria/Parceiro']"));
+        var countTabelaDeDados = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaListagemParceiros);
+        Debug.Assert(countTabelaDeDados > 0, "Tabela de dados não foi apresentada corretamente");
+
+        var countColunaIndustriaParceiro = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ColunaIndustriaParcerio);
+        Debug.Assert(countColunaIndustriaParceiro > 0, "Coluna Indústria/Parceiro não foi apresentado corretamente");
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -207,11 +211,13 @@ public class DashboardOperacoesPage
     public DashboardOperacoesPage AcessarDetalhesDesempenhoPorLoja()
     {
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesDesempenhoDosAtivos);
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesDesempenhoPorLoja, "Botão Visualizar Desempenho por Loja");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesDesempenhoPorLoja, "Botão Visualizar Desempenho por Loja");
 
-        //Validando se o gráfico é apresentado em tela, com o campo filtro
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.GraficoDesempenhoLoja);
-        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltroDesempenhoLoja, "Filtro Desempenho por Loja");
+        var countGraficoDesempenhoLoja = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.GraficoDesempenhoLoja);
+        Debug.Assert(countGraficoDesempenhoLoja > 0, "Gráfico não foi apresentado corretamente");
+
+        var countCampoFiltroDesempenhoLoja = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.FiltroDesempenhoLoja);
+        Debug.Assert(countCampoFiltroDesempenhoLoja > 0, "Campo filtro não foi apresentado corretamente");
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -223,11 +229,13 @@ public class DashboardOperacoesPage
     public DashboardOperacoesPage AcessarDetalhesDesempenhoDeAtivo()
     {
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardMaisVendidosDepartamento);
-        Dsl.Clicar(webDriver, GlobalVariables.DetalhesDesempenhoDosAtivos, "Botão Visualizar Desempenho dos Ativos");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesDesempenhoDosAtivos, "Botão Visualizar Desempenho dos Ativos");
 
-        //Validando se o gráfico é apresentado em tela, com o campo filtro
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.GraficoDesempenhoAtivo);
-        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltroDesempenhoAtivo, "Filtro Desempenho por Ativo");
+        var countGraficoDesempenhoAtivo = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.GraficoDesempenhoAtivo);
+        Debug.Assert(countGraficoDesempenhoAtivo > 0, "Gráfico não foi apresentado corretamente");
+
+        var countCampoFiltroDesempenhoAtivo = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.FiltroDesempenhoAtivo);
+        Debug.Assert(countCampoFiltroDesempenhoAtivo > 0, "Campo filtro não foi apresentado corretamente");
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -238,8 +246,7 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage FecharDetalhes()
     {
-        Thread.Sleep(500);
-        Dsl.Clicar(webDriver, GlobalVariables.FecharTela, "Botão Fechar Detalhes");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTela, "Botão Fechar Detalhes");
 
         return this;
     }

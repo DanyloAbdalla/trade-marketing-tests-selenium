@@ -24,8 +24,7 @@ public class HomePage
 
         Dsl.Clicar(webDriver, GlobalVariables.MenuGestao, "Menu Gestão");
         Dsl.Clicar(webDriver, GlobalVariables.DashboardOperacoes, "Tela DashBoard de Operações");
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TextoCardAtivosAlocados);
-        
+
         return new DashboardOperacoesPage(webDriver);
     }
 
@@ -35,14 +34,21 @@ public class HomePage
     /// <returns></returns>
     public PlanosContratosPage AcessarCadastroPlanos()
     {
+        var ultimoCadastroAcessado = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado");
+
+        if (!ultimoCadastroAcessado.Contains("Dashboard Opera..."))
+            AcessarDashBoardOperacoes();
+
         AbrirMenuVarejo();
 
         Dsl.Clicar(webDriver, GlobalVariables.MenuNegociacao, "Menu Negociação");
         Dsl.Clicar(webDriver, GlobalVariables.CadastroPlanosContratos, "Cadastro de Planos");
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.NovoRegistro);
-        if(!(Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0))
-            Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano"); 
+        if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.PaginacaoTela) > 0)
+            Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano");
+        else
+            Dsl.Esperar();
 
         return new PlanosContratosPage(webDriver);
     }
@@ -69,9 +75,7 @@ public class HomePage
     /// <returns></returns>
     public HomePage AbrirMenuVarejo()
     {
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MenuPrincipal);
         Dsl.Clicar(webDriver, GlobalVariables.MenuPrincipal, "Menu Principal Superior Esquerdo");
-
         Dsl.Clicar(webDriver, GlobalVariables.MenuVarejo, "Menu Varejo");
 
         return this;

@@ -24,9 +24,6 @@ public class DashboardOperacoesTest
         .PreencherEmailUsuario(GlobalVariables.emailUsuarioSemPlanta)
         .PreencherSenhaUsuario(GlobalVariables.senhaUsuarioSemPlanta)
         .SubmeterLogin();
-
-        new HomePage(webDriver)
-        .AcessarDashBoardOperacoes();
     }
 
     /// <summary>

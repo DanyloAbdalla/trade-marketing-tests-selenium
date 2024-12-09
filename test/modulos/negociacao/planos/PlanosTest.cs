@@ -110,7 +110,7 @@ public class PlanosTest
         .AbrirEdicaoDoPlano()
         .EditarInicioVigencia(contextoDeExecucao)
         .EditarFimVigencia(contextoDeExecucao)
-        .SalvarPlano()
+        .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano();
     }
 
@@ -186,15 +186,16 @@ public class PlanosTest
     [Test, Order(5)]
     public void TestAprovarPlano()
     {
-        var contextoSituacao = "Contrato Aprovado";
+        var contextoDeExecucao = "EditarPlano";
+        var situacaoPlano = "Contrato Aprovado";
         var statusPlanoEsperado = "Aprovado";
         var farolPlanoEsperado = "APROVADO";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .EditarSituacaoDoPlano(contextoSituacao)
-        .SalvarPlano()
+        .EditarSituacaoDoPlano(situacaoPlano)
+        .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
@@ -288,5 +289,12 @@ public class PlanosTest
     /// </summary>
     [TearDown]
     public void TearDown()
-    { webDriver.Close(); System.Diagnostics.Process.Start("taskkill_chromedriver.bat"); }
+    {
+        HomePage homePage= new HomePage(webDriver);
+        homePage.AcessarDashBoardOperacoes();
+        Dsl.Esperar();
+
+        webDriver.Close();
+        System.Diagnostics.Process.Start("taskkill_chromedriver.bat");
+    }
 }

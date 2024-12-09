@@ -38,7 +38,7 @@ public class DriverFactory
                 }
 
                 webDriver = new ChromeDriver(options);
-                webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+                webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
                 if(GlobalVariables.devMode)
                     webDriver.Navigate().GoToUrl(GlobalVariables.urlDevPlataforma);
                 if (GlobalVariables.hmlMode)

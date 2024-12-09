@@ -24,8 +24,9 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage NovaSimulacaoDePlano()
     {
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
+        Dsl.Esperar(1000);
         Dsl.Clicar(webDriver, GlobalVariables.NovoRegistro, "Botão Nova Simulação");
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.FecharTela);
 
         return this;
     }
@@ -36,10 +37,12 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage PreencherCampoIndustria()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.CampoIndustria, "Campo Indústria");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.PesquisarIndustria);
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.PesquisarIndustria);
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PesquisarIndustria, "Campo Indústria");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustria);
 
-        Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
+        Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherIndustria, "Indústria 01 F");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustria, "Campo Selecionar Indústria");
 
         return this;
@@ -259,7 +262,7 @@ public class PlanosContratosPage
     /// Método para salvar os dados plano com diferentes status
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage SalvarPlano([Optional] string contextoDeExecucao, [Optional] string contextoDeTeste)
+    public PlanosContratosPage SalvarPlano(string contextoDeExecucao, [Optional] string contextoDeTeste)
     {
         var mensagemSucessoEsperada = "OPlanofoialteradocomsucesso!";
 
@@ -491,7 +494,7 @@ public class PlanosContratosPage
             var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.Mensagens, "Mensagem Excluir Plano");
             ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
 
-            Dsl.Esperar();
+            Dsl.Esperar(2000);
         }
         return this;
     }
