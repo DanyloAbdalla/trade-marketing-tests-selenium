@@ -92,7 +92,6 @@ public class PlanosContratosPage
     public PlanosContratosPage PreencherQuantidadeAtivos(string contextoDeTestes)
     {
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
-
         if (contextoDeTestes.Contains("SemPlantaLoja"))
         {
             foreach (var nomeAtivo in nomesAtivos)
@@ -106,11 +105,11 @@ public class PlanosContratosPage
         }
         else if (contextoDeTestes.Contains("ComPlantaLoja"))
         {
-            var quantidadeAtivosSelecionados = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaAtivosPlano) - 1; //Contar linhas no elemento tbody da listagem de ativos selecionados na simulação do plano, ignorando a tag tr sem dados
+            var quantidadeAtivosSelecionados = Dsl.ContarLinhasEmTabela(webDriver, GlobalVariables.TabelaAtivosPlano) - 1; //Contar linhas no elemento tbody da listagem de ativos selecionados na simulação do plano, ignorando a tag tr sem dados
 
             for (var i = 1; i <= quantidadeAtivosSelecionados; i++)
             {
-                for (var j = 0; j <= 5; j++)
+                for (var j = 0; j < 5; j++)
                 {
                     webDriver.FindElement(By.XPath($"//div[@class='ant-modal-content']//tbody/tr[{i + 1}]/td[14]//span[@aria-label='Increase Value']")).Click();
                 }
@@ -136,6 +135,8 @@ public class PlanosContratosPage
         {
             webDriver.FindElement(By.XPath($"//tbody/tr[{i + 1}]/td[9]//input[@class='ant-checkbox-input']")).Click();
         }
+
+        Dsl.ValidarCheckInDaDisponbilidadeDeInventarioParaLoja(webDriver, GlobalVariables.CheckInInventarioOk, GlobalVariables.TabelaLojasPlano);
 
         return this;
     }
@@ -506,13 +507,10 @@ public class PlanosContratosPage
     public PlanosContratosPage ValidarAlertaInventario()
     {
         var mensagemAlertaEsperada = "Algumaslojasnãoteminventáriosuficientedisponível";
-        var quantidadeAlertas = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AlertaInventario);
-        var quantidadeLojas = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaLojasPlano) - 1; //Contar linhas no elemento tbody da listagem de lojas na simulação do plano, ignorando a tag tr sem dados
-
-        Debug.Assert(quantidadeAlertas == quantidadeLojas, "Quantidade de alertas não foram apresentadas corretamente - quantidadeAlertas: " + quantidadeAlertas + " quantidadeLojas: " + quantidadeLojas);
-
         var mensagemAlertaAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagensDadosPlano, "Mensagem Inventário Loja");
-        ValidarMensagemDeSucessoEAlerta(mensagemAlertaAtual, mensagemAlertaEsperada);
+
+        Dsl.ValidarCheckInDaDisponbilidadeDeInventarioParaLoja(webDriver, GlobalVariables.CheckInInventarioAlerta, GlobalVariables.TabelaLojasPlano);
+        Dsl.ValidarMensagemDeSucessoEAlerta(mensagemAlertaAtual, mensagemAlertaEsperada);
 
         return this;
     }

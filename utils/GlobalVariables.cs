@@ -6,7 +6,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se a variável for = false
+    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se a variável for = false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -114,8 +114,10 @@ public class GlobalVariables
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//button/*[text()='Selecionar Ativos']";
+    public static string AplicarQuantidadesPorLojaEmLote { get; set; } = "//button/*[text()='Selecionar Ativos']";
     public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas']";
-    public static string AlertaInventario { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
+    public static string CheckInInventarioAlerta { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
+    public static string CheckInInventarioOk { get; set; } = "//td[9]//span[contains(@class,'check-inventario')]";
     public static string GerarPrePlano { get; set; } = "//button/*[text()='Gerar Pré-Plano']";
     public static string MensagensDadosPlano { get; set; } = "//*[@class='form-action'][2]/span[3]";
     #endregion

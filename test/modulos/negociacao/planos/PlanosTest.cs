@@ -12,11 +12,11 @@ public class PlanosTest
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
     private string nomeCampanha = "MassaAutomatizada";
-    private string contextoDeTeste = "";
+    private string _contextoDeTeste = "";
 
     public PlanosTest(string contextoDeTeste)
     {
-        this.contextoDeTeste = contextoDeTeste;
+        _contextoDeTeste = contextoDeTeste;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class PlanosTest
     {
         webDriver = DriverFactory.CreateDriver(browserType);
 
-        if (contextoDeTeste.Contains("SemPlantaLoja"))
+        if (_contextoDeTeste.Contains("SemPlantaLoja"))
         {
             new LoginPage(webDriver)
             .PreencherEmailUsuario(GlobalVariables.emailUsuarioSemPlanta)
@@ -37,7 +37,7 @@ public class PlanosTest
             new HomePage(webDriver)
             .AcessarCadastroPlanos();
         }
-        else if (contextoDeTeste.Contains("ComPlantaLoja"))
+        else if (_contextoDeTeste.Contains("ComPlantaLoja"))
         {
             new LoginPage(webDriver)
             .PreencherEmailUsuario(GlobalVariables.emailUsuarioComPlanta)
@@ -77,10 +77,10 @@ public class PlanosTest
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
         .SelecionarAtivos()
-        .PreencherQuantidadeAtivos(contextoDeTeste)
+        .PreencherQuantidadeAtivos(_contextoDeTeste)
         .SelecionarLojas()
         .GerarPrePlano()
-        .SalvarPlano(contextoDeExecucao, contextoDeTeste)
+        .SalvarPlano(contextoDeExecucao, _contextoDeTeste)
         .ValidarPlanoCriado()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
@@ -227,7 +227,7 @@ public class PlanosTest
         .EditarInicioVigencia(contextoDeExecucao)
         .EditarFimVigencia(contextoDeExecucao)
         .SelecionarAtivos()
-        .PreencherQuantidadeAtivos(contextoDeTeste)
+        .PreencherQuantidadeAtivos(_contextoDeTeste)
         .SelecionarLojas()
         .ValidarAlertaInventario()
         .FecharDadosDoPlano();

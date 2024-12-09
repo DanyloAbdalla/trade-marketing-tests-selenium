@@ -154,7 +154,8 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <exception cref="Exception"></exception>
+    /// <returns>Retorna uma número inteiro</returns>
+    /// <exception cref="WebDriverTimeoutException"></exception>
     public static long ContarExistenciaDoElemento(IWebDriver webDriver, string XPath)
     {
         try
@@ -170,6 +171,27 @@ public class Dsl
             long elementCount = (long)jsExecutor.ExecuteScript(script);
 
             return elementCount;
+        }
+        catch (WebDriverTimeoutException ex)
+        { throw new WebDriverTimeoutException(ex.Message); }
+    }
+
+    /// <summary>
+    /// Método para contar as linhas dentro de um elemento tabela
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <returns>Retorna um número inteiro</returns>
+    /// <exception cref="WebDriverTimeoutException"></exception>/
+    public static long ContarLinhasEmTabela(IWebDriver webDriver, string XPath)
+    {
+        try
+        {
+            // Executando o script JavaScript para contar as linhas no elemento tbody
+            IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
+            long trCount = (long)jsExecutor.ExecuteScript("return document.evaluate(arguments[0], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getElementsByTagName('tr').length;", XPath);
+
+            return trCount;
         }
         catch (WebDriverTimeoutException ex)
         { throw new WebDriverTimeoutException(ex.Message); }
@@ -205,9 +227,9 @@ public class Dsl
         IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
         IList<IWebElement> linhas = tabela.FindElements(By.XPath("tr"));
 
-        var qtdLinhas = linhas.Count() - 1;
+        var quantidadeLinhas = linhas.Count() - 1;
 
-        return qtdLinhas;
+        return quantidadeLinhas;
     }
 
     /// <summary>
@@ -225,9 +247,9 @@ public class Dsl
         IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
         IList<IWebElement> linhas = tabela.FindElements(By.XPath("tr"));
 
-        var qtdLinhas = linhas.Count();
+        var quantidadeLinhas = linhas.Count();
 
-        return qtdLinhas;
+        return quantidadeLinhas;
     }
 
     /// <summary>
@@ -291,25 +313,25 @@ public class Dsl
 
     /// <summary>
     /// Método para selecionar datas de início vingencia, baseado na data atual
-    /// Avançando para os meses seguintes se qtdAvancarMeses for maior que 0
+    /// Avançando para os meses seguintes se quantidadeAvancarMeses for maior que 0
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <param name="qtdAvancarMeses"></param>
-    public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, string XPath, int qtdAvancarMeses)
+    /// <param name="quantidadeAvancarMeses"></param>
+    public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, string XPath, int quantidadeAvancarMeses)
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
 
         EsperarVisibilidadeDoElemento(webDriver, XPath);
 
-        if (qtdAvancarMeses == 0)
+        if (quantidadeAvancarMeses == 0)
         {
             webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
         }
-        else if (qtdAvancarMeses > 0)
+        else if (quantidadeAvancarMeses > 0)
         {
-            for (int i = 0; i < qtdAvancarMeses; i++)
+            for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
                 webDriver.FindElement(By.XPath(XPath)).Click();
             }
@@ -320,32 +342,32 @@ public class Dsl
 
     /// <summary>
     /// Método para selecionar datas de fim vingencia, baseado na data atual
-    /// Avançando para os meses seguintes se qtdAvancarMeses for maior que 0
+    /// Avançando para os meses seguintes se quantidadeAvancarMeses for maior que 0
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <param name="qtdAvancarMeses"></param>
-    public static void PreencherCalendariosFimVigencia(IWebDriver webDriver, string XPath, int qtdAvancarMeses)
+    /// <param name="quantidadeAvancarMeses"></param>
+    public static void PreencherCalendariosFimVigencia(IWebDriver webDriver, string XPath, int quantidadeAvancarMeses)
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
 
         EsperarVisibilidadeDoElemento(webDriver, XPath);
 
-        if (qtdAvancarMeses == 0)
+        if (quantidadeAvancarMeses == 0)
         {
             webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
         }
-        else if (qtdAvancarMeses > 0)
+        else if (quantidadeAvancarMeses > 0)
         {
-            for (int i = 0; i < qtdAvancarMeses; i++)
+            for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
                 webDriver.FindElement(By.XPath(XPath)).Click();
             }
 
-            var qtdDiasCalendario = Dsl.ContarExistenciaDoElemento(webDriver, $"(//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}']");
+            var quantiadadedDiasCalendario = Dsl.ContarExistenciaDoElemento(webDriver, $"(//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}']");
 
-            if (qtdDiasCalendario > 1)
+            if (quantiadadedDiasCalendario > 1)
             {
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
             }
@@ -442,6 +464,20 @@ public class Dsl
     public static void ValidarMensagemDeSucessoEAlerta(string mensagemAtual, string mensagemEsperada)
     {
         Assert.That(mensagemAtual, Does.Contain(mensagemEsperada), "Mensagem atual não corresponde com a esperada");
+    }
+
+    /// <summary>
+    /// Método para validar a verificação feita para a disponibilidade do inventário por loja, na simulção do plano
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPathInventario"></param>
+    /// <param name="XPathCheckLojas"></param>
+    public static void ValidarCheckInDaDisponbilidadeDeInventarioParaLoja(IWebDriver webDriver, string XPathCheckInventario, string XPathLojasPlano)
+    {
+        var quantidadeCheck = ContarExistenciaDoElemento(webDriver, XPathCheckInventario);
+        var quantidadeLojas = ContarExistenciaDoElemento(webDriver, XPathLojasPlano) - 1; //Contar linhas no elemento tbody da listagem de lojas na simulação do plano, ignorando a tag tr sem dados
+
+        Debug.Assert(quantidadeCheck == quantidadeLojas, "Checkin da disponibilidade de inventário apresentada incorretamente - quantidadeCheck: " + quantidadeCheck + " quantidadeLojas: " + quantidadeLojas);
     }
 
     /// <summary>
