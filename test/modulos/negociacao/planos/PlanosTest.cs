@@ -137,7 +137,7 @@ public class PlanosTest
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
-        .EditarQuantidadesDosAtivosNoPlano()
+        .EditarQuantidadesDosAtivosNoPlano(_contextoDeTeste)
         .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano();
     }
@@ -158,14 +158,13 @@ public class PlanosTest
     [Test, Order(4)]
     public void TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel()
     {
-        var nomeAtivo = "Cestão 01 - ";
         var contextoDeExecucao = "EditarPlanoIncluindoAtivo";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
-        .AlocarNovosAtivosNoPlano(nomeAtivo)
+        .AlocarNovosAtivosNoPlano(_contextoDeTeste)
         .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano();
     }

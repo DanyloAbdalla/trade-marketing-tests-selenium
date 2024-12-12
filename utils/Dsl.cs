@@ -55,16 +55,12 @@ public class Dsl
     /// <exception cref="WebDriverTimeoutException"></exception>
     public static void EsperarInvisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
-        bool isDisplayed;
-
         try
         {
-            do
-            {
-                IWebElement element = webDriver.FindElement(By.XPath(XPath));
-                IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
-                isDisplayed = (bool)jsExecutor.ExecuteScript("return arguments[0].offsetParent !== null;", element);
-            } while (!isDisplayed);
+            IWebElement element = webDriver.FindElement(By.XPath(XPath));
+
+            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+            wait.Until(ExpectedConditions.StalenessOf(element));
         }
         catch (Exception)
         { Console.WriteLine("Erro ao processar a invisibilidade do elemento"); }
@@ -143,7 +139,9 @@ public class Dsl
     {
         try
         {
-            webDriver.FindElement(By.XPath(XPath)).Click();
+            IWebElement element = webDriver.FindElement(By.XPath(XPath));
+            IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
+            jsExecutor.ExecuteScript("arguments[0].click();", element);
         }
         catch (Exception ex)
         { throw new Exception(ex.Message + "\n" + nomeElemento); }
@@ -303,7 +301,7 @@ public class Dsl
     {
         try
         {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
+            //EsperarVisibilidadeDoElemento(webDriver, XPath);
             Actions action = new Actions(webDriver);
             action.SendKeys(webDriver.FindElement(By.XPath(XPath)), textoValor).Perform();
         }
@@ -384,6 +382,7 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
+    /// <param name="nomeElemento"></param>
     /// <returns>Retorna o texto somente com letras maiúsculas ou minúsculas</returns>
     public static string RemoverNumerosEspacosDeUmTexto(IWebDriver webDriver, string XPath, string nomeElemento)
     {
@@ -416,7 +415,7 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <param name="nomeElemento"></param>
-    /// <param name="captura">0 - atributo valor OU 1 - texto no elemento</param>
+    /// <param name="captura">0: atributo value do elemento OU 1: texto no elemento</param>
     /// <returns>Retorna o valor numérico</returns>
     public static object RemoverLetrasEspacosDeUmTexto(IWebDriver webDriver, string XPath, string nomeElemento, int captura)
     {
@@ -525,13 +524,13 @@ public class Dsl
     /// <param name="xPathPesquisar"></param>
     /// <param name="xPathBuscar"></param>
     /// <param name="textoValor"></param>
-    public static void BuscarRegistros(IWebDriver webDriver, string xPathFiltrar, string xPathPesquisar, string xPathBuscar, string textoValor)
+    public static void BuscarRegistros(IWebDriver webDriver, string xPathFiltrar, string xPathPreencherFiltro, string xPathBuscar, string textoValor)
     {
-        Esperar();
-        Clicar(webDriver, xPathFiltrar, "Botão Filtrar Plano");
-        webDriver.FindElement(By.XPath(xPathPesquisar)).SendKeys(Keys.Control + "a" + Keys.Backspace);
-        DigitarNoCampoTexto(webDriver, xPathPesquisar, textoValor);
-        Clicar(webDriver, xPathBuscar, "Botão Buscar Plano");
+        Esperar(2000);
+        Clicar(webDriver, xPathFiltrar, "Botão Filtrar");
+        webDriver.FindElement(By.XPath(xPathPreencherFiltro)).SendKeys(Keys.Control + "a" + Keys.Backspace);
+        DigitarNoCampoTexto(webDriver, xPathPreencherFiltro, textoValor);
+        Clicar(webDriver, xPathBuscar, "Botão Buscar");
 
         Thread.Sleep(1000);
     }

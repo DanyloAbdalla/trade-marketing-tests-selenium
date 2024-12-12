@@ -95,8 +95,6 @@ public class GlobalVariables
     public static string ColunaFimVigencia { get; set; } = "//*[text()='Fim Vigência']";
     public static string StatusPlano { get; set; } = "//tbody/tr[2]/td[6]";
     public static string FarolPlano { get; set; } = "//tbody/tr[2]/td[7]/div";
-    //public static string EditarPlano { get; set; } = "//tbody/tr[2]/td[24]/div[1]/button[1]";
-    //public static string ExcluirPlano { get; set; } = "//table/tbody/tr[2]/td[24]/div//button//*[@aria-label='delete']";
     public static string EditarPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='zoom-in']";
     public static string ExcluirPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='delete']";
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
@@ -114,7 +112,8 @@ public class GlobalVariables
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//button/*[text()='Selecionar Ativos']";
-    public static string AplicarQuantidadesPorLojaEmLote { get; set; } = "//button/*[text()='Selecionar Ativos']";
+    public static string QuantidadePorLoja { get; set; } = "//*[@title='Qtd por Loja']/parent::div/parent::div/div[2]//input";
+    public static string AplicarQuantidadePorLojaMassivamente { get; set; } = "//button/*[text()='Aplicar']";
     public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas']";
     public static string CheckInInventarioAlerta { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
     public static string CheckInInventarioOk { get; set; } = "//td[9]//span[contains(@class,'check-inventario')]";
@@ -123,14 +122,14 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Novo Plano - Selecionar Ativos
-    public static string FiltrarAtivos { get; set; } = "//*[contains(@style,'width: 60')]//div[@class='ant-modal-body']//div[@class='ant-tabs-content-holder']//div[@class='ant-table-wrapper']//table/thead//tr/th[2]/div/span[@role='button']";
-    public static string PesquisarAtivos { get; set; } = "//div[@class='ant-table-filter-dropdown']//span[@class='ant-input-affix-wrapper ant-table-filter-dropdown-search-input']/input";
+    public static string FiltrarAtivos { get; set; } = "//th[@aria-label='Inventário Item']/div/span[2]/span[@aria-label='filter']";
+    public static string PesquisarAtivos { get; set; } = "//div[@class='ant-table-filter-dropdown']/div/span/input";
     public static string SelecionarAtivosFiltro { get; set; } = "//li[@class='ant-dropdown-menu-item']";
     public static string TelaFiltrarAtivo { get; set; } = "//div[@class='ant-table-filter-dropdown-btns']";
     public static string OkFiltroAtivos { get; set; } = "//button/*[text()='OK']";
     public static string SelecionarTodosAtivos { get; set; } = "(//span[@class='ant-checkbox'])[1]";
     public static string ResetarFiltroAtivo { get; set; } = "//button/*[text()='Resetar']";
-    public static string AplicarAtivos { get; set; } = "//*[contains(@style,'width: 60')]//button[@class='ant-btn ant-btn-primary']";
+    public static string AplicarAtivos { get; set; } = "//button/*[text()='Aplicar']";
     #endregion
 
     #region Elementos de página - Planos - Novo Plano - Selecionar Lojas
@@ -165,6 +164,11 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados
+    public static string FiltrarAtivoAlocado { get; set; } = "//thead//th[@title='Ativo']//span[@role='button']";
+    public static string PreencherNomeAtivo { get; set; } = "(//div[@style='padding: 5px;'])[2]/input";
+    public static string BuscarAtivoAlocado { get; set; } = "(//div[@style='padding: 5px;'])[2]/button/span[text()='Buscar']";
+    public static string QuantidadePorLojaAtivosAlocados { get; set; } = "//*[@title='Alocar']/parent::div/parent::div/div[2]//input";
+    public static string AplicarQuantidadePorLojaMassivamenteAtivosAlocados { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
     public static string TabelaAtivosPlano { get; set; } = "//div[@class='ant-modal-content']//tbody";
     #endregion
@@ -179,6 +183,7 @@ public class GlobalVariables
     public static string SalvarAlocacaoLoja { get; set; } = "(//button/*[text()='Salvar'])[2]";
     public static string FecharAlocacaoAtivoPorLoja { get; set; } = "(//button/*[text()='Fechar'])[2]";
     public static string MensagemSucessoAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Alocação atualizada')]";
+    public static string MensagemSucessoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Produtos atualizados')]";
     #endregion
 
     #region Elementos de página - SmartIA

@@ -35,16 +35,20 @@ public class HomePage
     public PlanosContratosPage AcessarCadastroPlanos()
     {
         var ultimoCadastroAcessado = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado");
+        Dsl.Esperar();
 
         if (!ultimoCadastroAcessado.Contains("Dashboard Opera..."))
             AcessarDashBoardOperacoes();
 
+        Dsl.Esperar();
         AbrirMenuVarejo();
 
         Dsl.Clicar(webDriver, GlobalVariables.MenuNegociacao, "Menu Negociação");
         Dsl.Clicar(webDriver, GlobalVariables.CadastroPlanosContratos, "Cadastro de Planos");
 
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.NovoRegistro);
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
+        Dsl.Esperar(2000);
+        
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.PaginacaoTela) > 0)
             Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano");
         else

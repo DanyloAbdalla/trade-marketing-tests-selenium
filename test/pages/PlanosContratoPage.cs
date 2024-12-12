@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
 namespace MeuClienteWebTestProject;
 
@@ -24,7 +25,6 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage NovaSimulacaoDePlano()
     {
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         Dsl.Esperar(1000);
         Dsl.Clicar(webDriver, GlobalVariables.NovoRegistro, "Botão Nova Simulação");
 
@@ -91,9 +91,9 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage PreencherQuantidadeAtivos(string contextoDeTestes)
     {
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
         if (contextoDeTestes.Contains("SemPlantaLoja"))
         {
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
             foreach (var nomeAtivo in nomesAtivos)
             {
                 for (var i = 0; i < 5; i++)
@@ -105,15 +105,11 @@ public class PlanosContratosPage
         }
         else if (contextoDeTestes.Contains("ComPlantaLoja"))
         {
-            var quantidadeAtivosSelecionados = Dsl.ContarLinhasEmTabela(webDriver, GlobalVariables.TabelaAtivosPlano) - 1; //Contar linhas no elemento tbody da listagem de ativos selecionados na simulação do plano, ignorando a tag tr sem dados
-
-            for (var i = 1; i <= quantidadeAtivosSelecionados; i++)
-            {
-                for (var j = 0; j < 5; j++)
-                {
-                    webDriver.FindElement(By.XPath($"//div[@class='ant-modal-content']//tbody/tr[{i + 1}]/td[14]//span[@aria-label='Increase Value']")).Click();
-                }
-            }
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.AplicarQuantidadePorLojaMassivamente);
+            Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.QuantidadePorLoja, "5");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AplicarQuantidadePorLojaMassivamente, "Botão Aplicar Quantidade para Todas as Lojas na Simulação do Plano");
+            Dsl.Esperar(500);
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
         }
 
         return this;
@@ -198,11 +194,31 @@ public class PlanosContratosPage
     /// <summary>
     /// Método para buscar planos
     /// </summary>
-    /// <param name="nomeCampanha"></param>
+    /// <param name="textoValor"></param>
     /// <returns></returns>
     public PlanosContratosPage BuscarPlanos(string textoValor)
     {
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarPlanoPorCampanha, GlobalVariables.PesquisarNomeCampanha, GlobalVariables.BuscarRegistro, textoValor);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para filtrar ativos alocados dentro do plano existente
+    /// </summary>
+    /// <param name="nomeAtivo"></param>
+    /// <returns></returns>
+    public PlanosContratosPage BuscarAtivosAlocadosNoPlano(string nomeAtivo)
+    {
+        Dsl.Clicar(webDriver, GlobalVariables.FiltrarAtivoAlocado, "Botão Filtrar Ativo");
+
+        IWebElement element = webDriver.FindElement(By.XPath(GlobalVariables.PreencherNomeAtivo));
+        element.SendKeys(Keys.Control + "a" + Keys.Backspace);
+
+        Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.PreencherNomeAtivo, nomeAtivo);
+
+        Dsl.Clicar(webDriver, GlobalVariables.BuscarAtivoAlocado, "Botão Buscar Ativo");
+        Dsl.Esperar();
 
         return this;
     }
@@ -305,33 +321,66 @@ public class PlanosContratosPage
     /// Método para editar as quantidades dos ativos por loja
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage EditarQuantidadesDosAtivosNoPlano()
+    public PlanosContratosPage EditarQuantidadesDosAtivosNoPlano(string contextoDeTestes)
     {
         var mensagemSucessoEsperada = "Alocaçãoatualizadacomsucesso!";
-        var qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
 
-        for (var i = 1; i <= qtdAtivosAlocados; i++)
+        if (contextoDeTestes.Contains("SemPlantaLoja"))
         {
-            var editarAtivo = $"//tr[{i + 1}]//button/span[@aria-label='edit']";
+            var qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
 
-            Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
-
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
-            Dsl.Esperar();
-            var qtdAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo", 1); //Descobrindo a quantidade de lojas no plano para o ativo alocado
-
-            int qtd = (int)qtdAtivosAlocadosLoja;
-            for (var j = 1; j <= qtd; j++)
+            for (var i = 1; i <= qtdAtivosAlocados; i++)
             {
-                webDriver.FindElement(By.XPath($"//tbody//tr[{j + 1}]/td[17]/div//span[@aria-label='Increase Value']")).Click(); //Aumentando a quantidade de alocação por loja
+                var editarAtivo = $"//tr[{i + 1}]//button/span[@aria-label='edit']";
+
+                Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
+
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+                Dsl.Esperar();
+                var qtdAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo", 1); //Descobrindo a quantidade de lojas no plano para o ativo alocado
+
+                int qtd = (int)qtdAtivosAlocadosLoja;
+                for (var j = 1; j <= qtd; j++)
+                {
+                    webDriver.FindElement(By.XPath($"//tbody//tr[{j + 1}]/td[17]/div//span[@aria-label='Increase Value']")).Click(); //Aumentando a quantidade de alocação por loja
+                }
+
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+
+                var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Alocação Ativo");
+                Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
+                Dsl.Esperar(3000);
             }
+        }
+        else if (contextoDeTestes.Contains("ComPlantaLoja"))
+        {
+            BuscarAtivosAlocadosNoPlano(nomesAtivos[0]);
+            Dsl.Esperar();
 
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+            var quantidadeAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
 
-            var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Alocação Ativo");
-            Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
-            Thread.Sleep(3000);
+            for (var i = 1; i <= quantidadeAtivosAlocados; i++)
+            {
+                var editarAtivo = $"//tr[{i + 1}]//button/span[@aria-label='edit']";
+
+                Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
+
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+                Dsl.Esperar();
+
+                Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.QuantidadePorLojaAtivosAlocados, "6");
+                Dsl.Clicar(webDriver, GlobalVariables.AplicarQuantidadePorLojaMassivamenteAtivosAlocados, "Botão Aplicar Quantidade para Todas as Lojas");
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemSucessoEditarQuantidadeAlocacaoAtivo);
+
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+
+                var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Salvar Alocação Ativo");
+                Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
+                Dsl.Esperar(4000);
+            }
         }
 
         return this;
@@ -354,25 +403,59 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="nomeAtivo"></param>
     /// <returns></returns>
-    public PlanosContratosPage AlocarNovosAtivosNoPlano(string nomeAtivo)
+    public PlanosContratosPage AlocarNovosAtivosNoPlano(string contextoDeTeste)
     {
         var mensagemSucessoEsperada = "Alocaçãoatualizadacomsucesso!";
 
-        Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
-        Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nomeAtivo);
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarAtivoAlocacao);
-        Dsl.Clicar(webDriver, GlobalVariables.SelecionarAtivoAlocacao, "Campo Selecionar Ativo");
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
-        Dsl.Esperar();
+        if (contextoDeTeste.Contains("SemPlantaLoja"))
+        {
+            var nomeAtivo = "Cestão 01 - ";
 
-        AumentarQuantidadeAtivosPorLoja();
+            Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nomeAtivo);
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarAtivoAlocacao);
+            Dsl.Clicar(webDriver, GlobalVariables.SelecionarAtivoAlocacao, "Campo Selecionar Ativo");
 
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
-        Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+            Dsl.Esperar();
 
-        var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Alocação Ativo");
-        Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
-        Dsl.Esperar();
+            AumentarQuantidadeAtivosPorLoja(contextoDeTeste);
+
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+            Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+
+            var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Alocação Ativo");
+            Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
+            Dsl.Esperar();
+        }
+        else if (contextoDeTeste.Contains("ComPlantaLoja"))
+        {
+            string[] nomeAtivo = { "Cestão 01 - ", "Cestão 01 - E01", "Cestão 01 - E02", "Cestão 01 - E03" };
+
+            foreach (var nome in nomeAtivo)
+            {
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.IncluirAlocacaoAtivo);
+
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nome);
+
+                var elementoAtivoNome = $"//div[@class='rc-virtual-list']//*[text()='{nome}']";
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, elementoAtivoNome);
+                Dsl.Clicar(webDriver, elementoAtivoNome, "Campo Selecionar Ativo");
+
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+                Dsl.Esperar();
+
+                AumentarQuantidadeAtivosPorLoja(contextoDeTeste);
+
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+
+                var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Alocação Ativo");
+                Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
+                Dsl.Esperar();
+            }
+        }
 
         return this;
     }
@@ -381,20 +464,26 @@ public class PlanosContratosPage
     /// Método para aumentar as quantidades de ativos alocados por loja
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage AumentarQuantidadeAtivosPorLoja()
+    public PlanosContratosPage AumentarQuantidadeAtivosPorLoja(string contextoDeTeste)
     {
-        var qtdAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo", 1);
-
-        if (qtdAtivosAlocadosLoja is int)
+        if (contextoDeTeste.Contains("SemPlantaLoja"))
         {
-            int qtd = (int)qtdAtivosAlocadosLoja;
-            for (var i = 1; i <= qtd; i++)
+            var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo", 1);
+
+            if (quantidadeAtivosAlocadosLoja is int)
             {
-                //Aumentando a quantidade de alocação por loja
-                webDriver.FindElement(By.XPath($"//tr[{i + 1}]/td[17]/div//span[@aria-label='Increase Value']")).Click();
+                int qtd = (int)quantidadeAtivosAlocadosLoja;
+                for (var i = 1; i <= qtd; i++)
+                {
+                    //Aumentando a quantidade de alocação por loja
+                    webDriver.FindElement(By.XPath($"//tr[{i + 1}]/td[17]/div//span[@aria-label='Increase Value']")).Click();
+                }
             }
         }
+        else if (contextoDeTeste.Contains("ComPlantaLoja"))
+        {
 
+        }
 
         return this;
     }
