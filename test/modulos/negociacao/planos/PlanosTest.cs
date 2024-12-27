@@ -7,6 +7,7 @@ namespace MeuClienteWebTestProject;
 /// </summary>
 [TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
 [TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
+[Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
 {
     private IWebDriver webDriver;

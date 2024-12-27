@@ -31,7 +31,7 @@ public class Dsl
     {
         var fluentWait = new DefaultWait<IWebDriver>(webDriver)
         {
-            Timeout = TimeSpan.FromSeconds(30),
+            Timeout = TimeSpan.FromSeconds(40),
             PollingInterval = TimeSpan.FromMilliseconds(500)
         };
 
@@ -55,12 +55,19 @@ public class Dsl
     /// <exception cref="WebDriverTimeoutException"></exception>
     public static void EsperarInvisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
+
+        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
+        {
+            Timeout = TimeSpan.FromSeconds(40),
+            PollingInterval = TimeSpan.FromMilliseconds(500)
+        };
+
+        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
         try
         {
             IWebElement element = webDriver.FindElement(By.XPath(XPath));
-
-            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
-            wait.Until(ExpectedConditions.StalenessOf(element));
+            fluentWait.Until(ExpectedConditions.StalenessOf(element));
         }
         catch (Exception)
         { Console.WriteLine("Erro ao processar a invisibilidade do elemento"); }
