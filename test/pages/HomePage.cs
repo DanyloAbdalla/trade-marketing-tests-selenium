@@ -34,6 +34,7 @@ public class HomePage
     /// <returns></returns>
     public PlanosContratosPage AcessarCadastroPlanos()
     {
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado);
         var ultimoCadastroAcessado = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado");
         Dsl.Esperar();
 

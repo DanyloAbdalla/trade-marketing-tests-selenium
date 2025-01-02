@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 
 namespace MeuClienteWebTestProject;
@@ -12,6 +14,7 @@ public class PlanosTest
 {
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
+    private bool _previousTestFalied;
     private string nomeCampanha = "MassaAutomatizada";
     private string _contextoDeTeste = "";
 
@@ -26,6 +29,8 @@ public class PlanosTest
     [SetUp]
     public void Setup()
     {
+        if(_previousTestFalied) Assert.Ignore("Pular os próximos teste, pois o teste anterior falhou");
+
         webDriver = DriverFactory.CreateDriver(browserType);
 
         if (_contextoDeTeste.Contains("SemPlantaLoja"))
@@ -290,6 +295,8 @@ public class PlanosTest
     [TearDown]
     public void TearDown()
     {
+        if(TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed) _previousTestFalied = true;
+        
         HomePage homePage = new HomePage(webDriver);
         homePage.AcessarDashBoardOperacoes();
         Dsl.Esperar();

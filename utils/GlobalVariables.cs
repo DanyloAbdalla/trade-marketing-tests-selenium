@@ -4,7 +4,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se a variável for = false
+    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se a variável for = false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -156,7 +156,7 @@ public class GlobalVariables
     public static string SelecionarDepartamento { get; set; } = "(//*[text()='Geral'])[3]";
     public static string Categoria { get; set; } = "//*[@name='CategoriaId']//input";
     public static string SelecionarCategoria { get; set; } = "(//*[text()='Geral'])[5]";
-    public static string DataCancelamentoPlano { get; set; } = "//div[contains(@class,'modal-confirm-content')]//input";
+    public static string DataCancelamentoPlano { get; set; } = "//*[contains(text(),'Data de Cancelamento')]/parent::div/div/div/div[2]//input";
     public static string SelecionarDataCancelamentoPlano { get; set; } = "//*[text()='Today']";
     public static string OkCancelamento { get; set; } = "//*[text()='OK']";
     public static string FecharPlanoConfirmacao { get; set; } = "//button/*[text()='Fechar mesmo assim']";

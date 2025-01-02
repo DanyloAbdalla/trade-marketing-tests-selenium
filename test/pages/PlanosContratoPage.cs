@@ -140,6 +140,7 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage GerarPrePlano()
     {
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlano, "Botão Gerar Pré-Plano");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarRegistro);
 
@@ -559,7 +560,8 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ConfirmarCancelamentoDoPlano()
     {
-        Thread.Sleep(500);
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.DataCancelamentoPlano);
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.OkCancelamento, "Botão OK Cancelamento");
 
         Dsl.Clicar(webDriver, GlobalVariables.DataCancelamentoPlano, "Campo Data Cancelamento");
         Dsl.Clicar(webDriver, GlobalVariables.SelecionarDataCancelamentoPlano, "Botão Today Cancelamento");
