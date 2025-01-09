@@ -249,6 +249,7 @@ public class PlanosContratosPage
         else if (contextoDeExecucao.Equals("EditarPlano"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaEditarPlano, "Campo Inicio Vigencia Editar Plano");
+            Dsl.Esperar();
             Dsl.PreencherCalendariosInicioVigencia(webDriver, GlobalVariables.AvancarCalendarioMesInicioVigencia, 2);
         }
 
@@ -270,6 +271,7 @@ public class PlanosContratosPage
         else if (contextoDeExecucao.Equals("EditarPlano"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaEditarPlano, "Campo Fim Vigencia Editar Plano");
+            Dsl.Esperar();
             Dsl.PreencherCalendariosFimVigencia(webDriver, GlobalVariables.AvancarCalendarioMesFimVigencia, 2);
         }
 
@@ -382,6 +384,7 @@ public class PlanosContratosPage
                 var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo, "Mensagem Salvar Alocação Ativo");
                 Dsl.ValidarMensagemDeSucessoEAlerta(mensagemSucessoAtual, mensagemSucessoEsperada);
                 Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemSucessoAlocacaoAtivo);
             }
         }
 
@@ -634,8 +637,8 @@ public class PlanosContratosPage
                 }
                 else if (contextoDeExecucao.Contains("EditarPlanoIncluindoAtivo"))
                 {
-                    var valorReceitaAtivosEsperado = 950.00;
-                    var valorReceitaPlanoEsperado = 995.00;
+                    var valorReceitaAtivosEsperado = 1050.00;
+                    var valorReceitaPlanoEsperado = 1145.00;
                     Dsl.ValidarNumerosNoElemento(webDriver, GlobalVariables.ReceitaAtivos, valorReceitaAtivosEsperado, "Campo Receita Ativos");
                     Dsl.ValidarNumerosNoElemento(webDriver, GlobalVariables.ReceitaPlano, valorReceitaPlanoEsperado, "Campo Receita Plano");
                 }

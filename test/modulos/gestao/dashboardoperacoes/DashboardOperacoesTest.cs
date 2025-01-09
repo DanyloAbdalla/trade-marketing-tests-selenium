@@ -24,6 +24,8 @@ public class DashboardOperacoesTest
         .PreencherEmailUsuario(GlobalVariables.emailUsuarioSemPlanta)
         .PreencherSenhaUsuario(GlobalVariables.senhaUsuarioSemPlanta)
         .SubmeterLogin();
+
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TextoCardAtivosAlocados);
     }
 
     /// <summary>
@@ -92,10 +94,10 @@ public class DashboardOperacoesTest
     [Test, Order(3)]
     public void TestAcessarVisãoDetalhadaDeContratosVigentes()
     {
-        var contexto = "ContratosVigentes";
+        var card = "ContratosVigentes";
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeContratosAtivos(contexto)
+        .AcessarDetalhesDeContratosAtivos(card)
         .FecharDetalhes()
         .AcessarDetalhesDeContratosVencendo()
         .FecharDetalhes();
@@ -116,10 +118,10 @@ public class DashboardOperacoesTest
     [Test, Order(4)]
     public void TestAcessarVisãoDetalhadaTotalReceita()
     {
-        var contexto = "TotalReceita";
+        var card = "TotalReceita";
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeContratosAtivos(contexto)
+        .AcessarDetalhesDeContratosAtivos(card)
         .FecharDetalhes();
     }
 

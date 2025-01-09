@@ -52,7 +52,7 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <exception cref="WebDriverTimeoutException"></exception>
+    /// <exception cref="Exception"></exception>
     public static void EsperarInvisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
 
@@ -69,8 +69,8 @@ public class Dsl
             IWebElement element = webDriver.FindElement(By.XPath(XPath));
             fluentWait.Until(ExpectedConditions.StalenessOf(element));
         }
-        catch (Exception)
-        { Console.WriteLine("Erro ao processar a invisibilidade do elemento"); }
+        catch (Exception ex)
+        { Console.WriteLine("Erro ao processar a invisibilidade do elemento" + ex.Message); }
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <returns>Retorna uma número inteiro</returns>
-    /// <exception cref="WebDriverTimeoutException"></exception>
+    /// <exception cref="Exception"></exception>
     public static long ContarExistenciaDoElemento(IWebDriver webDriver, string XPath)
     {
         try
@@ -177,20 +177,8 @@ public class Dsl
 
             return elementCount;
         }
-        catch (WebDriverTimeoutException ex)
-        { throw new WebDriverTimeoutException(ex.Message); }
-    }
-
-    public static bool VerificarExistenciaDoElemento(IWebDriver webDriver, string XPath)
-    {
-        try
-        {
-            if (webDriver.FindElement(By.XPath(XPath)).Enabled || webDriver.FindElement(By.XPath(XPath)).Displayed) return true;
-        }
         catch (Exception ex)
         { throw new Exception(ex.Message); }
-
-        return false;
     }
 
     /// <summary>
@@ -199,7 +187,7 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <returns>Retorna um número inteiro</returns>
-    /// <exception cref="WebDriverTimeoutException"></exception>/
+    /// <exception cref="Exception"></exception>/
     public static long ContarLinhasEmTabela(IWebDriver webDriver, string XPath)
     {
         try
@@ -210,8 +198,8 @@ public class Dsl
 
             return trCount;
         }
-        catch (WebDriverTimeoutException ex)
-        { throw new WebDriverTimeoutException(ex.Message); }
+        catch (Exception ex)
+        { throw new Exception(ex.Message); }
     }
 
     /// <summary>
@@ -350,15 +338,31 @@ public class Dsl
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
+                Esperar();
                 webDriver.FindElement(By.XPath(XPath)).Click();
             }
 
-            var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
-
-            if (classAttribute.Contains("ant-picker-cell-in-view"))
-                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]")).Click();
-            else
+            if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
+            else
+            {
+                var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
+
+                if (classAttribute.Contains("ant-picker-cell-in-view"))
+                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]")).Click();
+                else
+                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
+            }
+            /*else
+            {
+                var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
+
+                if (classAttribute.Contains("ant-picker-cell-in-view"))
+                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]")).Click();
+                else
+                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
+            }*/
+
         }
     }
 
@@ -384,16 +388,29 @@ public class Dsl
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
+                Esperar();
                 webDriver.FindElement(By.XPath(XPath)).Click();
             }
 
-            //var quantiadadedDiasCalendario = Dsl.ContarExistenciaDoElemento(webDriver, $"(//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}']");
+            if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
+                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
+            else
+            {
+                var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
+
+                if (classAttribute.Contains("ant-picker-cell-in-view"))
+                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
+                else
+                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
+            }
+
+            /*var quantiadadedDiasCalendario = Dsl.ContarExistenciaDoElemento(webDriver, $"(//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}']");
             var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
 
             if (classAttribute.Contains("ant-picker-cell-in-view"))
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
             else
-                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
+                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();*/
 
         }
     }
