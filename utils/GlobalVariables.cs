@@ -5,7 +5,7 @@ public class GlobalVariables
 {
     #region Projeto
     //Executa, mostrando o Browser na tela, se handLessMode igual false
-    public static bool handLessMode = true; 
+    public static bool handLessMode = false;
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -157,7 +157,7 @@ public class GlobalVariables
     public static string ReceitaAtivos { get; set; } = "//*[@name='VendaCalculada']";
     public static string ReceitaPlano { get; set; } = "//*[@name='ValorTotalContrato']";
     public static string TipoCampanha { get; set; } = "//*[@name='SubTipoFornecedorId']";
-    public static string SelecionarTipoCampanha { get; set; } = "//*[text()='Tipo Campanha 01']";
+    public static string SelecionarTipoCampanha { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Tipo Campanha 01']";
     public static string QuantidadeParcelas { get; set; } = "//*[@name='QuantidadeParcelas']";
     public static string Setor { get; set; } = "//*[@name='SetorId']//input";
     public static string SelecionarSetor { get; set; } = "(//*[text()='Geral'])[2]";

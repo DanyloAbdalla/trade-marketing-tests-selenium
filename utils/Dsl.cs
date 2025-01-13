@@ -67,7 +67,9 @@ public class Dsl
         try
         {
             IWebElement element = webDriver.FindElement(By.XPath(XPath));
-            fluentWait.Until(ExpectedConditions.StalenessOf(element));
+            if(fluentWait.Until(ExpectedConditions.StalenessOf(element)) || fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)))){}
+            //fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)));
+            //fluentWait.Until(ExpectedConditions.StalenessOf(element));
         }
         catch (Exception ex)
         { Console.WriteLine("Erro ao processar a invisibilidade do elemento" + ex.Message); }

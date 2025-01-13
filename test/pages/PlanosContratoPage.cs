@@ -613,7 +613,7 @@ public class PlanosContratosPage
     }
 
     /// <summary>
-    /// Método para validar as receitas do ativo e do plano
+    /// Método para validar as receitas dos ativos e do plano
     /// </summary>
     /// <returns></returns>
     public PlanosContratosPage ValidarReceitasDoPlano(string contextoDeExecucao, string contextoDeTeste)
@@ -637,8 +637,8 @@ public class PlanosContratosPage
                 }
                 else if (contextoDeExecucao.Contains("EditarPlanoIncluindoAtivo"))
                 {
-                    var valorReceitaAtivosEsperado = 1050.00;
-                    var valorReceitaPlanoEsperado = 1145.00;
+                    var valorReceitaAtivosEsperado = 950.00;
+                    var valorReceitaPlanoEsperado = 1045.00;
                     Dsl.ValidarNumerosNoElemento(webDriver, GlobalVariables.ReceitaAtivos, valorReceitaAtivosEsperado, "Campo Receita Ativos");
                     Dsl.ValidarNumerosNoElemento(webDriver, GlobalVariables.ReceitaPlano, valorReceitaPlanoEsperado, "Campo Receita Plano");
                 }
