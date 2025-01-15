@@ -46,8 +46,8 @@ public class SmartIaTest
     [Test, Order(1)]
     public void TestCriarCampanhaSmartIA()
     {
-        var contexto = "NovaCampanha";
-        var statusCampanha = "Criando";
+        var contextoDeExecucao = "NovaCampanha";
+        var statusCampanhaEsperado = "Criando";
 
         new SmartIaPage(webDriver)
         .NovaCampanhaSmartIA()
@@ -56,10 +56,10 @@ public class SmartIaTest
         .RealizarVarredura()
         .SelecionarEReservarAtivos()
         .SalvarAtivosReservados()
-        .SalvarCampanha(contexto)
+        .SalvarCampanha(contextoDeExecucao)
         .FecharCampanha()
         .BuscarCampanhas()
-        .ValidarStatusDaCampanha(statusCampanha);
+        .ValidarStatusDaCampanha(statusCampanhaEsperado);
     }
 
     /// <summary>
