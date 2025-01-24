@@ -6,17 +6,27 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes do cadastro de campanhas SmartIA
 /// </summary>
-[TestFixture]
+[TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
+[TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
+[Parallelizable(ParallelScope.Fixtures)]
 public class SmartIaTest
 {
-    private IWebDriver _webDriver;
-    private readonly BrowserType _browserType = BrowserType.Chrome;
-    private RunSettings _runSettings;
-    private bool _previousTestFalied;
-    private string nomeCampanha = "MassaAutomatizada";
-    private string whatsAppResponsavel = "15988086091";
-    private string nomeResponsavel = "Usuário Homologacao";
-    private string mensagemCabecalho = "Massa Automatizada";
+    private RunSettings runSettings;
+    private IWebDriver webDriver;
+    private readonly BrowserType browserType = BrowserType.Chrome;
+    private bool previousTestFalied;
+    private readonly string testContext;
+    private readonly string className;
+    private readonly string nomeCampanha = "CampanhaMassaAutomatizada";
+    private readonly string whatsAppResponsavel = "15988086091";
+    private readonly string nomeResponsavel = "Usuário Homologacao";
+    private readonly string mensagemCabecalho = "Campanha Massa Automatizada";
+
+    public SmartIaTest(string testContext)
+    {
+        this.testContext = testContext;
+        className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+    }
 
     /// <summary>
     /// Método que será executado antes de cada teste
@@ -24,17 +34,19 @@ public class SmartIaTest
     [SetUp]
     public void Setup()
     {
-        if (_previousTestFalied) Assert.Ignore("Pular o próximo teste, pois o teste anterior falhou");
+        runSettings = RunSettings.LoadSettings();
+        webDriver = DriverFactory.CreateDriver(browserType);
+        var testName = TestContext.CurrentContext.Test.MethodName;
 
-        _runSettings = RunSettings.LoadSettings();
-        _webDriver = DriverFactory.CreateDriver(_browserType);
+        if (previousTestFalied)
+            Assert.Ignore("Pular o próximo teste, pois o teste anterior falhou");
+        else if (runSettings.ToSkip(className, testContext, testName))
+            Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        new LoginPage(_webDriver)
-        .PreencherEmailUsuario(GlobalVariables.emailUsuarioSemPlanta)
-        .PreencherSenhaUsuario(GlobalVariables.senhaUsuarioSemPlanta)
-        .SubmeterLogin();
+        new LoginPage(webDriver)
+        .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
 
-        new HomePage(_webDriver)
+        new HomePage(webDriver)
         .AcessarCadastroSmartIa();
     }
 
@@ -55,12 +67,10 @@ public class SmartIaTest
     [Test, Order(1)]
     public void TestCriarCampanhaSmartIA()
     {
-        Dsl.PularTest(_runSettings, nameof(SmartIaTest), "", nameof(TestCriarCampanhaSmartIA));
-
         var contextoDeExecucao = "NovaCampanha";
         var statusCampanhaEsperado = "Criando";
 
-        new SmartIaPage(_webDriver)
+        new SmartIaPage(webDriver)
         .NovaCampanhaSmartIA()
         .PreencherCamposCampanha(nomeCampanha, whatsAppResponsavel, nomeResponsavel, mensagemCabecalho)
         .ValidarVarejoSelecionado()
@@ -90,11 +100,9 @@ public class SmartIaTest
     [Test, Order(2)]
     public void TestEditarAtivosReservadosNaCampanhaExistente()
     {
-        Dsl.PularTest(_runSettings, nameof(SmartIaTest), "", nameof(TestEditarAtivosReservadosNaCampanhaExistente));
-
         var contexto = "EditarCampanha";
 
-        new SmartIaPage(_webDriver)
+        new SmartIaPage(webDriver)
         .BuscarCampanhas()
         .AbrirEdicaoDaCampanha()
         .AbrirMenuSuspensoVarejos()
@@ -120,12 +128,10 @@ public class SmartIaTest
     [Test, Order(3)]
     public void TestReservarNovoAtivoNaCampanhaExistente()
     {
-        Dsl.PularTest(_runSettings, nameof(SmartIaTest), "", nameof(TestReservarNovoAtivoNaCampanhaExistente));
-
         var contexto = "EditarCampanha";
         var nomeAtivo = "Aplicativo";
 
-        new SmartIaPage(_webDriver)
+        new SmartIaPage(webDriver)
         .BuscarCampanhas()
         .AbrirEdicaoDaCampanha()
         .AbrirMenuSuspensoVarejos()
@@ -140,12 +146,22 @@ public class SmartIaTest
     [TearDown]
     public void TearDown()
     {
-        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed) _previousTestFalied = true;
+        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped)
+        {
+            webDriver.Close();
+        }
+        else if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+        {
+            previousTestFalied = true;
+            webDriver.Close();
+        }
+        else
+        {
+            //Retorna para o Dashboard de Operações no final de cada teste, realizando logout
+            new HomePage(webDriver).AcessarDashboardOperacoes();
+            new HomePage(webDriver).RealizarLogout();
 
-        //Retorna para o Dashboard de Operações no final de cada teste, realizando logout
-        new HomePage(_webDriver).AcessarDashboardOperacoes();
-        new HomePage(_webDriver).RealizarLogout();
-
-        _webDriver.Close();
+            webDriver.Close();
+        }
     }
 }

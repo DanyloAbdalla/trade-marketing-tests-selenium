@@ -10,16 +10,18 @@ namespace MeuClienteWebTestProject;
 public class DashboardOperacoesTest
 {
 
-    private IWebDriver _webDriver;
-    private readonly BrowserType _browserType = BrowserType.Chrome;
-    private RunSettings _runSettings;
-    private readonly string _className;
+    private RunSettings runSettings;
+    private IWebDriver webDriver;
+    private readonly BrowserType browserType = BrowserType.Chrome;
+    private readonly string className;
+    private readonly string nomeAtivo = "Adesivo de Elevador";
+    private readonly string nomeAtivoEsperado = "AdesivodeElevador";
+    private readonly string nomeContratoCampanha = "DashboardOperacoesMassaAutomatizada";
 
     public DashboardOperacoesTest()
     {
-        _className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+        className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
     }
-
 
     /// <summary>
     /// Método que será executado antes de cada teste
@@ -27,21 +29,21 @@ public class DashboardOperacoesTest
     [SetUp]
     public void SetUp()
     {
-        _runSettings = RunSettings.LoadSettings();
-        _webDriver = DriverFactory.CreateDriver(_browserType);
-        var _testName = TestContext.CurrentContext.Test.MethodName;
+        runSettings = RunSettings.LoadSettings();
+        webDriver = DriverFactory.CreateDriver(browserType);
+        var testName = TestContext.CurrentContext.Test.MethodName;
 
-        if (_runSettings.ToSkip(_className, null, _testName))
+        if (runSettings.ToSkip(className, null, testName))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        new LoginPage(_webDriver)
+        new LoginPage(webDriver)
         .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
 
         //Retorna para o Dashboard de Operações, se no último logout a plataforma parou em outra tela
-        new HomePage(_webDriver)
+        new HomePage(webDriver)
         .VoltarParaDashboardOperacoes();
 
-        Dsl.EsperarVisibilidadeDoElemento(_webDriver, GlobalVariables.TextoCardAtivosAlocados);
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TextoCardAtivosAlocados);
     }
 
     /// <summary>
@@ -59,7 +61,7 @@ public class DashboardOperacoesTest
     [Test, Order(1)]
     public void TestAcessarVisaoDetalhadaLojasAtivas()
     {
-        new DashboardOperacoesPage(_webDriver)
+        new DashboardOperacoesPage(webDriver)
         .AcessarDetalhesLojasAtivas()
         .FecharDetalhes();
     }
@@ -83,12 +85,12 @@ public class DashboardOperacoesTest
     [Test, Order(2)]
     public void TestAcessarVisaoDetalhadaDeAtivosAlocados()
     {
-        new DashboardOperacoesPage(_webDriver)
-        .AcessarDetalhesDaDiponibilidade()
+        new DashboardOperacoesPage(webDriver)
+        .AcessarDetalhesDaDiponibilidade(nomeAtivo, nomeAtivoEsperado)
         .FecharDetalhes()
-        .AcessarDetalhesDasNegociacoes()
+        .AcessarDetalhesDasNegociacoes(nomeAtivo, nomeAtivoEsperado)
         .FecharDetalhes()
-        .AcessarDetalhesDoPotencialDeReceita()
+        .AcessarDetalhesDoPotencialDeReceita(nomeAtivo, nomeAtivoEsperado)
         .FecharDetalhes();
     }
 
@@ -112,10 +114,10 @@ public class DashboardOperacoesTest
     {
         var card = "ContratosVigentes";
 
-        new DashboardOperacoesPage(_webDriver)
-        .AcessarDetalhesDeContratosAtivos(card)
+        new DashboardOperacoesPage(webDriver)
+        .AcessarDetalhesDeContratosAtivos(card, nomeContratoCampanha)
         .FecharDetalhes()
-        .AcessarDetalhesDeContratosVencendo()
+        .AcessarDetalhesDeContratosVencendo(nomeContratoCampanha)
         .FecharDetalhes();
     }
 
@@ -136,8 +138,8 @@ public class DashboardOperacoesTest
     {
         var card = "TotalReceita";
 
-        new DashboardOperacoesPage(_webDriver)
-        .AcessarDetalhesDeContratosAtivos(card)
+        new DashboardOperacoesPage(webDriver)
+        .AcessarDetalhesDeContratosAtivos(card, nomeContratoCampanha)
         .FecharDetalhes();
     }
 
@@ -164,7 +166,7 @@ public class DashboardOperacoesTest
         var cardReceitaBandeira = "EvolucaoReceitaBandeira";
         var cardReceitaTipoFornecedor = "EvolucaoReceitaTipoFornecedor";
 
-        new DashboardOperacoesPage(_webDriver)
+        new DashboardOperacoesPage(webDriver)
         .AcessarDetalhesDeAterrissagemReceita(cardReceita)
         .FecharDetalhes()
         .AcessarDetalhesDeAterrissagemReceita(cardReceitaBandeira)
@@ -192,7 +194,7 @@ public class DashboardOperacoesTest
         var cardPerformanceParceiro = "EvolucaoPerformanceParceiros";
         var cardInvestimentoParceiro = "InvestimentoParceiro";
 
-        new DashboardOperacoesPage(_webDriver)
+        new DashboardOperacoesPage(webDriver)
         .AcessarDetalhesDeListaParceiros(cardPerformanceParceiro)
         .FecharDetalhes()
         .AcessarDetalhesDeListaParceiros(cardInvestimentoParceiro)
@@ -214,7 +216,7 @@ public class DashboardOperacoesTest
     [Test, Order(7)]
     public void TestAcessarVisaoDetalhadaDesempenhoLoja()
     {
-        new DashboardOperacoesPage(_webDriver)
+        new DashboardOperacoesPage(webDriver)
         .AcessarDetalhesDesempenhoPorLoja()
         .FecharDetalhes();
     }
@@ -234,7 +236,7 @@ public class DashboardOperacoesTest
     [Test, Order(8)]
     public void TestAcessarVisaoDetalhadaDesempenhoAtivo()
     {
-        new DashboardOperacoesPage(_webDriver)
+        new DashboardOperacoesPage(webDriver)
         .AcessarDetalhesDesempenhoDeAtivo()
         .FecharDetalhes();
     }
@@ -247,12 +249,12 @@ public class DashboardOperacoesTest
     {
         if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped)
         {
-            _webDriver.Close();
+            webDriver.Close();
         }
         else
         {
-            new HomePage(_webDriver).RealizarLogout();
-            _webDriver.Close();
+            new HomePage(webDriver).RealizarLogout();
+            webDriver.Close();
         }
 
     }

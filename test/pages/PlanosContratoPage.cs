@@ -165,7 +165,7 @@ public class PlanosContratosPage
             var tituloAbaEsperado = abaPlano;
 
             Assert.That(tituloAbaAtual, Does.Contain(tituloAbaEsperado));
-            Thread.Sleep(500);
+            Dsl.Esperar(500);
 
             contadorAbaPlano++;
         }

@@ -67,9 +67,7 @@ public class Dsl
         try
         {
             IWebElement element = webDriver.FindElement(By.XPath(XPath));
-            if (fluentWait.Until(ExpectedConditions.StalenessOf(element)) || fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)))) { }
-            //fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)));
-            //fluentWait.Until(ExpectedConditions.StalenessOf(element));
+            if (fluentWait.Until(ExpectedConditions.StalenessOf(element)) || fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)))) { return; }
         }
         catch (Exception ex)
         { Console.WriteLine("Erro ao processar a invisibilidade do elemento" + ex.Message); }
@@ -356,16 +354,6 @@ public class Dsl
                 else
                     webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
             }
-            /*else
-            {
-                var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
-
-                if (classAttribute.Contains("ant-picker-cell-in-view"))
-                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]")).Click();
-                else
-                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
-            }*/
-
         }
     }
 
@@ -406,15 +394,6 @@ public class Dsl
                 else
                     webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
             }
-
-            /*var quantiadadedDiasCalendario = Dsl.ContarExistenciaDoElemento(webDriver, $"(//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}']");
-            var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
-
-            if (classAttribute.Contains("ant-picker-cell-in-view"))
-                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
-            else
-                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();*/
-
         }
     }
 
@@ -617,17 +596,5 @@ public class Dsl
         IWebElement imageInput = webDriver.FindElement(By.XPath(XPath));
 
         imageInput.SendKeys("C:\\TestProjectMeuCliente\\logomeucliente.png");
-    }
-
-    /// <summary>
-    /// Método que valida se o caso de teste será executado ou não executado, conforme configurado no arquivo bin\Debug\net8.0\apprunsettings.json
-    /// </summary>
-    /// <param name="runSettings"></param>
-    /// <param name="className"></param>
-    /// <param name="testName"></param>
-    public static void PularTest(RunSettings runSettings, string className, string fixtureName, string testName)
-    {
-        if (runSettings.ToSkip(className, fixtureName, testName))
-            Assert.Ignore("Teste ignorado pelas configurações de execução");
     }
 }

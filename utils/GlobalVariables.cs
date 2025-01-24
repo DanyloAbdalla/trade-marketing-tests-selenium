@@ -1,4 +1,3 @@
-
 namespace MeuClienteWebTestProject;
 
 public class GlobalVariables
@@ -29,8 +28,6 @@ public class GlobalVariables
     public static string PreencherFiltro { get; set; } = "//*[@class='ant-table-filter-dropdown']//input";
     public static string BuscarRegistro { get; set; } = "//button/*[text()='Buscar']";
     public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
-    public static string PrimeiraLinhaTabelaColuna1 { get; set; } = "(//tbody)[9]/tr[2]/td[1]";
-    public static string PrimeiraLinhaTabelaColuna2 { get; set; } = "(//tbody)[9]/tr[2]/td[2]";
     public static string AvisoInexistenciaDados { get; set; } = "//*[text()='Não há dados']";
     public static string LoadDeTela { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
     #endregion
