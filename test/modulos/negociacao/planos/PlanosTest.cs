@@ -37,7 +37,7 @@ public class PlanosTest
         var testName = TestContext.CurrentContext.Test.MethodName;
 
         if (previousTestFalied)
-            Assert.Ignore("Pular o próximo teste, pois o teste anterior falhou");
+            Assert.Ignore("Pular teste, o teste anterior falhou");
         else if (runSettings.ToSkip(className, testContext, testName))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 

@@ -92,7 +92,7 @@ public class HomePage
     public HomePage VoltarParaDashboardOperacoes()
     {
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado);
-        var ultimoCadastroAcessado = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado");
+        var ultimoCadastroAcessado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado");
         Dsl.Esperar();
 
         if (!ultimoCadastroAcessado.Contains("Dashboard Opera..."))

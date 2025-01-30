@@ -42,7 +42,10 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Dsl.Esperar();
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.ColunaAtivoListagemDisponibilidadeAtivos, nomeAtivoEsperado, "Coluna Ativo");
+        
+        var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaAtivoListagemDisponibilidadeAtivos, "Coluna Ativo");
+        var nomeAtivoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
+        Dsl.ValidarTextosNoElemento(nomeAtivoAtual, nomeAtivoEsperado);
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -58,7 +61,10 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Dsl.Esperar();
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.ColunaAtivoListagemAtivosNegociados, nomeAtivoEsperado, "Coluna Ativo");
+        
+        var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaAtivoListagemAtivosNegociados, "Coluna Ativo");
+        var nomeAtivoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
+        Dsl.ValidarTextosNoElemento(nomeAtivoAtual, nomeAtivoEsperado);
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ColunaDetalhesBotaoContratosVinculado, "Botão Visualizar Contratos Vinculados");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Contratos Vinculados");
@@ -78,7 +84,10 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNomePotencialReceita, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Dsl.Esperar();
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.ColunaNomeListagemPotencialReceita, nomeAtivoEsperado, "Coluna Ativo");
+
+        var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaNomeListagemPotencialReceita, "Coluna Ativo");
+        var nomeAtivoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
+        Dsl.ValidarTextosNoElemento(nomeAtivoAtual, nomeAtivoEsperado);
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -105,9 +114,10 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeConratoCampanha);
         Dsl.Esperar();
-        var contratoAtual = Dsl.PegarTextoDoElemento(webDriver, GlobalVariables.ColunaContratoListagemContratosAtivos, "Coluna Contrato");
-        var contratoEsperado = nomeConratoCampanha;
-        Assert.That(contratoAtual, Does.Contain(contratoEsperado), "Contratos não correspondem");
+
+        var nomeContratoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaContratoListagemContratosAtivos, "Coluna Contrato");
+        var nomecontratoEsperado = nomeConratoCampanha;
+        Dsl.ValidarTextosNoElemento(nomeContratoAtual, nomecontratoEsperado);
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ColunaAcoesBotaoListagemContratosAtivos, "Botão Visualizar Ativos Vinculados");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");
@@ -120,15 +130,16 @@ public class DashboardOperacoesPage
     /// Método para acessar a tela de Detalhes dos Contratos Vencendo no card Contratos Vigentes
     /// </summary>
     /// <returns></returns>
-    public DashboardOperacoesPage AcessarDetalhesDeContratosVencendo(string nomeContratoCampanha)
+    public DashboardOperacoesPage AcessarDetalhesDeContratosVencendo(string nomeContratoCampanhaEsperado)
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesContratosVencendo, "Botão Visualizar Contratos Vencendo");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarContratoPorCampanha, "Botão Filtro");
 
-        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeContratoCampanha);
+        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeContratoCampanhaEsperado);
         Dsl.Esperar();
-        Dsl.ValidarTextosNoElemento(webDriver, GlobalVariables.ColunaContratoListagemContratosVencendo, nomeContratoCampanha, "Coluna Contrato");
+        var nomeContratoCampanhaAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaContratoListagemContratosVencendo, "Coluna Contrato");
+        Dsl.ValidarTextosNoElemento(nomeContratoCampanhaAtual, nomeContratoCampanhaEsperado);
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ColunaAcoesBotaoListagemContratosVencendo, "Botão Visualizar Ativos Vinculados");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FecharTelaContratosEAtivosVinculados, "Botão Fechar Ativos Vinculados");

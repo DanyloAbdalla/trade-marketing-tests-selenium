@@ -46,10 +46,23 @@
     },
     {
       "ClassName": "SmartIaTest",
-      "Tests": [
-        {"TestName": "TestCriarCampanhaSmartIA", "TestSkip": true},
-        {"TestName": "TestEditarAtivosReservadosNaCampanhaExistente", "TestSkip": true},
-        {"TestName": "TestReservarNovoAtivoNaCampanhaExistente", "TestSkip": true}
+      "FixturesNames": [
+        {
+          "FixtureName": "SemPlantaLoja",
+          "Tests": [
+            {"TestName": "TestCriarCampanhaSmartIA", "TestSkip": true},
+            {"TestName": "TestEditarAtivosReservadosNaCampanhaExistente", "TestSkip": true},
+            {"TestName": "TestReservarNovoAtivoNaCampanhaExistente", "TestSkip": true}
+          ]
+        },
+        {
+          "FixtureName": "ComPlantaLoja",
+          "Tests": [
+            {"TestName": "TestCriarCampanhaSmartIA", "TestSkip": true},
+            {"TestName": "TestEditarAtivosReservadosNaCampanhaExistente", "TestSkip": true},
+            {"TestName": "TestReservarNovoAtivoNaCampanhaExistente", "TestSkip": true}
+          ]
+        }
       ]
     }
   ]
