@@ -7,8 +7,8 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes para o Cadastro de Planos\Contratos
 /// </summary>
-[TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
-[TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
+[TestFixture("SemPlantaLoja")]
+[TestFixture("ComPlantaLoja")]
 [Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
 {
@@ -17,13 +17,15 @@ public class PlanosTest
     private readonly BrowserType browserType = BrowserType.Chrome;
     private bool previousTestFaliedSkipped = false;
     private bool isFirstTest;
-    private readonly string testContext;
+    private readonly string contextoDeTeste;
     private readonly string className;
-    private readonly string nomeCampanha = "PlanosMassaAutomatizada";
+    private readonly string nomeCampanha = "PlanoSemWorkflowMassaAutomatizada";
+    private readonly string statusPlanoEsperado = "Simulado";
+    private readonly string farolPlanoEsperado = "PLANEJADO";
 
-    public PlanosTest(string testContext)
+    public PlanosTest(string contextoDeTeste)
     {
-        this.testContext = testContext;
+        this.contextoDeTeste = contextoDeTeste;
         className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
     }
 
@@ -44,10 +46,10 @@ public class PlanosTest
 
         if (previousTestFaliedSkipped)
             Assert.Ignore("Pular teste, o teste anterior falhou");
-        if (runSettings.ToSkip(className, testContext, testName))
+        if (runSettings.ToSkip(className, contextoDeTeste, testName))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        if (testContext.Contains("SemPlantaLoja"))
+        if (contextoDeTeste.Contains("SemPlantaLoja"))
         {
             new LoginPage(webDriver)
             .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
@@ -55,7 +57,7 @@ public class PlanosTest
             new HomePage(webDriver)
             .AcessarCadastroPlanos();
         }
-        else if (testContext.Contains("ComPlantaLoja"))
+        else if (contextoDeTeste.Contains("ComPlantaLoja"))
         {
             new LoginPage(webDriver)
             .RealizarLogin(GlobalVariables.emailUsuarioComPlanta, GlobalVariables.senhaUsuarioComPlanta);
@@ -66,38 +68,78 @@ public class PlanosTest
     }
 
     /// <summary>
-    /// Testar a criação de um plano
+    /// Testar a criação de um plano sem workflow
     /// 
     /// Como comercial de trade marketing
-    /// Eu quero criar um novo plano
-    /// E inicar uma nova negociação
+    /// Eu quero criar um plano
+    /// E inicar uma negociação
     /// Para enviar a proposta para o cliente
     /// 
     /// Dado que eu tenho uma nova negociação
     /// E que eu tenho disponibilidade de inventário, em um determinado período de vigência
-    /// Quando eu simular um novo plano
-    /// E escolher os ativos, colocar as quantidades, selecionar as lojas
+    /// Quando eu simular um novo plano, preenchendo indústria E vigência
+    /// E escolher os ativos, alocar as quantidades, selecionar as lojas
     /// Então será apresentado o botão de sucesso para as lojas com disponibilidade, com o botão Gerar Pré-Plano habilitado
     /// Quando eu clicar no botão “Gerar Pré-Plano”
-    /// Então o plano\contrato será criado com o ativo, com Status = Simulado e Farol = Planejado, com vigência em d+30
+    /// Então o plano\contrato será criado, com Status = Simulado e Farol = Planejado
     /// </summary>
     [Test, Order(1)]
-    public void TestCriarPlano()
+    public void TestCriarPlanoSemWorkflow()
     {
-        var statusPlanoEsperado = "Simulado";
-        var farolPlanoEsperado = "PLANEJADO";
-        var contextoDeExecucao = "NovoPlano";
+        var tipoAtivoMidiaPlano = "Grafica";
+        var contextoDeExecucao = "CriarPlanoSemWorkflow";
         isFirstTest = true;
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos()
-        .PreencherQuantidadeAtivos(testContext)
+        .SelecionarAtivos(tipoAtivoMidiaPlano)
+        .PreencherQuantidadeAtivos(contextoDeTeste, tipoAtivoMidiaPlano)
         .SelecionarLojas()
-        .GerarPrePlano(testContext)
-        .SalvarPlano(contextoDeExecucao, testContext)
+        .GerarPrePlano(contextoDeTeste, tipoAtivoMidiaPlano)
+        .SalvarPlano()
+        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
+        .ValidarPlanoCriado()
+        .FecharDadosDoPlano()
+        .BuscarPlanos(nomeCampanha)
+        .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
+    }
+
+    /// <summary>
+    /// Testar a criação de um plano com workflow
+    /// 
+    /// Como comercial de trade marketing
+    /// Eu quero criar um plano
+    /// E inicar uma negociação
+    /// Para enviar a proposta para o cliente
+    /// 
+    /// Dado que eu tenho uma nova negociação
+    /// E que eu tenho disponibilidade de inventário, em um determinado período de vigência
+    /// Quando eu simular um novo plano, preenchendo indústria E vigência
+    /// E escolher os ativos, alocar as quantidades, selecionar as lojas
+    /// Então será apresentado o botão de sucesso para as lojas com disponibilidade, com o botão Gerar Pré-Plano habilitado
+    /// Quando eu clicar no botão “Gerar Pré-Plano”
+    /// Então o plano\contrato será criado, com Status = Simulado e Farol = Planejado
+    /// E com as etapas do Workflow
+    /// </summary>
+    [Test, Order(2)]
+    public void TestCriarPlanoComWorkflow()
+    {
+        var tipoAtivoMidiaPlano = "Fisica";
+        var contextoDeExecucao = "CriarPlanoComWorkflow";
+        var nomeCampanha = "PlanoComWorkflowMassaAutomatizada";
+
+        new PlanosContratosPage(webDriver)
+        .NovaSimulacaoDePlano()
+        .PreencherCampoIndustria()
+        .PreencherCampoCampanha(nomeCampanha)
+        .SelecionarAtivos(tipoAtivoMidiaPlano)
+        .PreencherQuantidadeAtivos(contextoDeTeste, tipoAtivoMidiaPlano)
+        .SelecionarLojas()
+        .GerarPrePlano(contextoDeTeste, tipoAtivoMidiaPlano)
+        .SalvarPlano()
+        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
         .ValidarPlanoCriado()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
@@ -117,17 +159,17 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então um o plano será salvo com a nova vigência
     /// </summary>
-    [Test, Order(2)]
+    [Test, Order(3)]
     public void TestEditarPlanoExistenteAlterandoVigencia()
     {
-        var executionContext = "EditarPlano";
+        var contextoDeExecucao = "EditarPlano";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .EditarInicioVigencia(executionContext)
-        .EditarFimVigencia(executionContext)
-        .SalvarPlano(executionContext)
+        .EditarInicioVigencia(contextoDeExecucao)
+        .EditarFimVigencia(contextoDeExecucao)
+        .SalvarPlano()
         .FecharDadosDoPlano();
     }
 
@@ -144,17 +186,18 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então o plano será salvo com sucesso com a nova quantidade
     /// </summary>
-    [Test, Order(3)]
+    [Test, Order(4)]
     public void TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel()
     {
-        var executionContext = "EditarPlanoAlterandoQuantidadeAtivo";
+        var contextoDeExecucao = "EditarPlanoAlterandoQuantidadeAtivo";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
-        .EditarQuantidadesDosAtivosNoPlano(testContext)
-        .SalvarPlano(executionContext, testContext)
+        .EditarQuantidadesDosAtivosNoPlano(contextoDeTeste)
+        .SalvarPlano()
+        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
         .FecharDadosDoPlano();
     }
 
@@ -170,17 +213,18 @@ public class PlanosTest
     /// E incluir um novo ativo para a loja com disponibilidade de inventário
     /// Então o plano será salvo com sucesso com o novo ativo
     /// </summary>
-    [Test, Order(4)]
+    [Test, Order(5)]
     public void TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel()
     {
-        var executionContext = "EditarPlanoIncluindoAtivo";
+        var contextoDeExecucao = "EditarPlanoIncluindoAtivo";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
-        .AlocarNovosAtivosNoPlano(testContext)
-        .SalvarPlano(executionContext, testContext)
+        .AlocarNovosAtivosNoPlano(contextoDeTeste)
+        .SalvarPlano()
+        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
         .FecharDadosDoPlano();
     }
 
@@ -197,19 +241,18 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então o plano será salvo, com Status = Aprovado e Farol = Aprovado
     /// </summary>
-    [Test, Order(5)]
+    [Test, Order(6)]
     public void TestAprovarPlano()
     {
         var situacaoPlano = "Contrato Aprovado";
         var statusPlanoEsperado = "Aprovado";
         var farolPlanoEsperado = "APROVADO";
-        var executionContext = "EditarPlano";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .EditarSituacaoDoPlano(situacaoPlano)
-        .SalvarPlano(executionContext)
+        .SalvarPlano()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
@@ -228,19 +271,20 @@ public class PlanosTest
     /// Então será apresentado o botão de alerta para as lojas com indisponibilidade
     /// E uma mensagem será apresentada ao lado do botão Gerar Pré-Plano, com o mesmo desabilitado
     /// </summary>
-    [Test, Order(6)]
+    [Test, Order(7)]
     public void TestCriarPlanoComAlertaDeInventario()
     {
-        var executionContext = "NovoPlano";
+        var tipoAtivoMidiaPlano = "Grafica";
+        var contextoDeExecucao = "CriarPlanoSemWorkflow";
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
-        .EditarInicioVigencia(executionContext)
-        .EditarFimVigencia(executionContext)
-        .SelecionarAtivos()
-        .PreencherQuantidadeAtivos(testContext)
+        .EditarInicioVigencia(contextoDeExecucao)
+        .EditarFimVigencia(contextoDeExecucao)
+        .SelecionarAtivos(tipoAtivoMidiaPlano)
+        .PreencherQuantidadeAtivos(contextoDeTeste, tipoAtivoMidiaPlano)
         .SelecionarLojas()
         .ValidarAlertaInventario()
         .FecharDadosDoPlano();
@@ -259,19 +303,19 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então o plano será salvo, com Status = Cancelado e Farol = Cancelado
     /// </summary>
-    [Test, Order(7)]
+    [Test, Order(8)]
     public void TestCancelarPlano()
     {
         var situacaoPlano = "Cancelado";
         var statusPlanoEsperado = "Cancelado";
         var farolPlanoEsperado = "CANCELADO";
-        var executionContext = "CancelarPlano";
+        var contextoDeExecucao = "CancelarPlano";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .EditarSituacaoDoPlano(situacaoPlano)
-        .SalvarPlano(executionContext)
+        .SalvarPlano(contextoDeExecucao)
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
@@ -289,11 +333,16 @@ public class PlanosTest
     /// E excluir (desativar), clicando no campo Excluir do Plano
     /// Então o plano será excluído com mensagem de sucesso, não sendo mais apresentado na lista
     /// </summary>
-    [Test, Order(8)]
+    [Test, Order(9)]
     public void TestExcluirPlano()
     {
+        var nomeCampanhaSemWorkflow = "PlanoSemWorkflowMassaAutomatizada";
+        var nomeCampanhaComWorkflow = "PlanoComWorkflowMassaAutomatizada";
+
         new PlanosContratosPage(webDriver)
-        .BuscarPlanos(nomeCampanha)
+        .BuscarPlanos(nomeCampanhaSemWorkflow)
+        .ConfirmarExclusaoDoPlano()
+        .BuscarPlanos(nomeCampanhaComWorkflow)
         .ConfirmarExclusaoDoPlano();
     }
 
@@ -310,11 +359,11 @@ public class PlanosTest
                 previousTestFaliedSkipped = true;
 
             isFirstTest = false;
-            
+
             new HomePage(webDriver).AcessarDashboardOperacoes();
             new HomePage(webDriver).RealizarLogout();
         }
-        else if (testOutCome == TestStatus.Passed)
+        else if (testOutCome == TestStatus.Passed || testOutCome == TestStatus.Failed)
         {
             new HomePage(webDriver).AcessarDashboardOperacoes();
             new HomePage(webDriver).RealizarLogout();

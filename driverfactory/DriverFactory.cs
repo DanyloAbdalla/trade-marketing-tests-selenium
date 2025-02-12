@@ -27,6 +27,7 @@ public class DriverFactory
                 if (!GlobalVariables.handLessMode)
                 {
                     chromeOptions.AddArgument("--start-maximized");
+                    chromeOptions.AddArgument("--incognito");
                 }
                 else
                 {

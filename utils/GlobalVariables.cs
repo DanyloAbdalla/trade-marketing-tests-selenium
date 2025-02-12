@@ -4,7 +4,7 @@ public class GlobalVariables
 {
     #region Projeto
     //Executa, mostrando o Browser na tela, se handLessMode igual false
-    public static bool handLessMode = true;
+    public static bool handLessMode = false;
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -20,8 +20,8 @@ public class GlobalVariables
     #region Elementos de página - Elementos Comuns
     public static string MenuUsuarioLogado { get; set; } = "//header/div[@class='Log']/div[2]";
     public static string SairConta { get; set; } = "//*[contains(@class,'logout')]/ancestor::a/*[text()='Sair']";
-    public static string Mensagens { get; set; } = "//*[@id='ant-message-notice']";
-    public static string MensagemDeSucesso { get; set; } = "//*[@id='Mc-message-success']";
+    public static string Mensagens { get; set; } = "//*[@class='ant-message-notice']";
+    public static string MensagemDeComunicacao { get; set; } = "//div[@class='Mc-message-container']/div/div";
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//button/*[text()='Salvar']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
@@ -31,6 +31,7 @@ public class GlobalVariables
     public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
     public static string AvisoInexistenciaDados { get; set; } = "//*[text()='Não há dados']";
     public static string LoadDeTela { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
+    public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     #endregion
 
     #region Elementos de página - Login
@@ -110,9 +111,11 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Novo Plano
-    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']";
+    //public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']";
+    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
-    public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
+    //public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
+    public static string SelecionarIndustria { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[text()='Indústria 01 F']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
     public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
@@ -127,8 +130,10 @@ public class GlobalVariables
     public static string InventarioOk { get; set; } = "//td[9]//span[contains(@class,'check-inventario')]";
     public static string GerarPrePlano { get; set; } = "//button/*[text()='Gerar Pré-Plano']";
     public static string GerarPrePlanoComWorkflowSelecionado { get; set; } = "//button/*[text()='Gerar Pré Plano']";
-    public static string PesquisarUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[contains(text(),'Selecione o usuário')]/parent::div//input[@type='search']";
-    public static string SelecionarUsuarioResponsavelEtapaWorkflow { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02SP']";
+    public static string PesquisarUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[contains(text(),'Selecione o usuário')]/parent::div/div/div/div/div/div/div/div/span[2]";
+    public static string PreencherUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[contains(text(),'Selecione o usuário')]/parent::div/div/div/div/div/div/div/div/span[1]/input";
+    public static string SelecionarUsuarioResponsavelEtapaWorkflowSP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02SP']";
+    public static string SelecionarUsuarioResponsavelEtapaWorkflowCP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02CP']";
     public static string MensagensDadosPlano { get; set; } = "//*[@class='form-action'][2]/span[3]";
     #endregion
 

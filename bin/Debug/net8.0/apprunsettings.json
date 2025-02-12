@@ -6,7 +6,8 @@
         {
           "FixtureName": "SemPlantaLoja",
           "Tests": [
-            { "TestName": "TestCriarPlano", "TestSkip": false },
+            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigencia", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "TestSkip": false },
@@ -19,7 +20,8 @@
         {
           "FixtureName": "ComPlantaLoja",
           "Tests": [
-            { "TestName": "TestCriarPlano", "TestSkip": false },
+            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigencia", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "TestSkip": false },

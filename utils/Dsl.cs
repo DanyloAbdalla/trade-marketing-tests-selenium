@@ -229,6 +229,8 @@ public class Dsl
 
     /// <summary>
     /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
+    /// Existem tabelas que são apresentadas no sistema com uma tag tr a mais (que não é apresentada em tela)
+    /// Nesse cenário essa tag tr a mais é desconsiderada, retornando a quantidade real de linhas apresentadas em tela
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
@@ -272,12 +274,13 @@ public class Dsl
     /// <param name="nomeAtributo"></param>
     /// <returns>Retorna os dados contidos no atributo como uma string</returns>
     /// <exception cref="Exception"></exception>
-    public static string ObterDadosDoAtributoDoElemento(IWebDriver webDriver, string XPath, string elemento, string tipoAtributo)
+    public static object ObterDadosDoAtributoDoElemento(IWebDriver webDriver, string XPath, string elemento, string nomeAtributo)
     {
         try
         {
             EsperarVisibilidadeDoElemento(webDriver, XPath);
-            var valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(tipoAtributo);
+            object valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(nomeAtributo);
+
             return valor;
         }
         catch (Exception ex)
@@ -302,6 +305,7 @@ public class Dsl
             {
                 webDriver.FindElement(By.XPath(XPath)).SendKeys(textoValor[i].ToString());
             }
+            Esperar();
         }
         catch (Exception ex)
         { throw new Exception(ex.Message); }
@@ -471,21 +475,22 @@ public class Dsl
     /// <param name="mensagemEsperada"></param>
     /// <param name="mensagemTipo"></param>
     /// <returns></returns>
-    public static void ValidarMensagemDeComunicacao(string mensagemAtual, string mensagemEsperada, string mensagemTipo)
+    public static void ValidarMensagemDeComunicacao(IWebDriver webDriver, string mensagemEsperada, string nomeAtributoElemento)
     {
-        switch (mensagemTipo)
+        var valorAtributoDataTestId = ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação", nomeAtributoElemento);
+        var texto = ObterTextoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação");
+        var mensagemAtual = RemoverNumerosEspacosDeUmTexto(texto, "Mensagens de Comunicação");
+
+        switch (valorAtributoDataTestId)
         {
             case "Mc-message-success":
+            case "Mc-message-info":
+            case "Mc-message-warning":
+            case "Mc-message-loading":
                 Assert.That(mensagemAtual, Does.Contain(mensagemEsperada), "Mensagem atual não corresponde com a esperada");
                 break;
             case "Mc-message-error":
                 Assert.Fail("Teste falhou apresentando a mensagem: " + mensagemAtual);
-                break;
-            case "Mc-message-info":
-                break;
-            case "Mc-message-warning":
-                break;
-            case "Mc-message-loading":
                 break;
         }
     }
@@ -604,5 +609,14 @@ public class Dsl
         IWebElement imageInput = webDriver.FindElement(By.XPath(XPath));
 
         imageInput.SendKeys("C:\\TestProjectMeuCliente\\logomeucliente.png");
+    }
+
+    /// <summary>
+    /// Método para recarregar a página (F5)
+    /// </summary>
+    /// <param name="webDriver"></param>
+    public static void RecarregarPagina(IWebDriver webDriver)
+    {
+        webDriver.Navigate().Refresh();
     }
 }
