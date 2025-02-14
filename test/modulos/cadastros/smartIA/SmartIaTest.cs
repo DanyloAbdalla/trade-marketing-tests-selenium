@@ -6,26 +6,37 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes do cadastro de campanhas SmartIA
 /// </summary>
-[TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
-[TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
+[TestFixture("SemPlantaLoja")]
+[TestFixture("ComPlantaLoja")]
 [Parallelizable(ParallelScope.Fixtures)]
 public class SmartIaTest
 {
     private RunSettings runSettings;
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
-    private bool previousTestFalied;
-    private readonly string testContext;
-    private readonly string className;
+    private bool testeAnteriorPulouFalhou = false;
+    private bool primeiroTeste;
+    private readonly string nomeClasse;
+    private readonly string contextoDeTeste;
     private readonly string nomeCampanha = "CampanhaMassaAutomatizada";
     private readonly string whatsAppResponsavel = "15988086091";
     private readonly string nomeResponsavel = "Usuário Homologacao";
     private readonly string mensagemCabecalho = "Campanha Massa Automatizada";
 
-    public SmartIaTest(string testContext)
+    public SmartIaTest(string contextoDeTeste)
     {
-        this.testContext = testContext;
-        className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+        this.contextoDeTeste = contextoDeTeste;
+        nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+    }
+
+    /// <summary>
+    /// Método que será executado uma única vez, antes de todos os testes
+    /// </summary>
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        runSettings = RunSettings.LoadSettings();
+        webDriver = DriverFactory.CreateDriver(browserType);
     }
 
     /// <summary>
@@ -34,13 +45,11 @@ public class SmartIaTest
     [SetUp]
     public void Setup()
     {
-        runSettings = RunSettings.LoadSettings();
-        webDriver = DriverFactory.CreateDriver(browserType);
-        var testName = TestContext.CurrentContext.Test.MethodName;
+        var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
-        if (previousTestFalied)
+        if (testeAnteriorPulouFalhou)
             Assert.Ignore("Pular o próximo teste, pois o teste anterior falhou");
-        else if (runSettings.ToSkip(className, testContext, testName))
+        else if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
         new LoginPage(webDriver)
@@ -69,6 +78,7 @@ public class SmartIaTest
     {
         var contextoDeExecucao = "NovaCampanha";
         var statusCampanhaEsperado = "Criando";
+        primeiroTeste = true;
 
         new SmartIaPage(webDriver)
         .NovaCampanhaSmartIA()
@@ -141,27 +151,36 @@ public class SmartIaTest
     }
 
     /// <summary>
-    /// Método que será executado ao final de cada teste
+    /// Método que será executado depois de cada teste
     /// </summary>
     [TearDown]
     public void TearDown()
     {
-        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped)
+        var statusTeste = TestContext.CurrentContext.Result.Outcome.Status;
+        if (primeiroTeste)
         {
-            webDriver.Close();
-        }
-        else if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
-        {
-            previousTestFalied = true;
-            webDriver.Close();
-        }
-        else
-        {
-            //Retorna para o Dashboard de Operações no final de cada teste, realizando logout
+            if (statusTeste == TestStatus.Failed || statusTeste == TestStatus.Skipped)
+                testeAnteriorPulouFalhou = true;
+
+            primeiroTeste = false;
+
             new HomePage(webDriver).AcessarDashboardOperacoes();
             new HomePage(webDriver).RealizarLogout();
-
-            webDriver.Close();
         }
+        else if (statusTeste == TestStatus.Passed || statusTeste == TestStatus.Failed)
+        {
+            new HomePage(webDriver).AcessarDashboardOperacoes();
+            new HomePage(webDriver).RealizarLogout();
+        }
+    }
+
+    /// <summary>
+    /// Método que será executado uma única vez, depois de todos os teste
+    /// </summary>
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        webDriver.Quit();
+        webDriver.Dispose();
     }
 }

@@ -227,6 +227,19 @@ public class Dsl
         { throw new Exception(ex.Message + "\n" + elemento); }
     }
 
+    public static string ObterTextoDoElementoNew(IWebDriver webDriver, string XPath, string elemento)
+    {
+        try
+        {
+            //EsperarVisibilidadeDoElemento(webDriver, XPath);
+            var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
+
+            return textoElemento;
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + elemento); }
+    }
+
     /// <summary>
     /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
     /// Existem tabelas que são apresentadas no sistema com uma tag tr a mais (que não é apresentada em tela)
@@ -274,12 +287,12 @@ public class Dsl
     /// <param name="nomeAtributo"></param>
     /// <returns>Retorna os dados contidos no atributo como uma string</returns>
     /// <exception cref="Exception"></exception>
-    public static object ObterDadosDoAtributoDoElemento(IWebDriver webDriver, string XPath, string elemento, string nomeAtributo)
+    public static string ObterDadosDoAtributoDoElemento(IWebDriver webDriver, string XPath, string elemento, string nomeAtributo)
     {
         try
         {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
-            object valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(nomeAtributo);
+            //EsperarVisibilidadeDoElemento(webDriver, XPath);
+            string valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(nomeAtributo);
 
             return valor;
         }
@@ -445,7 +458,7 @@ public class Dsl
     /// </summary>
     /// <param name="elemento"></param>
     /// <param name="metodoCaptura">atributo OU texto no elemento</param>
-    /// <returns>Retorna o valor numérico inteiro OU decimal</returns>
+    /// <returns>Retorna o valor numérico inteiro OU decimal presentes em uma string</returns>
     /// <exception cref="FormatException"></exception>
     /// <exception cref="Exception"></exception>
     public static object RemoverLetrasEspacosDeUmTexto(string texto, string elemento)
@@ -494,6 +507,23 @@ public class Dsl
                 break;
         }
     }
+
+    public static void ValidarMensagemDeComunicacaoNew(string mensagemAtual, string mensagemEsperada, string valorAtributoDataTestId)
+    {
+        switch (valorAtributoDataTestId)
+        {
+            case "Mc-message-success":
+            case "Mc-message-info":
+            case "Mc-message-warning":
+            case "Mc-message-loading":
+                Assert.That(mensagemAtual, Does.Contain(mensagemEsperada), "Mensagem atual não corresponde com a esperada");
+                break;
+            case "Mc-message-error":
+                Assert.Fail("Teste falhou apresentando a mensagem: " + mensagemAtual);
+                break;
+        }
+    }
+
 
     /// <summary>
     /// Método para validar mensagens de sucesso e mensagens de alertas em telas

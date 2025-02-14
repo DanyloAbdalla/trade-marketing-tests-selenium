@@ -7,18 +7,18 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes para o Cadastro de Planos\Contratos
 /// </summary>
-[TestFixture("SemPlantaLoja")]
-[TestFixture("ComPlantaLoja")]
+[TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
+[TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
 [Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
 {
     private RunSettings runSettings;
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
-    private bool previousTestFaliedSkipped = false;
-    private bool isFirstTest;
+    private bool testeAnteriorPulouFalhou = false;
+    private bool primeiroTeste;
+    private readonly string nomeClasse;
     private readonly string contextoDeTeste;
-    private readonly string className;
     private readonly string nomeCampanha = "PlanoSemWorkflowMassaAutomatizada";
     private readonly string statusPlanoEsperado = "Simulado";
     private readonly string farolPlanoEsperado = "PLANEJADO";
@@ -26,9 +26,12 @@ public class PlanosTest
     public PlanosTest(string contextoDeTeste)
     {
         this.contextoDeTeste = contextoDeTeste;
-        className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+        nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
     }
 
+    /// <summary>
+    /// Método que será executado uma única vez, antes de todos os testes
+    /// </summary>
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
@@ -42,11 +45,11 @@ public class PlanosTest
     [SetUp]
     public void Setup()
     {
-        var testName = TestContext.CurrentContext.Test.MethodName;
+        var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
-        if (previousTestFaliedSkipped)
+        if (testeAnteriorPulouFalhou)
             Assert.Ignore("Pular teste, o teste anterior falhou");
-        if (runSettings.ToSkip(className, contextoDeTeste, testName))
+        if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
         if (contextoDeTeste.Contains("SemPlantaLoja"))
@@ -55,7 +58,7 @@ public class PlanosTest
             .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
 
             new HomePage(webDriver)
-            .AcessarCadastroPlanos();
+            .AcessarCadastroPlanos(nomeTeste);
         }
         else if (contextoDeTeste.Contains("ComPlantaLoja"))
         {
@@ -63,7 +66,7 @@ public class PlanosTest
             .RealizarLogin(GlobalVariables.emailUsuarioComPlanta, GlobalVariables.senhaUsuarioComPlanta);
 
             new HomePage(webDriver)
-            .AcessarCadastroPlanos();
+            .AcessarCadastroPlanos(nomeTeste);
         }
     }
 
@@ -86,18 +89,18 @@ public class PlanosTest
     [Test, Order(1)]
     public void TestCriarPlanoSemWorkflow()
     {
-        var tipoAtivoMidiaPlano = "Grafica";
+        var ativoTipoMidia = "Grafica";
         var contextoDeExecucao = "CriarPlanoSemWorkflow";
-        isFirstTest = true;
+        primeiroTeste = true;
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos(tipoAtivoMidiaPlano)
-        .PreencherQuantidadeAtivos(contextoDeTeste, tipoAtivoMidiaPlano)
+        .SelecionarAtivos(ativoTipoMidia)
+        .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
         .SelecionarLojas()
-        .GerarPrePlano(contextoDeTeste, tipoAtivoMidiaPlano)
+        .GerarPrePlano(contextoDeTeste, ativoTipoMidia)
         .SalvarPlano()
         .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
         .ValidarPlanoCriado()
@@ -126,7 +129,7 @@ public class PlanosTest
     [Test, Order(2)]
     public void TestCriarPlanoComWorkflow()
     {
-        var tipoAtivoMidiaPlano = "Fisica";
+        var ativoTipoMidia = "Fisica";
         var contextoDeExecucao = "CriarPlanoComWorkflow";
         var nomeCampanha = "PlanoComWorkflowMassaAutomatizada";
 
@@ -134,10 +137,10 @@ public class PlanosTest
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria()
         .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos(tipoAtivoMidiaPlano)
-        .PreencherQuantidadeAtivos(contextoDeTeste, tipoAtivoMidiaPlano)
+        .SelecionarAtivos(ativoTipoMidia)
+        .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
         .SelecionarLojas()
-        .GerarPrePlano(contextoDeTeste, tipoAtivoMidiaPlano)
+        .GerarPrePlano(contextoDeTeste, ativoTipoMidia)
         .SalvarPlano()
         .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
         .ValidarPlanoCriado()
@@ -274,7 +277,7 @@ public class PlanosTest
     [Test, Order(7)]
     public void TestCriarPlanoComAlertaDeInventario()
     {
-        var tipoAtivoMidiaPlano = "Grafica";
+        var ativoTipoMidia = "Grafica";
         var contextoDeExecucao = "CriarPlanoSemWorkflow";
 
         new PlanosContratosPage(webDriver)
@@ -283,8 +286,8 @@ public class PlanosTest
         .PreencherCampoCampanha(nomeCampanha)
         .EditarInicioVigencia(contextoDeExecucao)
         .EditarFimVigencia(contextoDeExecucao)
-        .SelecionarAtivos(tipoAtivoMidiaPlano)
-        .PreencherQuantidadeAtivos(contextoDeTeste, tipoAtivoMidiaPlano)
+        .SelecionarAtivos(ativoTipoMidia)
+        .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
         .SelecionarLojas()
         .ValidarAlertaInventario()
         .FecharDadosDoPlano();
@@ -352,18 +355,18 @@ public class PlanosTest
     [TearDown]
     public void TearDown()
     {
-        var testOutCome = TestContext.CurrentContext.Result.Outcome.Status;
-        if (isFirstTest)
+        var statusTeste = TestContext.CurrentContext.Result.Outcome.Status;
+        if (primeiroTeste)
         {
-            if (testOutCome == TestStatus.Failed || testOutCome == TestStatus.Skipped)
-                previousTestFaliedSkipped = true;
+            if (statusTeste == TestStatus.Failed || statusTeste == TestStatus.Skipped)
+                testeAnteriorPulouFalhou = true;
 
-            isFirstTest = false;
+            primeiroTeste = false;
 
             new HomePage(webDriver).AcessarDashboardOperacoes();
             new HomePage(webDriver).RealizarLogout();
         }
-        else if (testOutCome == TestStatus.Passed || testOutCome == TestStatus.Failed)
+        else if (statusTeste == TestStatus.Passed || statusTeste == TestStatus.Failed)
         {
             new HomePage(webDriver).AcessarDashboardOperacoes();
             new HomePage(webDriver).RealizarLogout();

@@ -9,31 +9,30 @@ namespace MeuClienteWebTestProject;
 [TestFixture]
 public class DashboardOperacoesTest
 {
-
     private RunSettings runSettings;
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
-    private readonly string className;
+    private readonly string nomeClasse;
     private readonly string nomeAtivo = "Adesivo de Elevador";
     private readonly string nomeAtivoEsperado = "AdesivodeElevador";
-    private readonly string nomeContratoCampanha = "DashboardOperacoesMassaAutomatizada";
+    private readonly string nomeCampanha = "DashboardOperacoesMassaAutomatizada";
 
     public DashboardOperacoesTest()
     {
-        runSettings = RunSettings.LoadSettings();
-        webDriver = DriverFactory.CreateDriver(browserType);
-        className = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+        nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
     }
 
     /// <summary>
-    /// Método que será executado antes de cada teste
+    /// Método que será executado uma única vez, antes de todos os testes
     /// </summary>
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {        
-        var testName = TestContext.CurrentContext.Test.MethodName;
+        runSettings = RunSettings.LoadSettings();
+        webDriver = DriverFactory.CreateDriver(browserType);
+        var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
-        if (runSettings.ToSkip(className, null, testName))
+        if (runSettings.ToSkip(nomeClasse, null, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
         new LoginPage(webDriver)
@@ -116,9 +115,9 @@ public class DashboardOperacoesTest
         var card = "ContratosVigentes";
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeContratosAtivos(card, nomeContratoCampanha)
+        .AcessarDetalhesDeContratosAtivos(card, nomeCampanha)
         .FecharDetalhes()
-        .AcessarDetalhesDeContratosVencendo(nomeContratoCampanha)
+        .AcessarDetalhesDeContratosVencendo(nomeCampanha)
         .FecharDetalhes();
     }
 
@@ -140,7 +139,7 @@ public class DashboardOperacoesTest
         var card = "TotalReceita";
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeContratosAtivos(card, nomeContratoCampanha)
+        .AcessarDetalhesDeContratosAtivos(card, nomeCampanha)
         .FecharDetalhes();
     }
 
@@ -243,7 +242,7 @@ public class DashboardOperacoesTest
     }
 
     /// <summary>
-    /// Método que será exexutado ao final de cada teste
+    /// Método que será executado uma única vez, depois de todos os teste
     /// </summary>
     [OneTimeTearDown]
     public void OneTimeTearDown()

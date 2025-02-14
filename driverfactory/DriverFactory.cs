@@ -23,11 +23,9 @@ public class DriverFactory
         switch (browserType)
         {
             case BrowserType.Chrome:
-
                 if (!GlobalVariables.handLessMode)
                 {
                     chromeOptions.AddArgument("--start-maximized");
-                    chromeOptions.AddArgument("--incognito");
                 }
                 else
                 {
@@ -35,6 +33,7 @@ public class DriverFactory
                     chromeOptions.AddArgument("--no-sandbox"); //desativa o recurso de segurança sandbox do Browser para o uso do mesmo em contêineres Docker
                     chromeOptions.AddArgument("--disable-dev-shm-usage"); //direciona o Browser a usar o diretório /tmp, previnindo falhas em ambientes com memória compartilhada limitada em contêineres Docker
                     chromeOptions.AddArgument("--start-maximized"); //inicia com o Browser maximizado
+                    chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
                 }
 
                 webDriver = new ChromeDriver(chromeOptions);

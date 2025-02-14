@@ -98,6 +98,8 @@ public class GlobalVariables
 
     #region Elementos de página - Planos
     public static string TabelaPlanos { get; set; } = "//table/tbody/tr";
+    public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[@class='selects-items']//div[@class='ant-select-selector']";
+    public static string SelecionarTodosPlanos {get;set;} = "//div[@class='rc-virtual-list']//div[@title='Todos']";
     public static string FiltrarPlanoPorCampanha { get; set; } = "//thead//th[@title='Nome Campanha']//span[@role='button']";
     public static string PesquisarNomeCampanha { get; set; } = "//div[@class='ant-table-filter-dropdown']//input";
     public static string ColunaFimVigencia { get; set; } = "//*[text()='Fim Vigência']";

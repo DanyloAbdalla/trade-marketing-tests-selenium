@@ -32,7 +32,7 @@ public class HomePage
     /// Método para acessar a tela de Cadastro de Planos, acessando o mesmo pelo menu suspenso no canto superior esquerdo
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage AcessarCadastroPlanos()
+    public PlanosContratosPage AcessarCadastroPlanos(string primeiroTeste)
     {
         //Retorna para o Dashboard de Operações, se no último logout a plataforma parou em outra tela
         VoltarParaDashboardOperacoes();
@@ -44,13 +44,15 @@ public class HomePage
         Dsl.Clicar(webDriver, GlobalVariables.CadastroPlanosContratos, "Cadastro de Planos");
 
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
-        Dsl.Esperar(1000);
-        Dsl.RecarregarPagina(webDriver);
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
-        Dsl.Esperar(1000);
-        Dsl.RecarregarPagina(webDriver);
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
-        Dsl.Esperar(2000);
+        Dsl.Esperar(3000);
+
+        if (primeiroTeste.Equals("TestCriarPlanoSemWorkflow"))
+        {
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarPlanosStatusVigencia, "Campo Filtro Vigência");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTodosPlanos, "Selecionar Todos Planos");
+            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
+            Dsl.Esperar(3000);
+        }
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0)
             return new PlanosContratosPage(webDriver);
