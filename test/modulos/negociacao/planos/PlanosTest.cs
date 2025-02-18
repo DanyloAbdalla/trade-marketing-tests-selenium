@@ -9,7 +9,7 @@ namespace MeuClienteWebTestProject;
 /// </summary>
 [TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
 [TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
-[Parallelizable(ParallelScope.Fixtures)]
+//[Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
 {
     private RunSettings runSettings;

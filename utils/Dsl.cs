@@ -42,7 +42,7 @@ public class Dsl
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
         }
         catch (Exception ex)
-        { Console.WriteLine("Erro ao esperar o elemento na página" + ex.Message); }
+        { Console.WriteLine("Erro ao esperar o elemento na página: " + "\n" + ex.Message); }
 
         return false;
     }
@@ -70,7 +70,7 @@ public class Dsl
             if (fluentWait.Until(ExpectedConditions.StalenessOf(element)) || fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)))) { return; }
         }
         catch (Exception ex)
-        { Console.WriteLine("Erro ao processar a invisibilidade do elemento" + ex.Message); }
+        { Console.WriteLine("Erro ao processar a invisibilidade do elemento: " + "\n" + ex.Message); }
     }
 
     /// <summary>
