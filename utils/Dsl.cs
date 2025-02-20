@@ -503,6 +503,12 @@ public class Dsl
         }
     }
 
+    /// <summary>
+    /// Método para validar mensagens em modal
+    /// </summary>
+    /// <param name="mensagemAtual"></param>
+    /// <param name="mensagemEsperada"></param>
+    /// <returns></returns>
     public static void ValidarMensagensDeConfirmacao(string mensagemAtual, string mensagemEsperada)
     {
         Assert.That(mensagemAtual, Does.Contain(mensagemEsperada), "Mensagem atual não corresponde com a esperada");
@@ -510,7 +516,7 @@ public class Dsl
 
 
     /// <summary>
-    /// Método para validar mensagens de sucesso e mensagens de alertas em telas
+    /// Método para validar mensagens em telas
     /// </summary>
     /// <param name="mensagemAtual"></param>
     /// <param name="mensagemEsperada"></param>

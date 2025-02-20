@@ -545,6 +545,7 @@ public class PlanosContratosPage
     /// <summary>
     /// Método para aumentar as quantidades de ativos alocados por loja
     /// </summary>
+    /// <param name="contextoDeTeste"></param>
     /// <returns></returns>
     public PlanosContratosPage AumentarQuantidadeAtivosPorLoja(string contextoDeTeste)
     {
@@ -707,7 +708,7 @@ public class PlanosContratosPage
     /// Método para validar os alertas apresentados com a indisponibildiade do ativo no inventário da loja
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage ValidarAlertaInventario()
+    public PlanosContratosPage ValidarIndisponibilidadeDeInventario()
     {
         var mensagemAlertaEsperada = "Algumaslojasnãoteminventáriosuficientedisponível";
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.MensagensDadosPlano, "Mensagem Inventário Loja");

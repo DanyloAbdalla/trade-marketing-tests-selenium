@@ -289,7 +289,7 @@ public class PlanosTest
         .SelecionarAtivos(ativoTipoMidia)
         .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
         .SelecionarLojas()
-        .ValidarAlertaInventario()
+        .ValidarIndisponibilidadeDeInventario()
         .FecharDadosDoPlano();
     }
 
