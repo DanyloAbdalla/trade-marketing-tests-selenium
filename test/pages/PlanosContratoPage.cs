@@ -13,7 +13,7 @@ public class PlanosContratosPage
     private string atributoDataTestId = "data-testid";
     private string[] ativosGraficos = { "Adesivo de Check Out", "Display de Check Out", "Woobler" };
     private string[] ativosFisicos = { "Cestão 01", "Ponta de Gôndola" };
-    private string[] abasPlano = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria" };
+    private string[] nomesAbasPlano = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria", "Tarefas" };
 
     public PlanosContratosPage(IWebDriver webDriver)
     {
@@ -210,22 +210,19 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarPlanoCriado()
     {
-        var contadorAbaPlano = 1;
-
         Dsl.Esperar();
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
 
-        foreach (var abaPlano in abasPlano)
+        foreach (var nomeAbaPlano in nomesAbasPlano)
         {
-            webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{contadorAbaPlano}]")).Click();
+            var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
+            Dsl.Clicar(webDriver, xpathElemento, "Abas Edição Plano");
 
-            var tituloAbaAtual = webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{contadorAbaPlano}]")).Text;
-            var tituloAbaEsperado = abaPlano;
+            var tituloAbaAtual = Dsl.ObterTextoDoElemento(webDriver, xpathElemento, "Abas Edição Plano");
+            var tituloAbaEsperado = nomeAbaPlano;
 
-            Assert.That(tituloAbaAtual, Does.Contain(tituloAbaEsperado));
-            Dsl.Esperar(500);
-
-            contadorAbaPlano++;
+            Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
+            Dsl.Esperar(2000);
         }
 
         return this;
