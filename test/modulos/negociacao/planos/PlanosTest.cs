@@ -71,7 +71,7 @@ public class PlanosTest
     }
 
     /// <summary>
-    /// Testar a criação de um plano sem workflow
+    /// Testar a criação de um plano com workflow padrão (sem vínculo com tipo mídia)
     /// 
     /// Como comercial de trade marketing
     /// Eu quero criar um plano
@@ -85,9 +85,10 @@ public class PlanosTest
     /// Então será apresentado o botão de sucesso para as lojas com disponibilidade, com o botão Gerar Pré-Plano habilitado
     /// Quando eu clicar no botão “Gerar Pré-Plano”
     /// Então o plano\contrato será criado, com Status = Simulado e Farol = Planejado
+    /// E Workflow padrão
     /// </summary>
     [Test, Order(1)]
-    public void TestCriarPlanoSemWorkflow()
+    public void TestCriarPlanoComWorkflowPadrao()
     {
         var ativoTipoMidia = "Grafica";
         var contextoDeExecucao = "CriarPlanoSemWorkflow";

@@ -14,6 +14,7 @@ public class PlanosContratosPage
     private string[] ativosGraficos = { "Adesivo de Check Out", "Display de Check Out", "Woobler" };
     private string[] ativosFisicos = { "Cestão 01", "Ponta de Gôndola" };
     private string[] nomesAbasPlano = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria", "Tarefas" };
+    private string[] nomesEtapasWorkflowPlanoEsperado = { "Arte", "Montagem", "Comprovação" };
 
     public PlanosContratosPage(IWebDriver webDriver)
     {
@@ -210,11 +211,21 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarPlanoCriado()
     {
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.EtapasWorkflowGraficoPlano);
         Dsl.Esperar();
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
 
+        IList<IWebElement> elementos = Dsl.ObterListaDeElementos(webDriver, GlobalVariables.EtapasWorkflowPlano);
+        IList<string> nomesEtapasWorkflowPlanoAtual = elementos.Select(elementos => elementos.Text).ToList();
+
+        foreach (var (nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado) in nomesEtapasWorkflowPlanoAtual.Zip(nomesEtapasWorkflowPlanoEsperado, (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado) => (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado)))
+        {
+            Dsl.ValidarTextosNoElemento(nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado);
+        }
+
         foreach (var nomeAbaPlano in nomesAbasPlano)
         {
+            Dsl.Esperar(500);
             var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
             Dsl.Clicar(webDriver, xpathElemento, "Abas Edição Plano");
 
@@ -222,7 +233,8 @@ public class PlanosContratosPage
             var tituloAbaEsperado = nomeAbaPlano;
 
             Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
-            Dsl.Esperar(2000);
+            if(nomeAbaPlano.Equals("Anexos") || nomeAbaPlano.Equals("Book Fotográfico") || nomeAbaPlano.Equals("Painel da indústria"))
+                Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         }
 
         return this;
@@ -481,12 +493,12 @@ public class PlanosContratosPage
         if (contextoDeTeste.Contains("SemPlantaLoja"))
         {
             var nomeAtivo = "Stopper - ";
-            var elemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
+            var xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
 
             Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nomeAtivo);
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, elemento);
-            Dsl.Clicar(webDriver, elemento, "Campo Selecionar Ativo");
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, xpathElemento);
+            Dsl.Clicar(webDriver, xpathElemento, "Campo Selecionar Ativo");
 
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
             Dsl.Esperar();

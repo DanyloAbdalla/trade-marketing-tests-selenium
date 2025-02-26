@@ -259,23 +259,19 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
-    /// Existem tabelas que são apresentadas no sistema com uma tag tr a mais (que não é apresentada em tela)
-    /// Nesse cenário essa tag tr a mais é desconsiderada, retornando a quantidade real de linhas apresentadas em tela
+    /// Método para obter uma lista de elementos
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna um número inteiro</returns>
-    public static int ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(IWebDriver webDriver, string XPath)
+    /// <param name="tagName"></param>
+    /// <returns>Retorna uma lista de elementos</returns>
+    public static IList<IWebElement> ObterListaDeElementos(IWebDriver webDriver, string XPath)
     {
         EsperarVisibilidadeDoElemento(webDriver, XPath);
 
-        IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
-        IList<IWebElement> linhas = tabela.FindElements(By.XPath("tr"));
+        IList<IWebElement> elementos = webDriver.FindElements(By.XPath(XPath));
 
-        var quantidadeLinhas = linhas.Count();
-
-        return quantidadeLinhas;
+        return elementos;
     }
 
     /// <summary>

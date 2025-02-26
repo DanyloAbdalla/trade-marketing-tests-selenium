@@ -182,6 +182,8 @@ public class GlobalVariables
     public static string SelecionarDataCancelamentoPlano { get; set; } = "//*[text()='Today']";
     public static string OkCancelamento { get; set; } = "//*[text()='OK']";
     public static string FecharPlanoConfirmacao { get; set; } = "//button/*[text()='Fechar mesmo assim']";
+    public static string EtapasWorkflowPlano { get; set; } = "//div[contains(@class,'etapas-item')]/span";
+    public static string EtapasWorkflowGraficoPlano {get;set;} = "//div[@class='ant-row etapas-container-grafico ']";
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados
