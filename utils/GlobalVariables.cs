@@ -3,8 +3,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    //Executa, mostrando o Browser na tela, se handLessMode igual false
-    public static bool handLessMode = true;
+    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se handLessMode igual false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -139,7 +138,7 @@ public class GlobalVariables
     public static string PreencherUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[contains(text(),'Selecione o usuário')]/parent::div/div/div/div/div/div/div/div/span[1]/input";
     public static string SelecionarUsuarioResponsavelEtapaWorkflowSP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02SP']";
     public static string SelecionarUsuarioResponsavelEtapaWorkflowCP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02CP']";
-    public static string MensagensDadosPlano { get; set; } = "//*[@class='form-action'][2]/span[3]";
+    public static string MensagemIndisponibilidadeInventario { get; set; } = "//*[@class='form-action'][2]/span[3]/label";
     #endregion
 
     #region Elementos de página - Planos - Novo Plano - Selecionar Ativos
@@ -157,6 +156,7 @@ public class GlobalVariables
     public static string MenuLojas { get; set; } = "//div[text()='Selecione as lojas: ']";
     public static string TabelaLojasPlano { get; set; } = "(//table/tbody)[3]/tr";
     public static string SelecionarLojas { get; set; } = "//div[@class='ant-spin-container']/div[3]//div[@class='ant-collapse-content ant-collapse-content-active']//tbody/tr[2]//input";
+    public static string QuantidadeLojasFiltradas { get; set; } = "//div[text()='Selecione as lojas: ']/parent::div/div[2]/div/div/div";
     #endregion
 
     #region Elementos de página - Planos - Dados do Plano
@@ -182,6 +182,8 @@ public class GlobalVariables
     public static string SelecionarDataCancelamentoPlano { get; set; } = "//*[text()='Today']";
     public static string OkCancelamento { get; set; } = "//*[text()='OK']";
     public static string FecharPlanoConfirmacao { get; set; } = "//button/*[text()='Fechar mesmo assim']";
+    public static string EtapasWorkflowPlano { get; set; } = "//div[contains(@class,'etapas-item')]/span";
+    public static string EtapasWorkflowGraficoPlano { get; set; } = "//div[@class='ant-row etapas-container-grafico ']";
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados

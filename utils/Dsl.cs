@@ -207,12 +207,12 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método que espera até que um texto específico seja apresentado no elemento
+    /// Método para obter o texto contido no elemento
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <param name="elemento"></param>
-    /// <returns></returns>
+    /// <returns>Retorna um texto</returns>
     /// <exception cref="Exception"></exception>
     public static string ObterTextoDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
@@ -259,23 +259,19 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
-    /// Existem tabelas que são apresentadas no sistema com uma tag tr a mais (que não é apresentada em tela)
-    /// Nesse cenário essa tag tr a mais é desconsiderada, retornando a quantidade real de linhas apresentadas em tela
+    /// Método para obter uma lista de elementos
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna um número inteiro</returns>
-    public static int ObterQuantidadeLinhasNoElementoTabelaSemLinhaInvisivel(IWebDriver webDriver, string XPath)
+    /// <param name="tagName"></param>
+    /// <returns>Retorna uma lista de elementos</returns>
+    public static IList<IWebElement> ObterListaDeElementos(IWebDriver webDriver, string XPath)
     {
         EsperarVisibilidadeDoElemento(webDriver, XPath);
 
-        IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
-        IList<IWebElement> linhas = tabela.FindElements(By.XPath("tr"));
+        IList<IWebElement> elementos = webDriver.FindElements(By.XPath(XPath));
 
-        var quantidadeLinhas = linhas.Count();
-
-        return quantidadeLinhas;
+        return elementos;
     }
 
     /// <summary>
@@ -454,11 +450,11 @@ public class Dsl
 
     /// <summary>
     /// Método para remover lestras maiúsculas, minúsculas, caracteres especiais e espaços em branco, obtendo um dado tratado em formato de número,
-    /// que se encontra como texto ou atributo em um elemeneto
+    /// que se encontra como texto ou atributo de um elemento
     /// </summary>
-    /// <param name="elemento"></param>
-    /// <param name="metodoCaptura">atributo OU texto no elemento</param>
-    /// <returns>Retorna o valor numérico inteiro OU decimal presentes em uma string</returns>
+    /// <param name="texto"></param>
+    /// <param name="elemento">atributo OU texto no elemento</param>
+    /// <returns>Retorna o valor numérico inteiro OU decimal contido em uma string</returns>
     /// <exception cref="FormatException"></exception>
     /// <exception cref="Exception"></exception>
     public static object RemoverLetrasEspacosDeUmTexto(string texto, string elemento)
@@ -524,20 +520,6 @@ public class Dsl
     public static void ValidarMensagemDeSucessoEAlerta(string mensagemAtual, string mensagemEsperada)
     {
         Assert.That(mensagemAtual, Does.Contain(mensagemEsperada), "Mensagem atual não corresponde com a esperada");
-    }
-
-    /// <summary>
-    /// Método para validar a verificação feita para a disponibilidade do inventário por loja, na simulção do plano
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPathCheckInventario"></param>
-    /// <param name="XPathLojasPlano"></param>
-    public static void ValidarDisponbilidadeDeInventarioParaLoja(IWebDriver webDriver, string XPathCheckInventario, string XPathLojasPlano)
-    {
-        var quantidadeCheck = ContarExistenciaDoElemento(webDriver, XPathCheckInventario);
-        var quantidadeLojas = ContarExistenciaDoElemento(webDriver, XPathLojasPlano) - 1; //Contar linhas no elemento tbody da listagem de lojas na simulação do plano, ignorando a tag tr sem dados
-
-        Debug.Assert(quantidadeCheck == quantidadeLojas, "Checkin da disponibilidade de inventário apresentada incorretamente - quantidadeCheck: " + quantidadeCheck + " quantidadeLojas: " + quantidadeLojas);
     }
 
     /// <summary>

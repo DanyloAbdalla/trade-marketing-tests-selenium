@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic;
 using OpenQA.Selenium;
@@ -13,7 +14,8 @@ public class PlanosContratosPage
     private string atributoDataTestId = "data-testid";
     private string[] ativosGraficos = { "Adesivo de Check Out", "Display de Check Out", "Woobler" };
     private string[] ativosFisicos = { "Cestão 01", "Ponta de Gôndola" };
-    private string[] abasPlano = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria" };
+    private string[] nomesAbasPlanoEsperado = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria", "Tarefas" };
+    private string[] nomesEtapasWorkflowPlanoEsperado = { "Arte", "Montagem", "Comprovação" };
 
     public PlanosContratosPage(IWebDriver webDriver)
     {
@@ -210,22 +212,30 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarPlanoCriado()
     {
-        var contadorAbaPlano = 1;
-
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.EtapasWorkflowGraficoPlano);
         Dsl.Esperar();
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
 
-        foreach (var abaPlano in abasPlano)
+        IList<IWebElement> elementos = Dsl.ObterListaDeElementos(webDriver, GlobalVariables.EtapasWorkflowPlano);
+        IList<string> nomesEtapasWorkflowPlanoAtual = elementos.Select(elementos => elementos.Text).ToList();
+
+        foreach (var (nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado) in nomesEtapasWorkflowPlanoAtual.Zip(nomesEtapasWorkflowPlanoEsperado, (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado) => (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado)))
         {
-            webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{contadorAbaPlano}]")).Click();
+            Dsl.ValidarTextosNoElemento(nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado);
+        }
 
-            var tituloAbaAtual = webDriver.FindElement(By.XPath($"//div[@class='ant-tabs-nav-list']/div[{contadorAbaPlano}]")).Text;
-            var tituloAbaEsperado = abaPlano;
-
-            Assert.That(tituloAbaAtual, Does.Contain(tituloAbaEsperado));
+        foreach (var nomeAbaPlano in nomesAbasPlanoEsperado)
+        {
             Dsl.Esperar(500);
+            var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
+            Dsl.Clicar(webDriver, xpathElemento, "Abas Edição Plano");
 
-            contadorAbaPlano++;
+            var tituloAbaAtual = Dsl.ObterTextoDoElemento(webDriver, xpathElemento, "Abas Edição Plano");
+            var tituloAbaEsperado = nomeAbaPlano;
+
+            Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
+            if (nomeAbaPlano.Equals("Anexos") || nomeAbaPlano.Equals("Book Fotográfico") || nomeAbaPlano.Equals("Painel da indústria"))
+                Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         }
 
         return this;
@@ -299,7 +309,7 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage EditarInicioVigencia(string contextoDeExecucao)
     {
-        if (contextoDeExecucao.Equals("CriarPlanoSemWorkflow"))
+        if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaNovoPlano, "Campo Inicio Vigencia Novo Plano");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, GlobalVariables.AvancarCalendarioMesInicioVigencia, 2);
@@ -321,7 +331,7 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage EditarFimVigencia(string contextoDeExecucao)
     {
-        if (contextoDeExecucao.Equals("CriarPlanoSemWorkflow"))
+        if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaNovoPlano, "Campo Fim Vigencia Novo Plano");
             Dsl.PreencherCalendariosFimVigencia(webDriver, GlobalVariables.AvancarCalendarioMesFimVigencia, 2);
@@ -484,12 +494,12 @@ public class PlanosContratosPage
         if (contextoDeTeste.Contains("SemPlantaLoja"))
         {
             var nomeAtivo = "Stopper - ";
-            var elemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
+            var xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
 
             Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nomeAtivo);
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, elemento);
-            Dsl.Clicar(webDriver, elemento, "Campo Selecionar Ativo");
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, xpathElemento);
+            Dsl.Clicar(webDriver, xpathElemento, "Campo Selecionar Ativo");
 
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
             Dsl.Esperar();
@@ -705,17 +715,27 @@ public class PlanosContratosPage
     }
 
     /// <summary>
-    /// Método para validar os alertas apresentados com a indisponibildiade do ativo no inventário da loja
+    /// Método para validar os alertas apresentados, para a indisponibildiade do ativo no inventário, ao selecionar a loja
     /// </summary>
     /// <returns></returns>
     public PlanosContratosPage ValidarIndisponibilidadeDeInventario()
     {
-        var mensagemAlertaEsperada = "Algumaslojasnãoteminventáriosuficientedisponível";
-        var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.MensagensDadosPlano, "Mensagem Inventário Loja");
-        var mensagemAlertaAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagem Inventário Loja");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemIndisponibilidadeInventario);
 
-        Dsl.ValidarDisponbilidadeDeInventarioParaLoja(webDriver, GlobalVariables.InventarioAlerta, GlobalVariables.TabelaLojasPlano);
-        Dsl.ValidarMensagemDeSucessoEAlerta(mensagemAlertaAtual, mensagemAlertaEsperada);
+        var contadorMensagemAlertaAtual = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.MensagemIndisponibilidadeInventario);
+        var contadorIconeAlertaAtual = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.InventarioAlerta);
+
+        if (contadorMensagemAlertaAtual == 1 && contadorIconeAlertaAtual == 5)
+        {
+            var mensagemAlertaEsperada = "Algumaslojasnãoteminventáriosuficientedisponível";
+            var textoMensagemAlertaAtual = Dsl.ObterTextoDoElementoNew(webDriver, GlobalVariables.MensagemIndisponibilidadeInventario, "Mensagem Indisponibilidade Inventário Loja");
+            var mensagemAlertaAtual = Dsl.RemoverNumerosEspacosDeUmTexto(textoMensagemAlertaAtual, "Mensagem Indisponibilidade Inventário Loja");
+            Dsl.ValidarMensagemDeSucessoEAlerta(mensagemAlertaAtual, mensagemAlertaEsperada);
+        }
+        else
+        {
+            Assert.Fail("Mensagem de indisponibilidade e ícone de alerta não foram apresentados corretamente: " + "\n" + "Mensagem: " + contadorMensagemAlertaAtual + " Alertas: " + contadorIconeAlertaAtual);
+        }
 
         return this;
     }
@@ -733,7 +753,7 @@ public class PlanosContratosPage
         switch (contextoDeTeste)
         {
             case "SemPlantaLoja":
-                if (contextoDeExecucao.Equals("CriarPlanoSemWorkflow"))
+                if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
                 {
                     var valorReceitaAtivosEsperado = 750.00;
                     var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
@@ -787,7 +807,7 @@ public class PlanosContratosPage
                 }
                 break;
             case "ComPlantaLoja":
-                if (contextoDeExecucao.Equals("CriarPlanoSemWorkflow"))
+                if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
                 {
                     var valorReceitaAtivosEsperado = 3000.00;
                     var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
