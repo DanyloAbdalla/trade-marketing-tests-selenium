@@ -207,12 +207,12 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método que espera até que um texto específico seja apresentado no elemento
+    /// Método para obter o texto contido no elemento
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <param name="elemento"></param>
-    /// <returns></returns>
+    /// <returns>Retorna um texto</returns>
     /// <exception cref="Exception"></exception>
     public static string ObterTextoDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
@@ -450,11 +450,11 @@ public class Dsl
 
     /// <summary>
     /// Método para remover lestras maiúsculas, minúsculas, caracteres especiais e espaços em branco, obtendo um dado tratado em formato de número,
-    /// que se encontra como texto ou atributo em um elemeneto
+    /// que se encontra como texto ou atributo de um elemento
     /// </summary>
-    /// <param name="elemento"></param>
-    /// <param name="metodoCaptura">atributo OU texto no elemento</param>
-    /// <returns>Retorna o valor numérico inteiro OU decimal presentes em uma string</returns>
+    /// <param name="texto"></param>
+    /// <param name="elemento">atributo OU texto no elemento</param>
+    /// <returns>Retorna o valor numérico inteiro OU decimal contido em uma string</returns>
     /// <exception cref="FormatException"></exception>
     /// <exception cref="Exception"></exception>
     public static object RemoverLetrasEspacosDeUmTexto(string texto, string elemento)
@@ -520,20 +520,6 @@ public class Dsl
     public static void ValidarMensagemDeSucessoEAlerta(string mensagemAtual, string mensagemEsperada)
     {
         Assert.That(mensagemAtual, Does.Contain(mensagemEsperada), "Mensagem atual não corresponde com a esperada");
-    }
-
-    /// <summary>
-    /// Método para validar a verificação feita para a disponibilidade do inventário por loja, na simulção do plano
-    /// </summary>
-    /// <param name="webDriver"></param>
-    /// <param name="XPathCheckInventario"></param>
-    /// <param name="XPathLojasPlano"></param>
-    public static void ValidarDisponbilidadeDeInventarioParaLoja(IWebDriver webDriver, string XPathCheckInventario, string XPathLojasPlano)
-    {
-        var quantidadeCheck = ContarExistenciaDoElemento(webDriver, XPathCheckInventario);
-        var quantidadeLojas = ContarExistenciaDoElemento(webDriver, XPathLojasPlano) - 1; //Contar linhas no elemento tbody da listagem de lojas na simulação do plano, ignorando a tag tr sem dados
-
-        Debug.Assert(quantidadeCheck == quantidadeLojas, "Checkin da disponibilidade de inventário apresentada incorretamente - quantidadeCheck: " + quantidadeCheck + " quantidadeLojas: " + quantidadeLojas);
     }
 
     /// <summary>

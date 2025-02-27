@@ -47,7 +47,7 @@ public class HomePage
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         Dsl.Esperar(3000);
 
-        if (primeiroTeste.Equals("TestCriarPlanoSemWorkflow"))
+        if (primeiroTeste.Equals("TestCriarPlanoComWorkflowPadrao"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarPlanosStatusVigencia, "Campo Filtro Vigência");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTodosPlanos, "Selecionar Todos Planos");

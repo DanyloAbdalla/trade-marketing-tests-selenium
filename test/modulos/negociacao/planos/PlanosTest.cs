@@ -19,7 +19,7 @@ public class PlanosTest
     private bool primeiroTeste;
     private readonly string nomeClasse;
     private readonly string contextoDeTeste;
-    private readonly string nomeCampanha = "PlanoSemWorkflowMassaAutomatizada";
+    private readonly string nomeCampanha = "PlanoComWorkflowPadraoMassaAutomatizada";
     private readonly string statusPlanoEsperado = "Simulado";
     private readonly string farolPlanoEsperado = "PLANEJADO";
 
@@ -91,7 +91,7 @@ public class PlanosTest
     public void TestCriarPlanoComWorkflowPadrao()
     {
         var ativoTipoMidia = "Grafica";
-        var contextoDeExecucao = "CriarPlanoSemWorkflow";
+        var contextoDeExecucao = "CriarPlanoComWorkflowPadrao";
         primeiroTeste = true;
 
         new PlanosContratosPage(webDriver)
@@ -279,7 +279,7 @@ public class PlanosTest
     public void TestCriarPlanoComAlertaDeInventario()
     {
         var ativoTipoMidia = "Grafica";
-        var contextoDeExecucao = "CriarPlanoSemWorkflow";
+        var contextoDeExecucao = "CriarPlanoComWorkflowPadrao";
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
