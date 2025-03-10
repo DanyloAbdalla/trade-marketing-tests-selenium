@@ -3,7 +3,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se handLessMode igual false
+    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se handLessMode igual false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -34,6 +34,7 @@ public class GlobalVariables
     public static string LoadDeTelaBarra { get; set; } = "(//span[@class='anticon anticon-loading anticon-spin'])[2]";
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
+    public static string CancelarAcao { get; set; } = "//button/*[text()='Cancelar']";
     #endregion
 
     #region Elementos de página - Login
@@ -112,6 +113,7 @@ public class GlobalVariables
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
     public static string OkExclusao { get; set; } = "//*[text()='OK']";
     public static string ModalPlanos { get; set; } = "//*[@class='ant-modal-body' and @style='overflow-x: hidden; height: 85vh;']";
+    public static string AbaPlano { get; set; } = "//div[contains(@class,'ant-tabs-tab-active')]/div";
     #endregion
 
     #region Elementos de página - Planos - Novo Plano
