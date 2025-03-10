@@ -214,7 +214,7 @@ public class Dsl
     /// <param name="elemento"></param>
     /// <returns>Retorna um texto</returns>
     /// <exception cref="Exception"></exception>
-    public static string ObterTextoDoElemento(IWebDriver webDriver, string XPath, string elemento)
+    public static string ObterTextoDoElementoOld(IWebDriver webDriver, string XPath, string elemento)
     {
         try
         {
@@ -227,7 +227,7 @@ public class Dsl
         { throw new Exception(ex.Message + "\n" + elemento); }
     }
 
-    public static string ObterTextoDoElementoNew(IWebDriver webDriver, string XPath, string elemento)
+    public static string ObterTextoDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
         try
         {

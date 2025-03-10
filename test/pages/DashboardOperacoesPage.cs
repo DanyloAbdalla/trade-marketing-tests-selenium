@@ -141,6 +141,7 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarContratoPorCampanha, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeContratoCampanhaEsperado);
         Dsl.Esperar();
+
         var nomeContratoCampanhaAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaContratoListagemContratosVencendo, "Coluna Contrato");
         Dsl.ValidarTextosNoElemento(nomeContratoCampanhaAtual, nomeContratoCampanhaEsperado);
 
