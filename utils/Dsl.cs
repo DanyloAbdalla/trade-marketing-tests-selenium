@@ -214,24 +214,10 @@ public class Dsl
     /// <param name="elemento"></param>
     /// <returns>Retorna um texto</returns>
     /// <exception cref="Exception"></exception>
-    public static string ObterTextoDoElementoOld(IWebDriver webDriver, string XPath, string elemento)
-    {
-        try
-        {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
-            var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
-
-            return textoElemento;
-        }
-        catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
-    }
-
     public static string ObterTextoDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
         try
         {
-            //EsperarVisibilidadeDoElemento(webDriver, XPath);
             var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
 
             return textoElemento;
