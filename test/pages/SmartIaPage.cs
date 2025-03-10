@@ -208,6 +208,7 @@ public class SmartIaPage
 
         Dsl.Esperar();
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.VarrerAtivos, "Botão Executar Varredura de Ativos");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver,  GlobalVariables.Mensagens);
 
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.Mensagens, "Mensagem Realizar Varredura");
         var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagem Realizar Varredura");
@@ -355,6 +356,7 @@ public class SmartIaPage
             mensagemSucessoEsperada = "Campanhaeditadacomsucesso!";
 
         Dsl.Clicar(webDriver, GlobalVariables.SalvarRegistro, "Botão Salvar Campanha");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver,  GlobalVariables.Mensagens);
 
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.Mensagens, "Mensagem Salvar/Editar Campanha");
         var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagem Salvar/Editar Campanha");
@@ -372,6 +374,7 @@ public class SmartIaPage
         var mensagemSucessoEsperada = "AtivosSelecionadoscomSucesso!";
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAtivosCampanha, "Botão Salvar Ativos Reservados");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver,  GlobalVariables.Mensagens);
 
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.Mensagens, "Mensagem Salvar Ativos Reservados");
         var mensagemSucessoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagem Salvar Ativos Reservados");

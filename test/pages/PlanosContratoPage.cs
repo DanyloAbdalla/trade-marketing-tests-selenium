@@ -645,7 +645,7 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarMensagensDoPlano(string mensagemEsperada)
     {
-        var texto = Dsl.ObterTextoDoElementoNew(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação");
+        var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação");
         var mensagemAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagens de Comunicação");
         var valorAtributoDataTestId = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação", atributoDataTestId);
 
@@ -661,7 +661,7 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarMensagensDeModalDoPlano(string mensagemEsperada)
     {
-        var texto = Dsl.ObterTextoDoElementoNew(webDriver, GlobalVariables.TituloModalConfirmacao, "Mensagens de Confirmação");
+        var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.TituloModalConfirmacao, "Mensagens de Confirmação");
         var mensagemAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagens de Confirmação");
 
         Dsl.ValidarMensagensDeConfirmacao(mensagemAtual, mensagemEsperada);
@@ -728,7 +728,7 @@ public class PlanosContratosPage
         if (contadorMensagemAlertaAtual == 1 && contadorIconeAlertaAtual == 5)
         {
             var mensagemAlertaEsperada = "Algumaslojasnãoteminventáriosuficientedisponível";
-            var textoMensagemAlertaAtual = Dsl.ObterTextoDoElementoNew(webDriver, GlobalVariables.MensagemIndisponibilidadeInventario, "Mensagem Indisponibilidade Inventário Loja");
+            var textoMensagemAlertaAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.MensagemIndisponibilidadeInventario, "Mensagem Indisponibilidade Inventário Loja");
             var mensagemAlertaAtual = Dsl.RemoverNumerosEspacosDeUmTexto(textoMensagemAlertaAtual, "Mensagem Indisponibilidade Inventário Loja");
             Dsl.ValidarMensagemDeSucessoEAlerta(mensagemAlertaAtual, mensagemAlertaEsperada);
         }

@@ -218,20 +218,6 @@ public class Dsl
     {
         try
         {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
-            var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
-
-            return textoElemento;
-        }
-        catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
-    }
-
-    public static string ObterTextoDoElementoNew(IWebDriver webDriver, string XPath, string elemento)
-    {
-        try
-        {
-            //EsperarVisibilidadeDoElemento(webDriver, XPath);
             var textoElemento = webDriver.FindElement(By.XPath(XPath)).Text;
 
             return textoElemento;
