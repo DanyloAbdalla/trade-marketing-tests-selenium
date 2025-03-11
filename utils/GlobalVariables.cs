@@ -34,6 +34,7 @@ public class GlobalVariables
     public static string LoadDeTelaBarra { get; set; } = "(//span[@class='anticon anticon-loading anticon-spin'])[2]";
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
+    public static string CancelarAcao { get; set; } = "//button/*[text()='Cancelar']";
     #endregion
 
     #region Elementos de página - Login
@@ -96,6 +97,7 @@ public class GlobalVariables
     public static string GraficoDesempenhoAtivo { get; set; } = "//*[@class='ant-modal-content']//*[@class='Chart']";
     public static string FiltroDesempenhoAtivo { get; set; } = "//*[@class='ant-modal-content']//*[text()='Maior Retorno']";
     public static string TextoCardMaisVendidosDepartamento { get; set; } = "//*[text()='Mais vendidos do Departamento']";
+    public static string ModalDashboardDetalhesCards { get; set; } = "//*[@class='ant-modal-content']";
     #endregion
 
     #region Elementos de página - Planos
@@ -112,6 +114,7 @@ public class GlobalVariables
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
     public static string OkExclusao { get; set; } = "//*[text()='OK']";
     public static string ModalPlanos { get; set; } = "//*[@class='ant-modal-body' and @style='overflow-x: hidden; height: 85vh;']";
+    public static string AbaPlano { get; set; } = "//div[contains(@class,'ant-tabs-tab-active')]/div";
     #endregion
 
     #region Elementos de página - Planos - Novo Plano

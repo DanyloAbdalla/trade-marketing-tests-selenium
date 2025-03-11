@@ -28,8 +28,16 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage NovaSimulacaoDePlano()
     {
+        var mensagemConfirmacaoEsperadaReutilizarDadosSalvosAnteriormente = "Existemdadossalvosdaultimasimulação,desejareutiliza-los?";
+
         Dsl.Clicar(webDriver, GlobalVariables.NovoRegistro, "Botão Nova Simulação");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela1);
+
+        if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TituloModalConfirmacao) > 0)
+        {
+            ValidarMensagensDeModalDoPlano(mensagemConfirmacaoEsperadaReutilizarDadosSalvosAnteriormente);
+            Dsl.Clicar(webDriver, GlobalVariables.CancelarAcao, "Botão Cancelar Reutilização Dados");
+        }
 
         return this;
     }
