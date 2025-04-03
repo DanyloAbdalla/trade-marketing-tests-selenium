@@ -119,10 +119,10 @@ public class GlobalVariables
 
     #region Elementos de página - Planos - Novo Plano
     //public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']";
-    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']//input[@type='search']";
+    public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     //public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
-    public static string SelecionarIndustria { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[text()='Indústria 01 F']";
+    public static string SelecionarIndustria { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[text()='Industria 01 F']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
     public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
