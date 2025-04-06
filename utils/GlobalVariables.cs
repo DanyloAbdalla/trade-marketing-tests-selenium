@@ -122,7 +122,7 @@ public class GlobalVariables
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     //public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
-    public static string SelecionarIndustria { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
+    public static string SelecionarIndustria { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
     public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
@@ -141,7 +141,7 @@ public class GlobalVariables
     public static string PreencherUsuarioResponsavelEtapaWorkflow { get; set; } = "//span[contains(text(),'usuário responsável')]/..//input";
     public static string SelecionarUsuarioResponsavelEtapaWorkflowSP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02SP']";
     public static string SelecionarUsuarioResponsavelEtapaWorkflowCP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02CP']";
-    public static string MensagemIndisponibilidadeInventario { get; set; } = "//*[@class='form-action'][2]/span[3]/label";
+    public static string MensagemIndisponibilidadeInventario { get; set; } = "//*[@class='form-action'][2]/div/span[3]";
     #endregion
 
     #region Elementos de página - Planos - Novo Plano - Selecionar Ativos
