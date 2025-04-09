@@ -46,14 +46,22 @@ public class PlanosContratosPage
     /// Métodos para preencher o campo Indústria
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage PreencherCampoIndustria()
+    public PlanosContratosPage PreencherCampoIndustria(string contextoDeTeste)
     {
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.PesquisarIndustria);
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PesquisarIndustria, "Campo Indústria");
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustria);
-
-        Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherIndustria, "Indústria 01 F");
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustria, "Campo Selecionar Indústria");
+        if (contextoDeTeste.Equals("SemPlantaLoja"))
+        {
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaSemPlanta);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustriaSemPlanta, "Campo Selecionar Indústria");
+        }
+        else
+        {
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaComPlanta);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustriaComPlanta, "Campo Selecionar Indústria");
+        }
 
         return this;
     }
@@ -193,7 +201,8 @@ public class PlanosContratosPage
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
                 Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlano, "Botão Gerar Pré-Plano");
 
-                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "Campo Selecionar Usuário Responsável do Workflow no Plano");
+                Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
+                Dsl.Esperar(500);
 
                 if (contextoDeTeste.Equals("SemPlantaLoja"))
                 {
