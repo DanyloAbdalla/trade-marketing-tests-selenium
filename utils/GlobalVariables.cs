@@ -3,7 +3,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static bool handLessMode = true; //Executa, mostrando o Browser na tela, se handLessMode igual false
+    public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se handLessMode igual false
     public static bool devMode = false;
     public static bool hmlMode = true;
     public static bool prodMode = false;
@@ -118,11 +118,10 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Novo Plano
-    //public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']";
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
-    //public static string SelecionarIndustria { get; set; } = "//div[@title='Indústria 01 F']";
-    public static string SelecionarIndustria { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
+    public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
+    public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
     public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
     public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
