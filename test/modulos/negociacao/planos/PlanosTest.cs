@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using OpenQA.Selenium;
@@ -164,7 +165,7 @@ public class PlanosTest
     /// Então um o plano será salvo com a nova vigência
     /// </summary>
     [Test, Order(3)]
-    public void TestEditarPlanoExistenteAlterandoVigencia()
+    public void TestEditarPlanoExistenteAlterandoVigenciaDoTrade()
     {
         var contextoDeExecucao = "EditarPlano";
 
@@ -173,6 +174,8 @@ public class PlanosTest
         .AbrirEdicaoDoPlano()
         .EditarInicioVigencia(contextoDeExecucao)
         .EditarFimVigencia(contextoDeExecucao)
+        .AbrirAbaAtivosAlocados()
+        .EditarVigenciaDoTradeNoPlano(contextoDeExecucao, contextoDeTeste)
         .SalvarPlano()
         .FecharDadosDoPlano();
     }
