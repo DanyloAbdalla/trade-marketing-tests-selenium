@@ -159,6 +159,16 @@ public class Dsl
         { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
     }
 
+    public static void ClicarNoElementoId(IWebDriver webDriver, IWebElement elementId, string elemento)
+    {
+        try
+        {
+            elementId.Click();
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + elemento); }
+    }
+
     /// <summary>
     /// Método para contar quantas vezes o elemento existe na tela
     /// </summary>
@@ -253,6 +263,14 @@ public class Dsl
         return linhas;
     }
 
+    public static IList<IWebElement> ObterColunasDoElementoTabela(IWebElement linhaTabela)
+    {
+        IList<IWebElement> colunas = linhaTabela.FindElements(By.XPath("td"));
+
+        return colunas;
+    }
+
+
     /// <summary>
     /// Método para obter uma lista de elementos
     /// </summary>
@@ -284,6 +302,19 @@ public class Dsl
         {
             //EsperarVisibilidadeDoElemento(webDriver, XPath);
             string valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(nomeAtributo);
+
+            return valor;
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + elemento); }
+    }
+
+    public static string ObterDadosDoAtributoDoElementoId(IWebElement elementId, string elemento, string nomeAtributo)
+    {
+        try
+        {
+            //EsperarVisibilidadeDoElemento(webDriver, XPath);
+            var valor = elementId.GetAttribute(nomeAtributo);
 
             return valor;
         }
@@ -346,8 +377,6 @@ public class Dsl
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
 
-        EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.AvancarMesesCalendarios);
-
         if (quantidadeAvancarMeses == 0)
         {
             webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
@@ -357,25 +386,27 @@ public class Dsl
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
                 Esperar();
-                webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendarios)).Click();
+                if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
             }
 
-            var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-            Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Plano");
+            var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
+            var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
 
-            /*if (contextoDeExecucao.Equals("plano"))
+            if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
             {
                 var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Plano");
+                Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
             }
-            else if (contextoDeExecucao.Equals("trade"))
+            else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
             {
                 var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
                 Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
             }
 
-
-            if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
+            /*if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
             else
             {
@@ -401,8 +432,6 @@ public class Dsl
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
 
-        EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.AvancarMesesCalendarios);
-
         if (quantidadeAvancarMeses == 0)
         {
             webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
@@ -412,24 +441,27 @@ public class Dsl
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
                 Esperar();
-                webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendarios)).Click();
+                if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
             }
 
-            var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-            Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia");
+            var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
+            var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
 
-            /*if (contextoDeExecucao.Equals("plano"))
+            if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
             {
                 var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
                 Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia");
             }
-            else if (contextoDeExecucao.Equals("trade"))
+            else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
             {
                 var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
                 Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia Trade");
             }
 
-            if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
+            /*if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
             else
             {
@@ -612,6 +644,15 @@ public class Dsl
 
         Actions action = new Actions(webDriver);
         action.MoveToElement(webElement).Perform();
+    }
+
+    public static void ScrollHorizontalDentroDoElementoTabela(IWebDriver webDriver, string tabelaXPath, string colunaXPath)
+    {
+        IWebElement tabela = webDriver.FindElement(By.XPath(tabelaXPath));
+        IWebElement coluna = tabela.FindElement(By.XPath(colunaXPath));
+
+        IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
+        jsExecutor.ExecuteScript("arguments[0].scrollIntoView({ inline: 'center' });", coluna);
     }
 
     /// <summary>

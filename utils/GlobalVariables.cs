@@ -35,7 +35,8 @@ public class GlobalVariables
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
     public static string CancelarAcao { get; set; } = "//button/*[text()='Cancelar']";
-    public static string AvancarMesesCalendarios { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//*[@class='ant-picker-header-next-btn']";
+    public static string AvancarMesesCalendariosBotton { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//*[@class='ant-picker-header-next-btn']";
+    public static string AvancarMesesCalendariosTop { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//*[@class='ant-picker-header-next-btn']";
     #endregion
 
     #region Elementos de página - Login
@@ -196,7 +197,7 @@ public class GlobalVariables
     public static string QuantidadePorLojaAtivosAlocados { get; set; } = "//*[@title='Alocar']/parent::div/parent::div/div[2]//input";
     public static string AplicarQuantidadePorLojaMassivamenteAtivosAlocados { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
-    public static string TabelaAtivosPlano { get; set; } = "//div[@class='ant-modal-content']//tbody";
+    public static string TabelaAtivosPlano { get; set; } = "//*[contains(text(),'Ativos Alocados')]/../../../../../../../..//div[@class='ant-modal-content']//tbody";
     public static string AvancarCalendarioMesInicioVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string AvancarCalendarioMesFimVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[1]";
 
@@ -204,8 +205,10 @@ public class GlobalVariables
 
     #region Elementos de página - Planos - Ativos Alocados - Editar Alocação do Ativo por Loja
     public static string TabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody";
+    public static string ScrollTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[contains(@class,'ant-table-scroll-horizontal')]";
     public static string ColunaInicioVigenciaTrade { get; set; } = "//td[7]//input";
     public static string ColunaFimVigenciaTrade { get; set; } = "//td[8]//input";
+    public static string ColunaVeiculacaoTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[@class='ant-table-body']//colgroup/col[9]";
     public static string LojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../..//tbody";
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string BuscarAtivoAlocacao { get; set; } = "//span[contains(text(),'Selecione um Ativo')]/div/div//input";
