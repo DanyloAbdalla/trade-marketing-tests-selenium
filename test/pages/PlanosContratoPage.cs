@@ -164,7 +164,7 @@ public class PlanosContratosPage
         return this;
     }
 
-    
+
     /// <summary>
     /// Método para selecionar as lojas carregadas na simulação do plano, para alocação dos ativos
     /// </summary>
@@ -327,26 +327,25 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage PreencherVigenciaDoPlano(string contextoDeExecucao)
     {
-        var contexto = "plano";
         int avancarMesCalendarioEm = 2;
 
         if (contextoDeExecucao.Contains("CriarPlano"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaNovoPlano, "Campo Início Vigencia Novo Plano");
-            Dsl.PreencherCalendariosInicioVigencia(webDriver, GlobalVariables.AvancarCalendarioMesInicioVigencia, avancarMesCalendarioEm, contexto);
+            Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
 
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaNovoPlano, "Campo Fim Vigencia Novo Plano");
-            Dsl.PreencherCalendariosFimVigencia(webDriver, GlobalVariables.AvancarCalendarioMesFimVigencia, avancarMesCalendarioEm, contexto);
+            Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
         }
         else if (contextoDeExecucao.Equals("EditarPlano"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaEditarPlano, "Campo Início Vigencia Editar Plano");
             Dsl.Esperar();
-            Dsl.PreencherCalendariosInicioVigencia(webDriver, GlobalVariables.AvancarCalendarioMesInicioVigencia, avancarMesCalendarioEm, contexto);
+            Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
 
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaEditarPlano, "Campo Fim Vigencia Editar Plano");
             Dsl.Esperar();
-            Dsl.PreencherCalendariosFimVigencia(webDriver, GlobalVariables.AvancarCalendarioMesFimVigencia, avancarMesCalendarioEm, contexto);
+            Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
         }
 
         return this;
@@ -359,20 +358,15 @@ public class PlanosContratosPage
     /// <param name="avancoCalendarioInicioVigencia"></param>
     /// <param name="avancoCalendarioFimVigencia"></param>
     /// <returns></returns>
-    public PlanosContratosPage PreencherVigenciaDoTrade(int colunaTr, int avancoCalendarioInicioVigencia, int avancoCalendarioFimVigencia)
+    public PlanosContratosPage PreencherVigenciaDoTrade(string inicioVigenciaTrade, string fimVigenciaTrade)
     {
-        var inicioVigenciaTrade = $"(//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//div[@class='ant-table-body']//tbody/tr[{colunaTr + 1}]//div[contains(@class,'date-picker')])[1]";
-        var fimVigenciaTrade = $"(//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//div[@class='ant-table-body']//tbody/tr[{colunaTr + 1}]//div[contains(@class,'date-picker')])[2]";
-        var avancarCalendarioMesFimVigenciaTrade = $"(//*[contains(@class,'header-next-btn')])[{avancoCalendarioFimVigencia}]";
-        var avancarCalendarioMesInicioVigenciaTrade = $"(//*[contains(@class,'header-next-btn')])[{avancoCalendarioInicioVigencia}]";
-        var contexto = "trade";
         int avancarMesCalendarioEm = 2;
 
         Dsl.Clicar(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
-        Dsl.PreencherCalendariosFimVigencia(webDriver, avancarCalendarioMesFimVigenciaTrade, avancarMesCalendarioEm, contexto);
+        Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
 
         Dsl.Clicar(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
-        Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarCalendarioMesInicioVigenciaTrade, avancarMesCalendarioEm, contexto);
+        Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
 
         return this;
     }
@@ -419,7 +413,7 @@ public class PlanosContratosPage
                 var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
                 int totalLojas = (int)quantidadeAtivosAlocadosLoja;
 
-                EditarVigenciaDoTrade(totalLojas);
+                EditarVigencia();
 
                 SalvarAtivoAlocado();
             }
@@ -444,7 +438,7 @@ public class PlanosContratosPage
                 var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
                 int totalLojas = (int)quantidadeAtivosAlocadosLoja;
 
-                EditarVigenciaDoTrade(totalLojas);
+                EditarVigencia();
 
                 SalvarAtivoAlocado();
             }
@@ -453,9 +447,21 @@ public class PlanosContratosPage
         return this;
     }
 
-    public PlanosContratosPage EditarVigenciaDoTrade(int totalLojas)
+    public PlanosContratosPage EditarVigencia()
     {
-        for (var linha = 1; linha <= totalLojas; linha++)
+
+        IList<IWebElement> linhas = Dsl.ObterLinhasDoElementoTabela(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+
+        foreach (IWebElement linha in linhas)
+        {
+            var valorAtributo = Dsl.ObterDadosDoAtributoDoElemento(webDriver, linha.ToString(), "Linha Tabela Lojas Alocadas No Ativo", "aria-hidden");
+            if (valorAtributo == null || valorAtributo != "true")
+            {
+                PreencherVigenciaDoTrade(GlobalVariables.ColunaInicioVigenciaTrade, GlobalVariables.ColunaFimVigenciaTrade);
+            }
+        }
+
+        /*for (var linha = 1; linha <= totalLojas; linha++)
         {
             if (linha == 1)
             {
@@ -487,7 +493,7 @@ public class PlanosContratosPage
                 var elementoAvancarCalendarioFimVigenciaLoja5 = 9;
                 PreencherVigenciaDoTrade(linha, elementoAvancarCalendarioInicioVigenciaLoja5, elementoAvancarCalendarioFimVigenciaLoja5);
             }
-        }
+        }*/
 
         return this;
     }
