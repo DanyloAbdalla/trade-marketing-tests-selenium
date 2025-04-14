@@ -321,29 +321,29 @@ public class PlanosContratosPage
     }
 
     /// <summary>
-    /// Método para preencher o campo vigencia do plano
+    /// Método para selecionar a vigencia do plano
     /// </summary>
     /// <param name="contextoDeExecucao"></param>
     /// <returns></returns>
-    public PlanosContratosPage PreencherVigenciaDoPlano(string contextoDeExecucao)
+    public PlanosContratosPage SelecionarVigenciaDoPlano(string contextoDeExecucao)
     {
         int avancarMesCalendarioEm = 2;
 
         if (contextoDeExecucao.Contains("CriarPlano"))
         {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaNovoPlano, "Campo Início Vigencia Novo Plano");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaSimulacao, "Campo Início Vigencia Novo Plano");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
 
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaNovoPlano, "Campo Fim Vigencia Novo Plano");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaSimulacao, "Campo Fim Vigencia Novo Plano");
             Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
         }
         else if (contextoDeExecucao.Equals("EditarPlano"))
         {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaEditarPlano, "Campo Início Vigencia Editar Plano");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigencia Editar Plano");
             Dsl.Esperar();
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
 
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaEditarPlano, "Campo Fim Vigencia Editar Plano");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaPlano, "Campo Fim Vigencia Editar Plano");
             Dsl.Esperar();
             Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
         }
@@ -352,13 +352,13 @@ public class PlanosContratosPage
     }
 
     /// <summary>
-    /// Método para preencher o campo vigencia do trade
+    /// Método para selecionar a vigencia do trade
     /// </summary>
     /// <param name="colunaTr"></param>
     /// <param name="avancoCalendarioInicioVigencia"></param>
     /// <param name="avancoCalendarioFimVigencia"></param>
     /// <returns></returns>
-    public PlanosContratosPage PreencherVigenciaDoTrade(string inicioVigenciaTrade, string fimVigenciaTrade)
+    public PlanosContratosPage SelecionarVigenciaDoTrade(string inicioVigenciaTrade, string fimVigenciaTrade)
     {
         int avancarMesCalendarioEm = 2;
 
@@ -367,28 +367,6 @@ public class PlanosContratosPage
 
         Dsl.Clicar(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
         Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
-
-        return this;
-    }
-
-    /// <summary>
-    /// Método para preencher o campo Fim vigencia
-    /// </summary>
-    /// <param name="contextoDeExecucao"></param>
-    /// <returns></returns>
-    public PlanosContratosPage EditarFimVigencia(string contextoDeExecucao)
-    {
-        if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
-        {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaNovoPlano, "Campo Fim Vigencia Novo Plano");
-            //Dsl.PreencherCalendariosFimVigencia(webDriver, GlobalVariables.AvancarCalendarioMesFimVigencia, 2);
-        }
-        else if (contextoDeExecucao.Equals("EditarPlano"))
-        {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaEditarPlano, "Campo Fim Vigencia Editar Plano");
-            Dsl.Esperar();
-            //Dsl.PreencherCalendariosFimVigencia(webDriver, GlobalVariables.AvancarCalendarioMesFimVigencia, 2);
-        }
 
         return this;
     }
@@ -457,7 +435,7 @@ public class PlanosContratosPage
             var valorAtributo = Dsl.ObterDadosDoAtributoDoElemento(webDriver, linha.ToString(), "Linha Tabela Lojas Alocadas No Ativo", "aria-hidden");
             if (valorAtributo == null || valorAtributo != "true")
             {
-                PreencherVigenciaDoTrade(GlobalVariables.ColunaInicioVigenciaTrade, GlobalVariables.ColunaFimVigenciaTrade);
+                SelecionarVigenciaDoTrade(GlobalVariables.ColunaInicioVigenciaTrade, GlobalVariables.ColunaFimVigenciaTrade);
             }
         }
 

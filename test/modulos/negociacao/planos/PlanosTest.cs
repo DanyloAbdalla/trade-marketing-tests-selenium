@@ -172,7 +172,7 @@ public class PlanosTest
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .PreencherVigenciaDoPlano(contextoDeExecucao)
+        .SelecionarVigenciaDoPlano(contextoDeExecucao)
         .SalvarPlano()
         .FecharDadosDoPlano();
     }
@@ -313,7 +313,7 @@ public class PlanosTest
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria(contextoDeTeste)
         .PreencherCampoCampanha(nomeCampanha)
-        .PreencherVigenciaDoPlano(contextoDeExecucao)
+        .SelecionarVigenciaDoPlano(contextoDeExecucao)
         .SelecionarAtivos(ativoTipoMidia)
         .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
         .SelecionarLojas()

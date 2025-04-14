@@ -118,14 +118,14 @@ public class GlobalVariables
     public static string AbaPlano { get; set; } = "//div[contains(@class,'ant-tabs-tab-active')]/div";
     #endregion
 
-    #region Elementos de página - Planos - Novo Plano
+    #region Elementos de página - Planos - Simulação
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
     public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
-    public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
-    public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
+    public static string InicioVigenciaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[contains(text(),'Inicio Vigência')]/../..//div[contains(@class,'date-picker')]";
+    public static string FimVigenciaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[contains(text(),'Fim Vigência')]/../..//div[contains(@class,'date-picker')]";
     public static string AvancarCalendarioMesInicioVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[1]";
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
@@ -167,8 +167,8 @@ public class GlobalVariables
     public static string AbaDadosPlano { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Dados do Plano')]";
     public static string SituacaoPlano { get; set; } = "//*[@name='Status']";
     public static string Desconto { get; set; } = "//*[@name='Desconto']";
-    public static string InicioVigenciaEditarPlano { get; set; } = "//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div";
-    public static string FimVigenciaEditarPlano { get; set; } = "//form[@class='ant-form ant-form-vertical']//div[6]//div[contains(@class,'date-picker')]/div";
+    public static string InicioVigenciaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]/../../../../..//label[text()='Inicio Vigência']/../../../..//div[contains(@class,'date-picker')]/div/input";
+    public static string FimVigenciaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]/../../../../..//span[text()='Fim Vigência']/../../../../..//div[contains(@class,'date-picker')]/div/input";
     public static string AvancarCalendarioMes { get; set; } = "//*[contains(@class,'header-next-btn')]";
     public static string ReceitaAtivos { get; set; } = "//*[@name='VendaCalculada']";
     public static string ReceitaPlano { get; set; } = "//*[@name='ValorTotalContrato']";
