@@ -137,6 +137,20 @@ public class Dsl
         EsperarInvisibilidadeDoElemento(webDriver, XPath);
     }
 
+    public static IWebElement EncontrarElemento(IWebDriver webDriver, string XPath, string elemento)
+    {
+        try
+        {
+            IWebElement element = webDriver.FindElement(By.XPath(XPath));
+
+            return element;
+        }
+        catch (NoSuchElementException)
+        { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
+        catch (Exception ex)
+        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+    }
+
     /// <summary>
     /// Método para clicar em um elemento
     /// </summary>

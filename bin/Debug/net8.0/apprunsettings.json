@@ -24,7 +24,7 @@
             { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
             { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
-            { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": true },
+            { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "TestSkip": false },
             { "TestName": "TestAprovarPlano", "TestSkip": false },

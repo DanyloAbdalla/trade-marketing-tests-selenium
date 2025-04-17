@@ -6,8 +6,8 @@ public class GlobalVariables
 {
     #region Projeto
     public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se handLessMode igual false
-    public static bool devMode = true;
-    public static bool hmlMode = false;
+    public static bool devMode = false;
+    public static bool hmlMode = true;
     public static bool prodMode = false;
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
@@ -197,7 +197,6 @@ public class GlobalVariables
     public static string PreencherNomeAtivo { get; set; } = "(//div[@style='padding: 5px;'])[2]/input";
     public static string BuscarAtivoAlocado { get; set; } = "(//div[@style='padding: 5px;'])[2]/button/span[text()='Buscar']";
     public static string QuantidadePorLojaAtivosAlocados { get; set; } = "//*[@title='Alocar']/parent::div/parent::div/div[2]//input";
-    public static string AplicarQuantidadePorLojaMassivamenteAtivosAlocados { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
     public static string TabelaAtivosPlano { get; set; } = "//*[contains(text(),'Ativos Alocados')]/../../../../../../../..//div[@class='ant-modal-content']//tbody";
     public static string AvancarCalendarioMesInicioVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
@@ -208,8 +207,8 @@ public class GlobalVariables
     #region Elementos de página - Planos - Ativos Alocados - Editar Alocação do Ativo por Loja
     public static string TabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody";
     public static string ScrollTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[contains(@class,'ant-table-scroll-horizontal')]";
-    public static string ColunaInicioVigenciaTrade { get; set; } = "//td[7]//input";
-    public static string ColunaFimVigenciaTrade { get; set; } = "//td[8]//input";
+    public static string AceleradorInicioVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Inicio Vigência']/../..//input";
+    public static string AceleradorFimVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Fim Vigência']/../..//input";
     public static string ColunaVeiculacaoTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[@class='ant-table-body']//colgroup/col[9]";
     public static string LojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../..//tbody";
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
@@ -223,7 +222,8 @@ public class GlobalVariables
     public static string MensagemSucessoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Produtos atualizados')]";
     public static string MensagemAvisoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Salve suas informações')]";
     public static string NomeAtivoAlocao { get; set; } = "//*[text()='Ativo: ']/div/div/span[2]";
-    public static string AbaAlocacaoPorLojaAtivo { get; set;} = "//*[contains(text(),'Alocação por Loja')]";
+    public static string AbaAlocacaoPorLojaAtivo { get; set; } = "//*[contains(text(),'Alocação por Loja')]";
+    public static string AplicarAceleradorPorLojaAtivoAlocado { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//button/*[text()='Aplicar']";
     #endregion
 
     #region Elementos de página - SmartIA
