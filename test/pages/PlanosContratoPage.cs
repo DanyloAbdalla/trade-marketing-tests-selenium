@@ -153,9 +153,9 @@ public class PlanosContratosPage
                 }
                 break;
             case "ComPlantaLoja":
-                Dsl.ScrollParaElemento(webDriver, GlobalVariables.AplicarQuantidadePorLojaMassivamente);
-                Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.QuantidadePorLoja, "5");
-                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AplicarQuantidadePorLojaMassivamente, "Botão Aplicar Quantidade para Todas as Lojas na Simulação do Plano");
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.AplicarAceleradorPorLojaSimulacao);
+                Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.AceleradorQuantidadeAlocarSimulacao, "5");
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaSimulacao, "Botão Aplicar Quantidade para Todas as Lojas na Simulação do Plano");
                 Dsl.Esperar(500);
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
                 break;
@@ -719,9 +719,9 @@ public class PlanosContratosPage
             Dsl.EsperarVisibilidadeDoElemento(webDriver, elementoAtivoNome);
             Dsl.Clicar(webDriver, elementoAtivoNome, "Campo Selecionar Ativo");
 
-            //Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
-            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
-            Dsl.Esperar();
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+            //Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
+            Dsl.Esperar(2000);
 
             var textoQuantidadeLojasAtivoAlocado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Label Quantidade de Lojas no Ativo Alocado");
             var quantidadeLojasAtivoAlocadoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(textoQuantidadeLojasAtivoAlocado, "Label Quantidade de Lojas no Ativo Alocado");
@@ -739,7 +739,6 @@ public class PlanosContratosPage
 
             Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTela);
             Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-
         }
 
         return this;

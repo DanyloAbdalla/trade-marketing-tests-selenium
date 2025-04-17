@@ -133,8 +133,8 @@ public class GlobalVariables
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//button/*[text()='Selecionar Ativos']";
-    public static string QuantidadePorLoja { get; set; } = "//*[@title='Qtd por Loja']/parent::div/parent::div/div[2]//input";
-    public static string AplicarQuantidadePorLojaMassivamente { get; set; } = "//button/*[text()='Aplicar']";
+    public static string AceleradorQuantidadeAlocarSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//*[@title='Qtd por Loja']/../..//input";
+    public static string AplicarAceleradorPorLojaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//button/*[text()='Aplicar']";
     public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas']";
     public static string InventarioAlerta { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
     public static string InventarioOk { get; set; } = "//td[9]//span[contains(@class,'check-inventario')]";
