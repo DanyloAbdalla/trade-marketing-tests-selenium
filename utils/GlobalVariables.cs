@@ -1,3 +1,5 @@
+using OpenQA.Selenium.DevTools.V128.Page;
+
 namespace MeuClienteWebTestProject;
 
 public class GlobalVariables
@@ -35,6 +37,8 @@ public class GlobalVariables
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
     public static string CancelarAcao { get; set; } = "//button/*[text()='Cancelar']";
+    public static string AvancarMesesCalendariosBotton { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//*[@class='ant-picker-header-next-btn']";
+    public static string AvancarMesesCalendariosTop { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//*[@class='ant-picker-header-next-btn']";
     #endregion
 
     #region Elementos de página - Login
@@ -114,23 +118,23 @@ public class GlobalVariables
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
     public static string OkExclusao { get; set; } = "//*[text()='OK']";
     public static string ModalPlanos { get; set; } = "//*[@class='ant-modal-body' and @style='overflow-x: hidden; height: 85vh;']";
-    public static string AbaPlano { get; set; } = "//div[contains(@class,'ant-tabs-tab-active')]/div";
+    public static string AbaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]";
     #endregion
 
-    #region Elementos de página - Planos - Novo Plano
+    #region Elementos de página - Planos - Simulação
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
     public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";
-    public static string InicioVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[1]";
-    public static string FimVigenciaNovoPlano { get; set; } = "(//div[contains(@class,'date-picker')]//input)[2]";
+    public static string InicioVigenciaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[contains(text(),'Inicio Vigência')]/../..//div[contains(@class,'date-picker')]";
+    public static string FimVigenciaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[contains(text(),'Fim Vigência')]/../..//div[contains(@class,'date-picker')]";
     public static string AvancarCalendarioMesInicioVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[1]";
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//button/*[text()='Selecionar Ativos']";
-    public static string QuantidadePorLoja { get; set; } = "//*[@title='Qtd por Loja']/parent::div/parent::div/div[2]//input";
-    public static string AplicarQuantidadePorLojaMassivamente { get; set; } = "//button/*[text()='Aplicar']";
+    public static string AceleradorQuantidadeAlocarSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//*[@title='Qtd por Loja']/../..//input";
+    public static string AplicarAceleradorPorLojaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//button/*[text()='Aplicar']";
     public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas']";
     public static string InventarioAlerta { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
     public static string InventarioOk { get; set; } = "//td[9]//span[contains(@class,'check-inventario')]";
@@ -166,8 +170,8 @@ public class GlobalVariables
     public static string AbaDadosPlano { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Dados do Plano')]";
     public static string SituacaoPlano { get; set; } = "//*[@name='Status']";
     public static string Desconto { get; set; } = "//*[@name='Desconto']";
-    public static string InicioVigenciaEditarPlano { get; set; } = "//form[@class='ant-form ant-form-vertical']//div[5]//div[contains(@class,'date-picker')]/div";
-    public static string FimVigenciaEditarPlano { get; set; } = "//form[@class='ant-form ant-form-vertical']//div[6]//div[contains(@class,'date-picker')]/div";
+    public static string InicioVigenciaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]/../../../../..//label[text()='Inicio Vigência']/../../../..//div[contains(@class,'date-picker')]/div/input";
+    public static string FimVigenciaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]/../../../../..//span[text()='Fim Vigência']/../../../../..//div[contains(@class,'date-picker')]/div/input";
     public static string AvancarCalendarioMes { get; set; } = "//*[contains(@class,'header-next-btn')]";
     public static string ReceitaAtivos { get; set; } = "//*[@name='VendaCalculada']";
     public static string ReceitaPlano { get; set; } = "//*[@name='ValorTotalContrato']";
@@ -192,25 +196,35 @@ public class GlobalVariables
     public static string FiltrarAtivoAlocado { get; set; } = "//thead//th[@title='Ativo']//span[@role='button']";
     public static string PreencherNomeAtivo { get; set; } = "(//div[@style='padding: 5px;'])[2]/input";
     public static string BuscarAtivoAlocado { get; set; } = "(//div[@style='padding: 5px;'])[2]/button/span[text()='Buscar']";
-    public static string QuantidadePorLojaAtivosAlocados { get; set; } = "//*[@title='Alocar']/parent::div/parent::div/div[2]//input";
-    public static string AplicarQuantidadePorLojaMassivamenteAtivosAlocados { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
-    public static string TabelaAtivosPlano { get; set; } = "//div[@class='ant-modal-content']//tbody";
+    public static string TabelaAtivosPlano { get; set; } = "//*[contains(text(),'Ativos Alocados')]/../../../../../../../..//div[@class='ant-modal-content']//tbody";
+    public static string AvancarCalendarioMesInicioVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
+    public static string AvancarCalendarioMesFimVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[1]";
+
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados - Editar Alocação do Ativo por Loja
-    public static string TabelaLojasAtivoAlocados { get; set; } = "(//tbody)[3]/tr[3]";
+    public static string TabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody";
+    public static string LinhaTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody/tr[@data-row-key='0']";
+    public static string ScrollTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[contains(@class,'ant-table-scroll-horizontal')]";
+    public static string AceleradorInicioVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Inicio Vigência']/../..//input";
+    public static string AceleradorQuantidadeAlocarTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Alocar']/../..//input";
+    public static string AceleradorFimVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Fim Vigência']/../..//input";
+    public static string ColunaVeiculacaoTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[@class='ant-table-body']//colgroup/col[9]";
+    public static string LojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../..//tbody";
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string BuscarAtivoAlocacao { get; set; } = "//span[contains(text(),'Selecione um Ativo')]/div/div//input";
     public static string SelecionarAtivoAlocacao { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Cestão 01 - ']";
     public static string IncluirAlocacaoAtivo { get; set; } = "//button/*[text()='Incluir Ativo']";
     public static string QuantidadeLojasPorAtivo { get; set; } = "//*[contains(text(),'Total de lojas')]";
     public static string SalvarAlocacaoLoja { get; set; } = "(//button/*[text()='Salvar'])[2]";
-    public static string FecharAlocacaoAtivoPorLoja { get; set; } = "(//button/*[text()='Fechar'])[2]";
+    public static string FecharAlocacaoAtivoPorLoja { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../../../../../..//*[text()='Fechar']";
     public static string MensagemSucessoAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Alocação atualizada')]";
     public static string MensagemSucessoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Produtos atualizados')]";
     public static string MensagemAvisoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Salve suas informações')]";
     public static string NomeAtivoAlocao { get; set; } = "//*[text()='Ativo: ']/div/div/span[2]";
+    public static string AbaAlocacaoPorLojaAtivo { get; set; } = "//*[contains(text(),'Alocação por Loja')]";
+    public static string AplicarAceleradorPorLojaAtivoAlocado { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//button/*[text()='Aplicar']";
     #endregion
 
     #region Elementos de página - SmartIA

@@ -4,6 +4,7 @@ using SeleniumExtras.WaitHelpers;
 using OpenQA.Selenium.Interactions;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Net.Mime;
 
 namespace MeuClienteWebTestProject;
 
@@ -136,6 +137,20 @@ public class Dsl
         EsperarInvisibilidadeDoElemento(webDriver, XPath);
     }
 
+    public static IWebElement EncontrarElemento(IWebDriver webDriver, string XPath, string elemento)
+    {
+        try
+        {
+            IWebElement element = webDriver.FindElement(By.XPath(XPath));
+
+            return element;
+        }
+        catch (NoSuchElementException)
+        { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
+        catch (Exception ex)
+        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+    }
+
     /// <summary>
     /// Método para clicar em um elemento
     /// </summary>
@@ -156,6 +171,16 @@ public class Dsl
         { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
         catch (Exception ex)
         { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+    }
+
+    public static void ClicarNoElementoId(IWebDriver webDriver, IWebElement elementId, string elemento)
+    {
+        try
+        {
+            elementId.Click();
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + elemento); }
     }
 
     /// <summary>
@@ -244,6 +269,22 @@ public class Dsl
         return quantidadeLinhas;
     }
 
+    public static IList<IWebElement> ObterLinhasDoElementoTabela(IWebDriver webDriver, string XPath)
+    {
+        IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
+        IList<IWebElement> linhas = tabela.FindElements(By.XPath("tr"));
+
+        return linhas;
+    }
+
+    public static IList<IWebElement> ObterColunasDoElementoTabela(IWebElement linhaTabela)
+    {
+        IList<IWebElement> colunas = linhaTabela.FindElements(By.XPath("td"));
+
+        return colunas;
+    }
+
+
     /// <summary>
     /// Método para obter uma lista de elementos
     /// </summary>
@@ -275,6 +316,19 @@ public class Dsl
         {
             //EsperarVisibilidadeDoElemento(webDriver, XPath);
             string valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(nomeAtributo);
+
+            return valor;
+        }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n" + elemento); }
+    }
+
+    public static string ObterDadosDoAtributoDoElementoId(IWebElement elementId, string elemento, string nomeAtributo)
+    {
+        try
+        {
+            //EsperarVisibilidadeDoElemento(webDriver, XPath);
+            var valor = elementId.GetAttribute(nomeAtributo);
 
             return valor;
         }
@@ -332,12 +386,10 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <param name="quantidadeAvancarMeses"></param>
-    public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, string XPath, int quantidadeAvancarMeses)
+    public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, int quantidadeAvancarMeses)
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
-
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
 
         if (quantidadeAvancarMeses == 0)
         {
@@ -348,10 +400,27 @@ public class Dsl
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
                 Esperar();
-                webDriver.FindElement(By.XPath(XPath)).Click();
+                if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
             }
 
-            if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
+            var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
+            var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
+
+            if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
+            {
+                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+            }
+            else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
+            {
+                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+            }
+
+            /*if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
             else
             {
@@ -361,7 +430,7 @@ public class Dsl
                     webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]")).Click();
                 else
                     webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
-            }
+            }*/
         }
     }
 
@@ -372,12 +441,10 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <param name="quantidadeAvancarMeses"></param>
-    public static void PreencherCalendariosFimVigencia(IWebDriver webDriver, string XPath, int quantidadeAvancarMeses)
+    public static void PreencherCalendariosFimVigencia(IWebDriver webDriver, int quantidadeAvancarMeses)
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
-
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
 
         if (quantidadeAvancarMeses == 0)
         {
@@ -388,10 +455,27 @@ public class Dsl
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
                 Esperar();
-                webDriver.FindElement(By.XPath(XPath)).Click();
+                if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
             }
 
-            if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
+            var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
+            var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
+
+            if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
+            {
+                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia");
+            }
+            else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
+            {
+                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia Trade");
+            }
+
+            /*if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
                 webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
             else
             {
@@ -401,7 +485,7 @@ public class Dsl
                     webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
                 else
                     webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
-            }
+            }*/
         }
     }
 
@@ -574,6 +658,15 @@ public class Dsl
 
         Actions action = new Actions(webDriver);
         action.MoveToElement(webElement).Perform();
+    }
+
+    public static void ScrollHorizontalDentroDoElementoTabela(IWebDriver webDriver, string tabelaXPath, string colunaXPath)
+    {
+        IWebElement tabela = webDriver.FindElement(By.XPath(tabelaXPath));
+        IWebElement coluna = tabela.FindElement(By.XPath(colunaXPath));
+
+        IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
+        jsExecutor.ExecuteScript("arguments[0].scrollIntoView({ inline: 'center' });", coluna);
     }
 
     /// <summary>

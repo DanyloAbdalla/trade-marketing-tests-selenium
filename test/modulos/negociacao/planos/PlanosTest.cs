@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using OpenQA.Selenium;
@@ -154,25 +155,52 @@ public class PlanosTest
     /// Testar a edição da vigência em um plano existente
     /// 
     /// Como comercial de trade marketing
-    /// Eu quero alterar a vigência
+    /// Eu quero alterar a vigência do plano
     /// Para negociar um novo período
     /// 
     /// Dado que eu tenho um plano criado na Negociação
     /// Quando acessar a tela de edição
     /// E alterar as datas início e fim da vigência
-    /// E clicar no botão Salvar Plano
-    /// Então um o plano será salvo com a nova vigência
+    /// E clicar no botão Salvar
+    /// Então o plano será salvo com a nova vigência
     /// </summary>
     [Test, Order(3)]
-    public void TestEditarPlanoExistenteAlterandoVigencia()
+    public void TestEditarPlanoExistenteAlterandoVigenciaDoPlano()
     {
         var contextoDeExecucao = "EditarPlano";
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .EditarInicioVigencia(contextoDeExecucao)
-        .EditarFimVigencia(contextoDeExecucao)
+        .SelecionarVigenciaDoPlano(contextoDeExecucao)
+        .SalvarPlano()
+        .FecharDadosDoPlano();
+    }
+
+    /// <summary>
+    /// Testar a edição da vigência em um plano existente
+    /// 
+    /// Como comercial de trade marketing
+    /// Eu quero alterar a vigência do trade
+    /// Para negociar um novo período
+    /// 
+    /// Dado que eu tenho um plano criado na Negociação
+    /// Quando acessar a aba "Ativos Alocados" na edição do plano
+    /// E editar um ativo alocado
+    /// E alterar as datas início e fim da vigência do trade
+    /// E clicar no botão Salvar
+    /// Então o plano será salvo com a nova vigência
+    /// </summary>
+    [Test, Order(4)]
+    public void TestEditarPlanoExistenteAlterandoVigenciaDoTrade()
+    {
+        //var contextoDeExecucao = "EditarPlano";
+
+        new PlanosContratosPage(webDriver)
+        .BuscarPlanos(nomeCampanha)
+        .AbrirEdicaoDoPlano()
+        .AbrirAbaAtivosAlocados()
+        .EditarVigenciaDoAtivoAlocado(contextoDeTeste)
         .SalvarPlano()
         .FecharDadosDoPlano();
     }
@@ -190,7 +218,7 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então o plano será salvo com sucesso com a nova quantidade
     /// </summary>
-    [Test, Order(4)]
+    [Test, Order(5)]
     public void TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel()
     {
         var contextoDeExecucao = "EditarPlanoAlterandoQuantidadeAtivo";
@@ -217,7 +245,7 @@ public class PlanosTest
     /// E incluir um novo ativo para a loja com disponibilidade de inventário
     /// Então o plano será salvo com sucesso com o novo ativo
     /// </summary>
-    [Test, Order(5)]
+    [Test, Order(6)]
     public void TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel()
     {
         var contextoDeExecucao = "EditarPlanoIncluindoAtivo";
@@ -245,7 +273,7 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então o plano será salvo, com Status = Aprovado e Farol = Aprovado
     /// </summary>
-    [Test, Order(6)]
+    [Test, Order(7)]
     public void TestAprovarPlano()
     {
         var situacaoPlano = "Contrato Aprovado";
@@ -275,18 +303,17 @@ public class PlanosTest
     /// Então será apresentado o botão de alerta para as lojas com indisponibilidade
     /// E uma mensagem será apresentada ao lado do botão Gerar Pré-Plano, com o mesmo desabilitado
     /// </summary>
-    [Test, Order(7)]
+    [Test, Order(8)]
     public void TestCriarPlanoComAlertaDeInventario()
     {
         var ativoTipoMidia = "Grafica";
-        var contextoDeExecucao = "CriarPlanoComWorkflowPadrao";
+        var contextoDeExecucao = "CriarPlano";
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria(contextoDeTeste)
         .PreencherCampoCampanha(nomeCampanha)
-        .EditarInicioVigencia(contextoDeExecucao)
-        .EditarFimVigencia(contextoDeExecucao)
+        .SelecionarVigenciaDoPlano(contextoDeExecucao)
         .SelecionarAtivos(ativoTipoMidia)
         .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
         .SelecionarLojas()
@@ -307,7 +334,7 @@ public class PlanosTest
     /// E clicar no botão Salvar Plano
     /// Então o plano será salvo, com Status = Cancelado e Farol = Cancelado
     /// </summary>
-    [Test, Order(8)]
+    [Test, Order(9)]
     public void TestCancelarPlano()
     {
         var situacaoPlano = "Cancelado";
@@ -337,7 +364,7 @@ public class PlanosTest
     /// E excluir (desativar), clicando no campo Excluir do Plano
     /// Então o plano será excluído com mensagem de sucesso, não sendo mais apresentado na lista
     /// </summary>
-    [Test, Order(9)]
+    [Test, Order(10)]
     public void TestExcluirPlano()
     {
         var nomeCampanharComWorkflowPadrao = "PlanoComWorkflowPadraoMassaAutomatizada";
@@ -361,7 +388,9 @@ public class PlanosTest
         if (primeiroTeste)
         {
             if (statusTeste == TestStatus.Failed || statusTeste == TestStatus.Skipped)
+            {
                 testeAnteriorPulouFalhou = true;
+            }
 
             primeiroTeste = false;
 
@@ -370,8 +399,20 @@ public class PlanosTest
         }
         else if (statusTeste == TestStatus.Passed || statusTeste == TestStatus.Failed)
         {
-            if (statusTeste == TestStatus.Failed && Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AbaPlano) > 0) //Identifica se o teste falhou e se a modal do plano está aberta, caso sim, a mesma é fechada para não comprometer a execução do próximo teste
-                Dsl.Clicar(webDriver, GlobalVariables.FecharTela, "Botão Fechar Edição");
+            if (statusTeste == TestStatus.Failed)
+            {
+                if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AbaAlocacaoPorLojaAtivo) > 0)
+                {
+                    //Se a modal da alocação por loja do ativo está aberta, a mesma é fechada para não comprometer a execução do próximo teste
+                    new PlanosContratosPage(webDriver).FecharAlocacaoPorLoja();
+
+                    if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AbaPlano) > 0)
+                    {
+                        //Se a modal do plano está aberta, a mesma é fechada para não comprometer a execução do próximo teste
+                        new PlanosContratosPage(webDriver).FecharDadosDoPlano();
+                    }
+                }
+            }
 
             Dsl.Esperar();
             new HomePage(webDriver).AcessarDashboardOperacoes();
