@@ -1,0 +1,50 @@
+{
+  "dashboard_operacaoes": {
+    "TestAcessarVisaoDetalhadaLojasAtivas": {
+      "semCalendario": {
+        "nomeAtivo": "Adesivo de Elevador"
+      },
+      "comCalendario": {
+        "nomeAtivo": "Adesivo de Chão 01"
+      }
+    },
+    "TestAcessarVisaoDetalhadaDeAtivosAlocados": {
+      "data01": {
+        "nome": "Danylo",
+        "email": "danylo@example.com",
+        "idade": 28
+      },
+      "data02": {
+        "nome": "Maria",
+        "email": "maria@example.com",
+        "idade": 32
+      }
+    }
+  },
+  "suíte_test02": {
+    "test01": {
+      "data01": {
+        "id": 101,
+        "nome": "Laptop",
+        "preco": 3500.00
+      },
+      "data02": {
+        "id": 102,
+        "nome": "Mouse",
+        "preco": 150.00
+      }
+    },
+    "test02": {
+      "data01": {
+        "id": 201,
+        "nome": "Teclado",
+        "preco": 200.00
+      },
+      "data02": {
+        "id": 202,
+        "nome": "Monitor",
+        "preco": 1200.00
+      }
+    }
+  }
+}

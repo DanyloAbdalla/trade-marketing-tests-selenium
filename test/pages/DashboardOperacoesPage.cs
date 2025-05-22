@@ -36,18 +36,21 @@ public class DashboardOperacoesPage
     /// Método para acessar a tela de Detalhes da Disponibilidade dos Ativos no card Ativos Alocados
     /// </summary>
     /// <returns></returns>
-    public DashboardOperacoesPage AcessarDetalhesDaDiponibilidade(string nomeAtivo, string nomeAtivoEsperado)
+    public DashboardOperacoesPage AcessarDetalhesDaDiponibilidade(string nomeAtivoEsperado)
     {
+        var nomeAtivoSemCalendario = DataLoader.ObterDados("TestAcessarVisaoDetalhadaLojasAtivas", "semCalendario", "nomeAtivo");
+
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesDisponibilidadeAtivos, "Botão Visualizar Disponibilidade de Ativos");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarAtivoPorNome, "Botão Filtro");
 
-        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
+        Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivoSemCalendario);
         Dsl.Esperar(2000);
         
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaAtivoListagemDisponibilidadeAtivos, "Coluna Ativo");
-        var nomeAtivoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
-        Dsl.ValidarTextosNoElemento(nomeAtivoAtual, nomeAtivoEsperado);
+        var nomeAtivoSemCalendarioAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
+        var nomeAtivoSemCalendarioEsperado = Dsl.RemoverNumerosEspacosDeUmTexto(nomeAtivoSemCalendario, "Ativo Esperado");
+        Dsl.ValidarTextosNoElemento(nomeAtivoSemCalendarioAtual, nomeAtivoSemCalendarioEsperado);
 
         return new DashboardOperacoesPage(webDriver);
     }

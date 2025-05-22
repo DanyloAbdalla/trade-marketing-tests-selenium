@@ -87,7 +87,7 @@ public class DashboardOperacoesTest
     public void TestAcessarVisaoDetalhadaDeAtivosAlocados()
     {
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDaDiponibilidade(nomeAtivo, nomeAtivoEsperado)
+        .AcessarDetalhesDaDiponibilidade(nomeAtivoEsperado)
         .FecharDetalhes()
         .AcessarDetalhesDasNegociacoes(nomeAtivo, nomeAtivoEsperado)
         .FecharDetalhes()
