@@ -36,18 +36,64 @@ public class DashboardOperacoesPage
     /// Método para acessar a tela de Detalhes da Disponibilidade dos Ativos no card Ativos Alocados
     /// </summary>
     /// <returns></returns>
-    public DashboardOperacoesPage AcessarDetalhesDaDiponibilidade(string nomeAtivo, string nomeAtivoEsperado)
+    public DashboardOperacoesPage AcessarDetalhesDaDiponibilidade()
     {
+        string nomeAtivoSemCalendario = DataLoader.ObterDados("dashboard_operacaoes", "TestAcessarVisaoDetalhadaDeAtivosAlocados", "nomeAtivoSemCalendario");
+        string nomeAtivoComCalendario = DataLoader.ObterDados("dashboard_operacaoes", "TestAcessarVisaoDetalhadaDeAtivosAlocados", "nomeAtivoComCalendario");
+
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesDisponibilidadeAtivos, "Botão Visualizar Disponibilidade de Ativos");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.FiltrarAtivoPorNome, "Botão Filtro");
 
+        BuscarDisponibilidadeDoAtivo(nomeAtivoSemCalendario);
+        BuscarDisponibilidadeDoAtivo(nomeAtivoComCalendario);
+
+        return new DashboardOperacoesPage(webDriver);
+    }
+
+    /// <summary>
+    /// Método para buscar e validar o ativo, pesquisando a disponibilidade
+    /// </summary>
+    /// <param name="nomeAtivo"></param>
+    /// <returns></returns>
+    public DashboardOperacoesPage BuscarDisponibilidadeDoAtivo(string nomeAtivo)
+    {
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Dsl.Esperar(2000);
-        
+
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaAtivoListagemDisponibilidadeAtivos, "Coluna Ativo");
-        var nomeAtivoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
-        Dsl.ValidarTextosNoElemento(nomeAtivoAtual, nomeAtivoEsperado);
+        var nomeAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
+        var nomeEsperado = Dsl.RemoverNumerosEspacosDeUmTexto(nomeAtivo, "Ativo Esperado");
+        Dsl.ValidarTextosNoElemento(nomeAtual, nomeEsperado);
+        AcessarDetalhesDaDisponibilidadePorLoja(nomeAtivo);
+
+        return new DashboardOperacoesPage(webDriver);
+    }
+
+    /// <summary>
+    /// Método para acessar a tela de Disponibilidade dos Ativos por Loja
+    /// </summary>
+    /// <param name="nomeAtivo"></param>
+    /// <returns></returns>
+    public DashboardOperacoesPage AcessarDetalhesDaDisponibilidadePorLoja(string nomeAtivo)
+    {
+        switch (nomeAtivo)
+        {
+            case "Adesivo de Elevador":
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ColunaQtdLojasListagemDisponibilidadeAtivos, "Coluna Qtd Lojas");
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaDisponibilidadeAtivoPorLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.FecharTelaDisponibilidadeAtivosPorLoja, "Botão Fechar Disponibilidade Por Loja");
+                break;
+            case "Adesivo de Chão 01":
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ColunaQtdLojasListagemDisponibilidadeAtivos, "Coluna Qtd Lojas");
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaDisponibilidadeCalendariosAtivo);
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ColunaDisponibilidadeCalendariosAtivo, "Coluna Disponibilidade Por Calendário");
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaDisponibilidadeAtivoPorLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.FecharTelaCalendariosAtivo, "Botão Fechar Calendários do Ativo");
+                Dsl.Clicar(webDriver, GlobalVariables.FecharTelaDisponibilidadeAtivosPorLoja, "Botão Fechar Disponibilidade Por Loja");
+                Dsl.Esperar();
+                break;
+        }
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -64,7 +110,7 @@ public class DashboardOperacoesPage
 
         Dsl.BuscarRegistros(webDriver, GlobalVariables.FiltrarAtivoPorNome, GlobalVariables.PreencherFiltro, GlobalVariables.BuscarRegistro, nomeAtivo);
         Dsl.Esperar();
-        
+
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.ColunaAtivoListagemAtivosNegociados, "Coluna Ativo");
         var nomeAtivoAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Coluna Ativo");
         Dsl.ValidarTextosNoElemento(nomeAtivoAtual, nomeAtivoEsperado);

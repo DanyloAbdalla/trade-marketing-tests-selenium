@@ -1,0 +1,10 @@
+{
+  "dashboard_operacaoes": {
+    "TestAcessarVisaoDetalhadaLojasAtivas": {
+    },
+    "TestAcessarVisaoDetalhadaDeAtivosAlocados": {
+      "nomeAtivoSemCalendario": "Adesivo de Elevador",
+      "nomeAtivoComCalendario": "Adesivo de Chão 01"
+    }
+  }
+}
