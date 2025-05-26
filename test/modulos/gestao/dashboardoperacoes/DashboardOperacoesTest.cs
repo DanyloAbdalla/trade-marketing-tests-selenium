@@ -30,6 +30,7 @@ public class DashboardOperacoesTest
     {
         runSettings = RunSettings.LoadSettings();
         webDriver = DriverFactory.CreateDriver(browserType);
+        DataLoader.CarregarArquivo();
 
         var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
@@ -87,7 +88,7 @@ public class DashboardOperacoesTest
     public void TestAcessarVisaoDetalhadaDeAtivosAlocados()
     {
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDaDiponibilidade(nomeAtivoEsperado)
+        .AcessarDetalhesDaDiponibilidade()
         .FecharDetalhes()
         .AcessarDetalhesDasNegociacoes(nomeAtivo, nomeAtivoEsperado)
         .FecharDetalhes()

@@ -29,6 +29,7 @@ public class GlobalVariables
     public static string FecharTela { get; set; } = "//button/*[text()='Fechar']";
     public static string PreencherFiltro { get; set; } = "//*[@class='ant-table-filter-dropdown']//input";
     public static string BuscarRegistro { get; set; } = "//button/*[text()='Buscar']";
+    public static string LimparRegistro { get; set; } = "//button/*[text()='Limpar']";
     public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
     public static string AvisoInexistenciaDados { get; set; } = "//*[text()='Não há dados']";
     public static string LoadDeTela { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
@@ -65,6 +66,12 @@ public class GlobalVariables
     public static string TabelaListagemLojasAtivas { get; set; } = "//*[contains(text(),'Listagem de Lojas')]/ancestor::div[@class='ant-modal-body']//table/tbody/tr";
     public static string DetalhesDisponibilidadeAtivos { get; set; } = "//*[contains(text(),'Ativos Alocados')]/following-sibling::div//button[1]";
     public static string ColunaAtivoListagemDisponibilidadeAtivos { get; set; } = "//*[contains(text(),'Disponibilidade de Ativos')]/ancestor::div[@class='ant-modal-body']//table/tbody/tr[2]/td[1]";
+    public static string ColunaQtdLojasListagemDisponibilidadeAtivos { get; set; } = "//*[contains(text(),'Disponibilidade de Ativos')]/ancestor::div[@class='ant-modal-body']//table/tbody/tr[2]/td[2]/button";
+    public static string ColunaDisponibilidadeCalendariosAtivo { get; set; } = "//*[contains(text(),'Calendários do Ativo')]/ancestor::div[@class='ant-modal-body']//table/tbody/tr[1]/td[3]/button";
+    public static string TabelaDisponibilidadeAtivoPorLoja { get; set; } = "//*[contains(text(),'Ativos Disponiveis')]/ancestor::div[@class='ant-modal-content']//div[@class='ant-table-wrapper']";
+    public static string TabelaDisponibilidadeCalendariosAtivo { get; set; } = "//*[contains(text(),'Calendários do Ativo')]/ancestor::div[@class='ant-modal-content']/div//div[@class='ant-tabs-content-holder']";
+    public static string FecharTelaCalendariosAtivo { get; set; } = "//*[contains(text(),'Calendários do Ativo')]/ancestor::div[@class='ant-modal-content']//button/*[text()='Fechar']";
+    public static string FecharTelaDisponibilidadeAtivosPorLoja { get; set; } = "//*[contains(text(),'Ativos Disponiveis')]/ancestor::div[@class='ant-modal-content']//button/*[text()='Fechar']";
     public static string DetalhesNegociacaoAtivos { get; set; } = "//*[contains(text(),'Ativos Alocados')]/following-sibling::div//button[2]";
     public static string ColunaAtivoListagemAtivosNegociados { get; set; } = "//*[contains(text(),'Ativos Negociados')]/ancestor::div[@class='ant-modal-body']//table/tbody/tr[2]/td[1]";
     public static string ColunaDetalhesBotaoContratosVinculado { get; set; } = "//*[contains(text(),'Ativos Negociados')]/ancestor::div[@class='ant-modal-body']//table/tbody/tr[2]/td[11]/button";

@@ -6,7 +6,7 @@ public class DataLoader
 
     public static void CarregarArquivo()
     {
-        string json = File.ReadAllText("data/data_test.json");
+        string json = File.ReadAllText("datatest.json");
         massaDados = JsonConvert.DeserializeObject<dynamic>(json);
     }
 
