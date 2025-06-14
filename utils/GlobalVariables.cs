@@ -31,7 +31,7 @@ public class GlobalVariables
     public static string BuscarRegistro { get; set; } = "//button/*[text()='Buscar']";
     public static string LimparRegistro { get; set; } = "//button/*[text()='Limpar']";
     public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
-    public static string AvisoInexistenciaDados { get; set; } = "//*[text()='Não há dados']";
+    public static string AvisoInexistenciaDados { get; set; } = "//*[text()='No data']";
     public static string LoadDeTela { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
     public static string LoadDeTela1 { get; set; } = "//span[@class='ant-spin-dot ant-spin-dot-spin']";
     public static string LoadDeTelaBarra { get; set; } = "(//span[@class='anticon anticon-loading anticon-spin'])[2]";
@@ -113,14 +113,14 @@ public class GlobalVariables
 
     #region Elementos de página - Planos
     public static string TabelaPlanos { get; set; } = "//table/tbody/tr";
-    public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[@class='selects-items']//div[@class='ant-select-selector']";
+    public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[contains(@class,'select-selector')]/span[2]";
     public static string SelecionarTodosPlanos { get; set; } = "//div[@class='rc-virtual-list']//div[@title='Todos']";
     public static string FiltrarPlanoPorCampanha { get; set; } = "//thead//th[@title='Nome Campanha']//span[@role='button']";
     public static string PesquisarNomeCampanha { get; set; } = "//div[@class='ant-table-filter-dropdown']//input";
     public static string ColunaFimVigencia { get; set; } = "//*[text()='Fim Vigência']";
     public static string StatusPlano { get; set; } = "//tbody/tr[2]/td[6]";
     public static string FarolPlano { get; set; } = "//tbody/tr[2]/td[7]/div";
-    public static string EditarPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='zoom-in']";
+    public static string EditarPlano { get; set; } = "(//div[@class='ant-btn-group buttons-round'])[1]//span[@aria-label='zoom-in']";
     public static string ExcluirPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='delete']";
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
     public static string OkExclusao { get; set; } = "//*[text()='OK']";
@@ -217,7 +217,7 @@ public class GlobalVariables
     public static string AceleradorInicioVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Inicio Vigência']/../..//input";
     public static string AceleradorQuantidadeAlocarTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Alocar']/../..//input";
     public static string AceleradorFimVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Fim Vigência']/../..//input";
-    public static string ColunaVeiculacaoTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[@class='ant-table-body']//colgroup/col[9]";
+    public static string ColunaVeiculacaoTrade { get; set; } = "//div[@id='ativos-alocados-table']//thead//th[text()='Veiculação']";
     public static string LojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../..//tbody";
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string BuscarAtivoAlocacao { get; set; } = "//span[contains(text(),'Selecione um Ativo')]/div/div//input";

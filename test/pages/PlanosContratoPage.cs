@@ -339,6 +339,7 @@ public class PlanosContratosPage
         }
         else if (contextoDeExecucao.Equals("EditarPlano"))
         {
+            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigencia Editar Plano");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
 
