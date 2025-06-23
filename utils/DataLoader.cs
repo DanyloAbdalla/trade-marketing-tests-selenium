@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class DataLoader
 {
@@ -13,5 +14,10 @@ public class DataLoader
     public static dynamic ObterDados(string suite, string teste, string data)
     {
         return massaDados[suite][teste][data];
+    }
+
+    public static List<string> ObterDadosEmLista(string suite, string teste, string data)
+    {
+        return ((JArray)massaDados[suite][teste][data]).ToObject<List<string>>();
     }
 }

@@ -22,7 +22,6 @@ public class DashboardOperacoesPage
     public DashboardOperacoesPage AcessarDetalhesLojasAtivas()
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesLojasAtivas, "Botão Visualizar Lojas Ativas");
-        //Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
 
         var lojasAtivas = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaListagemLojasAtivas) - 1;
@@ -147,12 +146,12 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDeContratosAtivos(string card, string nomeConratoCampanha)
     {
-        if (card.Contains("ContratosVigentes"))
+        if (card.Equals("ContratosVigentes"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesContratosAtivos, "Botão Visualizar Contratos Ativos");
             Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
         }
-        else if (card.Contains("TotalReceita"))
+        else if (card.Equals("TotalReceita"))
         {
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardTotalReceita);
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesContratosAtivosTotalReceita, "Botão Visualizar Contratos Ativos");
@@ -204,21 +203,28 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDeAterrissagemReceita(string card)
     {
-        if (card.Contains("EvolucaoReceita"))
+        string xpathElementoScroll = null;
+        string xpathElementoBotao = null;
+        string telaElemento = "Botão Visualizar Listagem de Aterrisagem Receita";
+
+        switch (card)
         {
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.TextoCardTotalReceita);
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesAterrissagemReceita, "Botão Visualizar Listagem de Aterrisagem Receita");
+            case "EvolucaoReceita":
+                xpathElementoScroll = GlobalVariables.TextoCardTotalReceita;
+                xpathElementoBotao = GlobalVariables.DetalhesAterrissagemReceita;
+                break;
+            case "EvolucaoReceitaBandeira":
+                xpathElementoScroll = GlobalVariables.DetalhesListaParceirosPerformance;
+                xpathElementoBotao = GlobalVariables.DetalhesAterrissagemReceitaPorBandeira;
+                break;
+            case "EvolucaoReceitaTipoFornecedor":
+                xpathElementoScroll = GlobalVariables.DetalhesAterrissagemReceitaPorTipoFornecedor;
+                xpathElementoBotao = GlobalVariables.DetalhesAterrissagemReceitaPorTipoFornecedor;
+                break;
         }
-        else if (card.Contains("EvolucaoReceitaBandeira"))
-        {
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesListaParceirosPerformance);
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaPorBandeira, "Botão Visualizar Listagem de Aterrisagem Receita");
-        }
-        else if (card.Contains("EvolucaoReceitaTipoFornecedor"))
-        {
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesListaParceirosPerformance);
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesAterrissagemReceitaPorTipoFornecedor, "Botão Visualizar Listagem de Aterrisagem Receita");
-        }
+
+        Dsl.ScrollParaElemento(webDriver, xpathElementoScroll);
+        Dsl.EsperarElementoParaClicar(webDriver, xpathElementoBotao, telaElemento);
 
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
 
@@ -237,20 +243,27 @@ public class DashboardOperacoesPage
     /// <returns></returns>
     public DashboardOperacoesPage AcessarDetalhesDeListaParceiros(string card)
     {
-        if (card.Contains("EvolucaoPerformanceParceiros"))
+        string xpathElementoScroll = null;
+        string xpathElementoBotao = null;
+        string telaElemento = "Botão Visualizar Lista Parceiro";
+
+        switch (card)
         {
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.FiltrarNegociacoes);
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesListaParceirosPerformance, "Botão Visualizar Lista Parceiro");
+            case "EvolucaoPerformanceParceiros":
+                xpathElementoScroll = GlobalVariables.FiltrarNegociacoes;
+                xpathElementoBotao = GlobalVariables.DetalhesListaParceirosPerformance;
+                break;
+            case "InvestimentoParceiro":
+                xpathElementoScroll = GlobalVariables.DetalhesDesempenhoDosAtivos;
+                xpathElementoBotao = GlobalVariables.DetalhesListaParceirosInvestimento;
+                break;
         }
-        else if (card.Contains("InvestimentoParceiro"))
-        {
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.DetalhesDesempenhoDosAtivos);
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.DetalhesListaParceirosInvestimento, "Botão Visualizar Lista Parceiro");
-        }
+
+        Dsl.ScrollParaElemento(webDriver, xpathElementoScroll);
+        Dsl.EsperarElementoParaClicar(webDriver, xpathElementoBotao, telaElemento);
 
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
         Dsl.Esperar();
-        //Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados);
 
         if (!(Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0))
             Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");

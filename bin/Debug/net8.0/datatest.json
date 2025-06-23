@@ -1,10 +1,33 @@
 {
   "dashboard_operacaoes": {
-    "TestAcessarVisaoDetalhadaLojasAtivas": {
+    "TestGlobalData": {
+      "nomeAtivo": "Adesivo de Elevador",
+      "nomeAtivoEsperado": "AdesivodeElevador",
+      "nomeCampanha": "DashboardOperacoesMassaAutomatizada"
     },
+    "TestAcessarVisaoDetalhadaLojasAtivas": {},
     "TestAcessarVisaoDetalhadaDeAtivosAlocados": {
       "nomeAtivoSemCalendario": "Adesivo de Elevador",
       "nomeAtivoComCalendario": "Adesivo de Chão 01"
+    },
+    "TestAcessarVisaoDetalhadaDeContratosVigentes": {
+      "nomeCard": "ContratosVigentes"
+    },
+    "TestAcessarVisaoDetalhadaTotalReceita": {
+      "nomeCard": "TotalReceita"
+    },
+    "TestAcessarVisaoDetalhadaAterrissagemReceita": {
+      "nomeCard": [
+        "EvolucaoReceita",
+        "EvolucaoReceitaBandeira",
+        "EvolucaoReceitaTipoFornecedor"
+      ]
+    },
+    "TestAcessarVisaoDetalhadaListaParceiro": {
+      "nomeCard": [
+        "EvolucaoPerformanceParceiros",
+        "InvestimentoParceiro"
+      ]
     }
   }
 }
