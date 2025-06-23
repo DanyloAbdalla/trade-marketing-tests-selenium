@@ -13,13 +13,17 @@ public class DashboardOperacoesTest
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
     private readonly string nomeClasse;
-    private readonly string nomeAtivo = "Adesivo de Elevador";
-    private readonly string nomeAtivoEsperado = "AdesivodeElevador";
-    private readonly string nomeCampanha = "DashboardOperacoesMassaAutomatizada";
+    private readonly string nomeAtivo;
+    private readonly string nomeAtivoEsperado;
+    private readonly string nomeCampanha;
 
     public DashboardOperacoesTest()
     {
         nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+        DataLoader.CarregarArquivo();
+        nomeAtivo = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeAtivo")?? throw new Exception("nomeAtivo não encontrado");
+        nomeAtivoEsperado = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeAtivoEsperado");
+        nomeCampanha = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeCampanha");
     }
 
     /// <summary>
@@ -30,7 +34,6 @@ public class DashboardOperacoesTest
     {
         runSettings = RunSettings.LoadSettings();
         webDriver = DriverFactory.CreateDriver(browserType);
-        DataLoader.CarregarArquivo();
 
         var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
@@ -114,10 +117,10 @@ public class DashboardOperacoesTest
     [Test, Order(3)]
     public void TestAcessarVisaoDetalhadaDeContratosVigentes()
     {
-        var card = "ContratosVigentes";
+        string cardContratoVigentes = DataLoader.ObterDados("dashboard_operacaoes", "TestAcessarVisaoDetalhadaDeContratosVigentes", "nomeCard");
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeContratosAtivos(card, nomeCampanha)
+        .AcessarDetalhesDeContratosAtivos(cardContratoVigentes, nomeCampanha)
         .FecharDetalhes()
         .AcessarDetalhesDeContratosVencendo(nomeCampanha)
         .FecharDetalhes();
@@ -138,10 +141,10 @@ public class DashboardOperacoesTest
     [Test, Order(4)]
     public void TestAcessarVisaoDetalhadaTotalReceita()
     {
-        var card = "TotalReceita";
+        string cardTotalReceita = DataLoader.ObterDados("dashboard_operacaoes", "TestAcessarVisaoDetalhadaTotalReceita", "nomeCard");
 
         new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeContratosAtivos(card, nomeCampanha)
+        .AcessarDetalhesDeContratosAtivos(cardTotalReceita, nomeCampanha)
         .FecharDetalhes();
     }
 
@@ -164,17 +167,14 @@ public class DashboardOperacoesTest
     [Test, Order(5)]
     public void TestAcessarVisaoDetalhadaAterrissagemReceita()
     {
-        var cardReceita = "EvolucaoReceita";
-        var cardReceitaBandeira = "EvolucaoReceitaBandeira";
-        var cardReceitaTipoFornecedor = "EvolucaoReceitaTipoFornecedor";
+        List<string> nomeCards = DataLoader.ObterDadosEmLista("dashboard_operacaoes", "TestAcessarVisaoDetalhadaAterrissagemReceita", "nomeCard");
 
-        new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeAterrissagemReceita(cardReceita)
-        .FecharDetalhes()
-        .AcessarDetalhesDeAterrissagemReceita(cardReceitaBandeira)
-        .FecharDetalhes()
-        .AcessarDetalhesDeAterrissagemReceita(cardReceitaTipoFornecedor)
-        .FecharDetalhes();
+        foreach (var nomeCard in nomeCards)
+        {
+            new DashboardOperacoesPage(webDriver)
+                .AcessarDetalhesDeAterrissagemReceita(nomeCard)
+                .FecharDetalhes();
+        }
     }
 
     /// <summary>
@@ -193,14 +193,14 @@ public class DashboardOperacoesTest
     [Test, Order(6)]
     public void TestAcessarVisaoDetalhadaListaParceiro()
     {
-        var cardPerformanceParceiro = "EvolucaoPerformanceParceiros";
-        var cardInvestimentoParceiro = "InvestimentoParceiro";
+        List<string> nomeCards = DataLoader.ObterDadosEmLista("dashboard_operacaoes", "TestAcessarVisaoDetalhadaListaParceiro", "nomeCard");
 
-        new DashboardOperacoesPage(webDriver)
-        .AcessarDetalhesDeListaParceiros(cardPerformanceParceiro)
-        .FecharDetalhes()
-        .AcessarDetalhesDeListaParceiros(cardInvestimentoParceiro)
-        .FecharDetalhes();
+        foreach (var nomeCard in nomeCards)
+        {
+            new DashboardOperacoesPage(webDriver)
+                .AcessarDetalhesDeListaParceiros(nomeCard)
+                .FecharDetalhes();
+        }
     }
 
     /// <summary>

@@ -44,21 +44,18 @@ public class HomePage
         Dsl.Clicar(webDriver, GlobalVariables.MenuNegociacao, "Menu Negociação");
         Dsl.Clicar(webDriver, GlobalVariables.CadastroPlanosContratos, "Cadastro de Planos");
 
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadTelaListaDePlanos);
         Dsl.Esperar(3000);
 
-        if (primeiroTeste.Equals("TestCriarPlanoComWorkflowPadrao"))
-        {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarPlanosStatusVigencia, "Campo Filtro Vigência");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTodosPlanos, "Selecionar Todos Planos");
-            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTela);
-            Dsl.Esperar(3000);
-        }
-
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0)
+        {
             return new PlanosContratosPage(webDriver);
+        }
         else if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.PaginacaoTela) > 0)
+        {
+            FiltrarTodosPlanos();
             Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano");
+        }
 
         return new PlanosContratosPage(webDriver);
     }
@@ -124,5 +121,19 @@ public class HomePage
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.PreencherUsuarioSenha);
 
         return this;
+    }
+
+    /// <summary>
+    /// Método para selecionar todos os planos, vingentes e não vigentes
+    /// </summary>
+    /// <returns></returns>
+    public PlanosContratosPage FiltrarTodosPlanos()
+    {
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarPlanosStatusVigencia, "Campo Filtro Vigência");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTodosPlanos, "Selecionar Todos Planos");
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadTelaListaDePlanos);
+        Dsl.Esperar(3000);
+
+        return new PlanosContratosPage(webDriver);
     }
 }

@@ -32,8 +32,7 @@ public class GlobalVariables
     public static string LimparRegistro { get; set; } = "//button/*[text()='Limpar']";
     public static string PaginacaoTela { get; set; } = "//ul[contains(@class,'ant-pagination')]//li[2]";
     public static string AvisoInexistenciaDados { get; set; } = "//*[text()='No data']";
-    public static string LoadDeTela { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
-    public static string LoadDeTela1 { get; set; } = "//span[@class='ant-spin-dot ant-spin-dot-spin']";
+    public static string LoadDeTelaSpiner { get; set; } = "(//*[contains(@class,'ant-spin-dot-item')])[1]";
     public static string LoadDeTelaBarra { get; set; } = "(//span[@class='anticon anticon-loading anticon-spin'])[2]";
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
@@ -112,6 +111,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos
+    public static string LoadTelaListaDePlanos { get; set; } = "(//div[@class='thin-card ant-card']//*[contains(@class,'ant-spin-dot-item')])[1]";
     public static string TabelaPlanos { get; set; } = "//table/tbody/tr";
     public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[contains(@class,'select-selector')]/span[2]";
     public static string SelecionarTodosPlanos { get; set; } = "//div[@class='rc-virtual-list']//div[@title='Todos']";
@@ -121,7 +121,7 @@ public class GlobalVariables
     public static string StatusPlano { get; set; } = "//tbody/tr[2]/td[6]";
     public static string FarolPlano { get; set; } = "//tbody/tr[2]/td[7]/div";
     public static string EditarPlano { get; set; } = "(//div[@class='ant-btn-group buttons-round'])[1]//span[@aria-label='zoom-in']";
-    public static string ExcluirPlano { get; set; } = "//thead/tr/th[text()='Ações']/ancestor::table/tbody/tr[2]//td//button//*[@aria-label='delete']";
+    public static string ExcluirPlano { get; set; } = "//button//*[@aria-label='delete']";
     public static string ExcluirPlanoMensagemConfirmacao { get; set; } = "//*[@class='ant-modal-confirm-body']/span[2]";
     public static string OkExclusao { get; set; } = "//*[text()='OK']";
     public static string ModalPlanos { get; set; } = "//*[@class='ant-modal-body' and @style='overflow-x: hidden; height: 85vh;']";
@@ -173,10 +173,12 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Dados do Plano
+    public static string LoadDeTelaDadosPlano { set; get; } = "//*[contains(@class,'contrato-loading-overlay')]";
     public static string AbasPlano { get; set; } = "//div[@class='ant-tabs-nav-list']";
     public static string AbaDadosPlano { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Dados do Plano')]";
     public static string SituacaoPlano { get; set; } = "//*[@name='Status']";
     public static string Desconto { get; set; } = "//*[@name='Desconto']";
+    public static string AplicarDesconto { get; set; } = "//button/*[text()='Aplicar']";
     public static string InicioVigenciaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]/../../../../..//label[text()='Inicio Vigência']/../../../..//div[contains(@class,'date-picker')]/div/input";
     public static string FimVigenciaPlano { get; set; } = "//*[contains(text(),'Dados do Plano')]/../../../../..//span[text()='Fim Vigência']/../../../../..//div[contains(@class,'date-picker')]/div/input";
     public static string AvancarCalendarioMes { get; set; } = "//*[contains(@class,'header-next-btn')]";
@@ -214,13 +216,13 @@ public class GlobalVariables
     public static string TabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody";
     public static string LinhaTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody/tr[@data-row-key='0']";
     public static string ScrollTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[contains(@class,'ant-table-scroll-horizontal')]";
-    public static string AceleradorInicioVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Inicio Vigência']/../..//input";
+    public static string AceleradorInicioVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Início Vigência']/../..//input";
     public static string AceleradorQuantidadeAlocarTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Alocar']/../..//input";
     public static string AceleradorFimVigenciaTrade { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//*[@title='Fim Vigência']/../..//input";
     public static string ColunaVeiculacaoTrade { get; set; } = "//div[@id='ativos-alocados-table']//thead//th[text()='Veiculação']";
     public static string LojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../..//tbody";
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
-    public static string BuscarAtivoAlocacao { get; set; } = "//span[contains(text(),'Selecione um Ativo')]/div/div//input";
+    public static string BuscarAtivoAlocacao { get; set; } = "//div[@class='ativo-selector']//input";
     public static string SelecionarAtivoAlocacao { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Cestão 01 - ']";
     public static string IncluirAlocacaoAtivo { get; set; } = "//button/*[text()='Incluir Ativo']";
     public static string QuantidadeLojasPorAtivo { get; set; } = "//*[contains(text(),'Total de lojas')]";
@@ -229,7 +231,7 @@ public class GlobalVariables
     public static string MensagemSucessoAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Alocação atualizada')]";
     public static string MensagemSucessoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Produtos atualizados')]";
     public static string MensagemAvisoEditarQuantidadeAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Salve suas informações')]";
-    public static string NomeAtivoAlocao { get; set; } = "//*[text()='Ativo: ']/div/div/span[2]";
+    public static string NomeAtivoAlocao { get; set; } = "//*[text()='Ativo: ']/../div/div/span[2]";
     public static string AbaAlocacaoPorLojaAtivo { get; set; } = "//*[contains(text(),'Alocação por Loja')]";
     public static string AplicarAceleradorPorLojaAtivoAlocado { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//button/*[text()='Aplicar']";
     #endregion
