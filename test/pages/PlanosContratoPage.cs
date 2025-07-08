@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.VisualBasic;
+using NUnit.Framework.Internal;
 using OpenQA.Selenium;
 
 namespace MeuClienteWebTestProject;
@@ -316,7 +317,6 @@ public class PlanosContratosPage
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaDadosPlano);
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.AplicarDesconto, "Botão Aplicar Desconto");
 
         return this;
@@ -327,11 +327,13 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="contextoDeExecucao"></param>
     /// <returns></returns>
-    public PlanosContratosPage SelecionarVigenciaDoPlano(string contextoDeExecucao)
+    public PlanosContratosPage SelecionarVigenciaDoPlano()
     {
         int avancarMesCalendarioEm = 2;
 
-        if (contextoDeExecucao.Equals("CriarPlano"))
+        var teste = TestContext.CurrentContext.Test.MethodName;
+
+        if (teste.Equals("TestCriarPlanoComAlertaDeInventario"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaSimulacao, "Campo Fim Vigencia Novo Plano");
             Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
@@ -339,7 +341,7 @@ public class PlanosContratosPage
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaSimulacao, "Campo Início Vigencia Novo Plano");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
         }
-        else if (contextoDeExecucao.Equals("EditarPlano"))
+        else if (teste.Equals("TestEditarPlanoExistenteAlterandoVigenciaDoPlano"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigencia Editar Plano");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
@@ -490,7 +492,7 @@ public class PlanosContratosPage
     /// <param name="contextoDeExecucao"></param>
     /// <param name="contextoDeTeste"></param>
     /// <returns></returns>
-    public PlanosContratosPage SalvarPlano([Optional] string contextoDeExecucao)
+    public PlanosContratosPage SalvarPlano()
     {
         var mensagemPlanoAlteradoEsperada = "OPlanofoialteradocomsucesso!";
 
@@ -498,7 +500,9 @@ public class PlanosContratosPage
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarRegistro);
         Dsl.Clicar(webDriver, GlobalVariables.SalvarRegistro, "Botão Salvar Plano");
 
-        if (contextoDeExecucao != null && contextoDeExecucao.Equals("CancelarPlano"))
+        var teste = TestContext.CurrentContext.Test.MethodName;
+
+        if (!string.IsNullOrEmpty(teste) && teste.Equals("TestCancelarPlano"))
             ConfirmarCancelamentoDoPlano();
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
@@ -789,17 +793,17 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="contextoSituacao"></param>
     /// <returns></returns>
-    public PlanosContratosPage EditarSituacaoDoPlano(string contextoSituacao)
+    public PlanosContratosPage EditarSituacaoDoPlano()
     {
         var valorSetorDepartamentoCategoria = "Geral";
+        var teste = TestContext.CurrentContext.Test.MethodName;
 
-        if (contextoSituacao.Equals("Contrato Aprovado"))
+        if (!string.IsNullOrEmpty(teste) && teste.Equals("TestAprovarPlano"))
         {
             //var mensagemAlertaInformarParcelaEsperada = "Salveasparcelascomostatusdoplanosimuladoparaaprovaroplano!";
 
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SituacaoPlano, "Campo Situação Plano");
-            var xpathElemento = $"//*[text()='{contextoSituacao}']";
-            Dsl.EsperarElementoParaClicar(webDriver, xpathElemento, "Campo Selecionar Situação Plano");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SituacaoPlanoAprovar, "Campo Selecionar Situação Plano");
 
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.TipoCampanha, "Campo Tipo Campanha");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTipoCampanha, "Campo Selecionar Tipo Campanha");
@@ -822,11 +826,10 @@ public class PlanosContratosPage
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.Categoria, valorSetorDepartamentoCategoria);
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarCategoria, "Campo Selecionar Categoria");
         }
-        else if (contextoSituacao.Equals("Cancelado"))
+        else if (!string.IsNullOrEmpty(teste) && teste.Equals("TestCancelarPlano"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SituacaoPlano, "Campo Situação do Plano");
-            var xpathElemento = $"//*[text()='{contextoSituacao}']";
-            Dsl.Clicar(webDriver, xpathElemento, "Selecionar Situação Plano Cancelado");
+            Dsl.Clicar(webDriver, GlobalVariables.SituacaoPlanoCancelar, "Selecionar Situação Plano Cancelado");
         }
 
         return this;
@@ -938,123 +941,135 @@ public class PlanosContratosPage
     /// Método para validar o valor de receita dos ativos e do plano
     /// </summary>
     /// <param name="contextoDeTeste"></param>
-    /// <param name="contextoDeExecucao"></param>
     /// <returns></returns>
-    public PlanosContratosPage ValidarReceitasDoPlano(string contextoDeTeste, string contextoDeExecucao)
+    public PlanosContratosPage ValidarReceitasDoPlano(string contextoDeTeste)
     {
         var tipoAtributo = "value";
+        var teste = TestContext.CurrentContext.Test.MethodName;
 
-        switch (contextoDeTeste)
+        if (string.IsNullOrEmpty(teste))
+            throw new ArgumentException("Variável teste vazia ou nulo");
+
+        try
         {
-            case "SemPlantaLoja":
-                if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
-                {
-                    var valorReceitaAtivosEsperado = 750.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+            switch (contextoDeTeste)
+            {
+                case "SemPlantaLoja":
+                    if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
+                    {
+                        var valorReceitaAtivosEsperado = 750.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 825.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Ativos");
+                        var valorReceitaPlanoEsperado = 825.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Ativos");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                else if (contextoDeExecucao.Equals("CriarPlanoComWorkflow"))
-                {
-                    var valorReceitaAtivosEsperado = 527.50;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    else if (teste.Equals("TestCriarPlanoComWorkflow"))
+                    {
+                        var valorReceitaAtivosEsperado = 527.50;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 605.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 605.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                else if (contextoDeExecucao.Equals("EditarPlanoAlterandoQuantidadeAtivo"))
-                {
-                    var valorReceitaAtivosEsperado = 900.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    else if (teste.Equals("TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel"))
+                    {
+                        var valorReceitaAtivosEsperado = 900.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 990.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 990.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                else if (contextoDeExecucao.Equals("EditarPlanoIncluindoAtivo"))
-                {
-                    var valorReceitaAtivosEsperado = 1050.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    else if (teste.Equals("TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel"))
+                    {
+                        var valorReceitaAtivosEsperado = 1050.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 1145.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 1145.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                break;
-            case "ComPlantaLoja":
-                if (contextoDeExecucao.Equals("CriarPlanoComWorkflowPadrao"))
-                {
-                    var valorReceitaAtivosEsperado = 3000.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    break;
+                case "ComPlantaLoja":
+                    if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
+                    {
+                        var valorReceitaAtivosEsperado = 3000.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 3300.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 3300.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                else if (contextoDeExecucao.Equals("CriarPlanoComWorkflow"))
-                {
-                    var valorReceitaAtivosEsperado = 2000.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    else if (teste.Equals("TestCriarPlanoComWorkflow"))
+                    {
+                        var valorReceitaAtivosEsperado = 2000.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 2200.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 2200.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                else if (contextoDeExecucao.Equals("EditarPlanoAlterandoQuantidadeAtivo"))
-                {
-                    var valorReceitaAtivosEsperado = 3200.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    else if (teste.Equals("TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel"))
+                    {
+                        var valorReceitaAtivosEsperado = 3200.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 3520.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 3520.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                else if (contextoDeExecucao.Equals("EditarPlanoIncluindoAtivo"))
-                {
-                    var valorReceitaAtivosEsperado = 3800.00;
-                    var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                    var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    else if (teste.Equals("TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel"))
+                    {
+                        var valorReceitaAtivosEsperado = 3800.00;
+                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
+                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                    var valorReceitaPlanoEsperado = 4140.00;
-                    var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                    var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
+                        var valorReceitaPlanoEsperado = 4140.00;
+                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
+                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
-                    Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                    Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                }
-                break;
+                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
+                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
+                    }
+                    break;
+                default:
+                    throw new InvalidOperationException("Contexto de teste inválido");
+            }
         }
+        catch (Exception ex)
+        { throw new Exception(ex.Message + "\n"); }
+
+
         return this;
     }
 }

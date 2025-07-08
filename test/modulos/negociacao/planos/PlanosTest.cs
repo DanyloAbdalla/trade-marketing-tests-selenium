@@ -20,14 +20,20 @@ public class PlanosTest
     private bool primeiroTeste;
     private readonly string nomeClasse;
     private readonly string contextoDeTeste;
-    private readonly string nomeCampanha = "PlanoComWorkflowPadraoMassaAutomatizada";
-    private readonly string statusPlanoEsperado = "Simulado";
-    private readonly string farolPlanoEsperado = "PLANEJADO";
+    private readonly string nomeCampanha;
+    private readonly string statusEsperado;
+    private readonly string farolEsperado;
+    private readonly string tipoMidiaAtivo;
 
     public PlanosTest(string contextoDeTeste)
     {
         this.contextoDeTeste = contextoDeTeste;
         nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+        DataLoader.CarregarArquivo();
+        nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "nomeCampanha");
+        statusEsperado = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "statusEsperado");
+        farolEsperado = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "farolEsperado");
+        tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
     }
 
     /// <summary>
@@ -91,27 +97,27 @@ public class PlanosTest
     [Test, Order(1)]
     public void TestCriarPlanoComWorkflowPadrao()
     {
-        var ativoTipoMidia = "Grafica";
-        var contextoDeExecucao = "CriarPlanoComWorkflowPadrao";
+        //var tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflowPadrao", "tipoMidiaAtivo");
+        //var contextoDeExecucao = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflowPadrao", "contextoDeExecucao");
         primeiroTeste = true;
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria(contextoDeTeste)
         .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos(ativoTipoMidia)
-        .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
+        .SelecionarAtivos(tipoMidiaAtivo)
+        .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
         .SelecionarLojas()
-        .GerarPrePlano(contextoDeTeste, ativoTipoMidia)
+        .GerarPrePlano(contextoDeTeste, tipoMidiaAtivo)
         .SalvarPlano()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
+        .ValidarReceitasDoPlano(contextoDeTeste)
         .ValidarPlanoCriado()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
-        .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
+        .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
     }
 
     /// <summary>
@@ -134,27 +140,27 @@ public class PlanosTest
     [Test, Order(2)]
     public void TestCriarPlanoComWorkflow()
     {
-        var ativoTipoMidia = "Fisica";
-        var contextoDeExecucao = "CriarPlanoComWorkflow";
-        var nomeCampanha = "PlanoComWorkflowMassaAutomatizada";
+        var tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "tipoMidiaAtivo");
+        //var contextoDeExecucao = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "contextoDeExecucao");
+        var nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "nomeCampanha");
 
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria(contextoDeTeste)
         .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos(ativoTipoMidia)
-        .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
+        .SelecionarAtivos(tipoMidiaAtivo)
+        .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
         .SelecionarLojas()
-        .GerarPrePlano(contextoDeTeste, ativoTipoMidia)
+        .GerarPrePlano(contextoDeTeste, tipoMidiaAtivo)
         .SalvarPlano()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
+        .ValidarReceitasDoPlano(contextoDeTeste)
         .ValidarPlanoCriado()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
-        .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
+        .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
     }
 
     /// <summary>
@@ -173,12 +179,10 @@ public class PlanosTest
     [Test, Order(3)]
     public void TestEditarPlanoExistenteAlterandoVigenciaDoPlano()
     {
-        var contextoDeExecucao = "EditarPlano";
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .SelecionarVigenciaDoPlano(contextoDeExecucao)
+        .SelecionarVigenciaDoPlano()
         .SalvarPlano()
         .FecharDadosDoPlano();
     }
@@ -200,8 +204,6 @@ public class PlanosTest
     [Test, Order(4)]
     public void TestEditarPlanoExistenteAlterandoVigenciaDoTrade()
     {
-        //var contextoDeExecucao = "EditarPlano";
-
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
@@ -227,7 +229,7 @@ public class PlanosTest
     [Test, Order(5)]
     public void TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel()
     {
-        var contextoDeExecucao = "EditarPlanoAlterandoQuantidadeAtivo";
+        //var contextoDeExecucao = DataLoader.ObterDados("negociacoes_planos", "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "contextoDeExecucao");
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
@@ -237,7 +239,7 @@ public class PlanosTest
         .SalvarPlano()
         .FecharDadosDoPlano()
         .AbrirEdicaoDoPlano()
-        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
+        .ValidarReceitasDoPlano(contextoDeTeste)
         .FecharDadosDoPlano();
     }
 
@@ -256,7 +258,7 @@ public class PlanosTest
     [Test, Order(6)]
     public void TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel()
     {
-        var contextoDeExecucao = "EditarPlanoIncluindoAtivo";
+        //var contextoDeExecucao = DataLoader.ObterDados("negociacoes_planos", "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "contextoDeExecucao");
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
@@ -266,7 +268,7 @@ public class PlanosTest
         .SalvarPlano()
         .FecharDadosDoPlano()
         .AbrirEdicaoDoPlano()
-        .ValidarReceitasDoPlano(contextoDeTeste, contextoDeExecucao)
+        .ValidarReceitasDoPlano(contextoDeTeste)
         .FecharDadosDoPlano();
     }
 
@@ -286,18 +288,17 @@ public class PlanosTest
     [Test, Order(7)]
     public void TestAprovarPlano()
     {
-        var situacaoPlano = "Contrato Aprovado";
-        var statusPlanoEsperado = "Aprovado";
-        var farolPlanoEsperado = "APROVADO";
+        var statusEsperado = DataLoader.ObterDados("negociacoes_planos", "TestAprovarPlano", "statusEsperado");
+        var farolEsperado = DataLoader.ObterDados("negociacoes_planos", "TestAprovarPlano", "farolEsperado");
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .EditarSituacaoDoPlano(situacaoPlano)
+        .EditarSituacaoDoPlano()
         .SalvarPlano()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
-        .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
+        .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
     }
 
     /// <summary>
@@ -316,16 +317,13 @@ public class PlanosTest
     [Test, Order(8)]
     public void TestCriarPlanoComAlertaDeInventario()
     {
-        var ativoTipoMidia = "Grafica";
-        var contextoDeExecucao = "CriarPlano";
-
         new PlanosContratosPage(webDriver)
         .NovaSimulacaoDePlano()
         .PreencherCampoIndustria(contextoDeTeste)
         .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarVigenciaDoPlano(contextoDeExecucao)
-        .SelecionarAtivos(ativoTipoMidia)
-        .PreencherQuantidadeAtivos(contextoDeTeste, ativoTipoMidia)
+        .SelecionarVigenciaDoPlano()
+        .SelecionarAtivos(tipoMidiaAtivo)
+        .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
         .SelecionarLojas()
         .ValidarIndisponibilidadeDeInventario()
         .FecharDadosDoPlano();
@@ -347,19 +345,17 @@ public class PlanosTest
     [Test, Order(9)]
     public void TestCancelarPlano()
     {
-        var situacaoPlano = "Cancelado";
-        var statusPlanoEsperado = "Cancelado";
-        var farolPlanoEsperado = "CANCELADO";
-        var contextoDeExecucao = "CancelarPlano";
+        var statusEsperado = DataLoader.ObterDados("negociacoes_planos", "TestCancelarPlano", "statusEsperado");
+        var farolEsperado = DataLoader.ObterDados("negociacoes_planos", "TestCancelarPlano", "farolEsperado");
 
         new PlanosContratosPage(webDriver)
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
-        .EditarSituacaoDoPlano(situacaoPlano)
-        .SalvarPlano(contextoDeExecucao)
+        .EditarSituacaoDoPlano()
+        .SalvarPlano()
         .FecharDadosDoPlano()
         .BuscarPlanos(nomeCampanha)
-        .ValidarStatusFarolDoPlano(statusPlanoEsperado, farolPlanoEsperado);
+        .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
     }
 
     /// <summary>
@@ -377,14 +373,14 @@ public class PlanosTest
     [Test, Order(10)]
     public void TestExcluirPlano()
     {
-        var nomeCampanharComWorkflowPadrao = "PlanoComWorkflowPadraoMassaAutomatizada";
-        var nomeCampanhaComWorkflow = "PlanoComWorkflowMassaAutomatizada";
+        List<string> nomeCampanhas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestExcluirPlano", "nomeCampanhas");
 
-        new PlanosContratosPage(webDriver)
-        .BuscarPlanos(nomeCampanharComWorkflowPadrao)
-        .ConfirmarExclusaoDoPlano()
-        .BuscarPlanos(nomeCampanhaComWorkflow)
-        .ConfirmarExclusaoDoPlano();
+        foreach (var nomeCampanha in nomeCampanhas)
+        {
+            new PlanosContratosPage(webDriver)
+            .BuscarPlanos(nomeCampanha)
+            .ConfirmarExclusaoDoPlano();
+        }
     }
 
     /// <summary>

@@ -29,5 +29,36 @@
         "InvestimentoParceiro"
       ]
     }
+  },
+  "negociacoes_planos": {
+    "TestGlobalData": {
+      "nomeCampanha": "PlanoComWorkflowPadraoMassaAutomatizada",
+      "statusEsperado": "Simulado",
+      "farolEsperado": "PLANEJADO",
+      "tipoMidiaAtivo": "Grafica"
+    },
+    "TestCriarPlanoComWorkflowPadrao": {},
+    "TestCriarPlanoComWorkflow": {
+      "tipoMidiaAtivo": "Fisica",
+      "nomeCampanha": "PlanoComWorkflowMassaAutomatizada"
+    },
+    "TestEditarPlanoExistenteAlterandoVigenciaDoPlano": {},
+    "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel": {},
+    "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel": {},
+    "TestAprovarPlano": {
+      "statusEsperado": "Aprovado",
+      "farolEsperado": "APROVADO"
+    },
+    "TestCriarPlanoComAlertaDeInventario": {},
+    "TestCancelarPlano": {
+      "statusEsperado": "Cancelado",
+      "farolEsperado": "CANCELADO"
+    },
+    "TestExcluirPlano": {
+      "nomeCampanhas": [
+        "PlanoComWorkflowPadraoMassaAutomatizada",
+        "PlanoComWorkflowMassaAutomatizada"
+      ]
+    }
   }
 }
