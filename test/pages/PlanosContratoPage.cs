@@ -1,7 +1,3 @@
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Microsoft.VisualBasic;
-using NUnit.Framework.Internal;
 using OpenQA.Selenium;
 
 namespace MeuClienteWebTestProject;
@@ -12,15 +8,20 @@ namespace MeuClienteWebTestProject;
 public class PlanosContratosPage
 {
     private IWebDriver webDriver;
-    private string atributoDataTestId = "data-testid";
-    private string[] ativosGraficos = { "Adesivo de Check Out", "Display de Check Out", "Woobler" };
-    private string[] ativosFisicos = { "Cestão 01", "Ponta de Gôndola" };
-    private string[] nomesAbasPlanoEsperado = { "Dados do Plano", "Ativos Alocados", "Fluxo de Pagamentos", "Histórico", "Anexos", "Book Fotográfico", "Painel da indústria", "Tarefas" };
-    private string[] nomesEtapasWorkflowPlanoEsperado = { "Arte", "Montagem", "Comprovação" };
+    private string atributoTesteId;
+    private IList<string> ativosGraficos;
+    private IList<string> ativosFisicos;
+    private IList<string> abasPlanoEsperado;
+    private IList<string> etapaNomeWorkflowPlanoEsperado;
 
     public PlanosContratosPage(IWebDriver webDriver)
     {
         this.webDriver = webDriver;
+        atributoTesteId = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "atributoTesteId");
+        ativosGraficos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosGraficos");
+        ativosFisicos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosFisicos");
+        abasPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "abasPlanoEsperado");
+        etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "etapaNomeWorkflowPlanoEsperado");
     }
 
     /// <summary>
@@ -240,12 +241,12 @@ public class PlanosContratosPage
         IList<IWebElement> elementos = Dsl.ObterListaDeElementos(webDriver, GlobalVariables.EtapasWorkflowPlano);
         IList<string> nomesEtapasWorkflowPlanoAtual = elementos.Select(elementos => elementos.Text).ToList();
 
-        foreach (var (nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado) in nomesEtapasWorkflowPlanoAtual.Zip(nomesEtapasWorkflowPlanoEsperado, (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado) => (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado)))
+        foreach (var (nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado) in nomesEtapasWorkflowPlanoAtual.Zip(etapaNomeWorkflowPlanoEsperado, (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado) => (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado)))
         {
             Dsl.ValidarTextosNoElemento(nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado);
         }
 
-        foreach (var nomeAbaPlano in nomesAbasPlanoEsperado)
+        foreach (var nomeAbaPlano in abasPlanoEsperado)
         {
             Dsl.Esperar(500);
             var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
@@ -575,7 +576,7 @@ public class PlanosContratosPage
 
         if (contextoDeTestes.Contains("SemPlantaLoja"))
         {
-            string[] nomesAtivosAlocadosEsperados = { "Adesivo de Check Out", "Display de Check Out", "Woobler" };
+            IList<string> nomesAtivosAlocadosEsperados = ativosGraficos;
 
             var qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
 
@@ -617,9 +618,9 @@ public class PlanosContratosPage
         else if (contextoDeTestes.Contains("ComPlantaLoja"))
         {
             //string[] nomesAtivosAlocadosEsperados = { "Adesivo de Check Out -", "Adesivo de Check Out - E01", "Adesivo de Check Out - E02", "Adesivo de Check Out - E03" };
-            string nomeAtivoAlocadoEsperado = "Adesivo de Check Out";
+            string nomeAtivoAlocadoEsperado = ativosGraficos[0];
 
-            BuscarAtivosAlocadosNoPlano(ativosGraficos[0]);
+            BuscarAtivosAlocadosNoPlano(nomeAtivoAlocadoEsperado);
             Dsl.Esperar();
 
             var quantidadeAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
@@ -688,14 +689,14 @@ public class PlanosContratosPage
     public PlanosContratosPage AlocarNovosAtivosNoPlano(string contextoDeTeste)
     {
         var mensagemSucessoEsperadaAlocacaoAtualizada = "Alocaçãoatualizadacomsucesso!";
+        var ativoNome = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "ativoNome");
 
         if (contextoDeTeste.Contains("SemPlantaLoja"))
         {
-            var nomeAtivo = "Ilha 01";
-            var xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
+            var xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";
 
             Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nomeAtivo);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome);
             Dsl.EsperarVisibilidadeDoElemento(webDriver, xpathElemento);
             Dsl.Clicar(webDriver, xpathElemento, "Campo Selecionar Ativo");
 
@@ -717,16 +718,10 @@ public class PlanosContratosPage
         }
         else if (contextoDeTeste.Contains("ComPlantaLoja"))
         {
-            //string[] nomeAtivo = { "Ilha 01 - ", "Ilha 01 - E01", "Ilha 01 - E02", "Ilha 01 - E03" };
-            string nomeAtivo = "Ilha 01";
-
-            //foreach (var nome in nomeAtivo){}
-            //Dsl.ScrollModalElemento(webDriver, GlobalVariables.ModalPlanos);
-
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, nomeAtivo);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome);
 
-            var elementoAtivoNome = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
+            var elementoAtivoNome = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";
             Dsl.EsperarVisibilidadeDoElemento(webDriver, elementoAtivoNome);
             Dsl.Clicar(webDriver, elementoAtivoNome, "Campo Selecionar Ativo");
 
@@ -851,7 +846,7 @@ public class PlanosContratosPage
     {
         var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação");
         var mensagemAtual = Dsl.RemoverNumerosEspacosDeUmTexto(texto, "Mensagens de Comunicação");
-        var valorAtributoDataTestId = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação", atributoDataTestId);
+        var valorAtributoDataTestId = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao, "Mensagens de Comunicação", atributoTesteId);
 
         Dsl.ValidarMensagemDeComunicacao(mensagemAtual, mensagemEsperada, valorAtributoDataTestId);
 
@@ -938,7 +933,7 @@ public class PlanosContratosPage
         }
         else
         {
-            Assert.Fail("Mensagem de indisponibilidade e ícone de alerta não foram apresentados corretamente: " + "\n" + "Mensagem: " + contadorMensagemAlertaAtual + " Alertas: " + contadorIconeAlertaAtual);
+            Assert.Fail("Mensagem de indisponibilidade ou ícone de alerta não foram apresentados corretamente: " + "\n" + "Mensagem: " + contadorMensagemAlertaAtual + " Alertas: " + contadorIconeAlertaAtual);
         }
 
         return this;
