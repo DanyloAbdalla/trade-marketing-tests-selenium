@@ -214,7 +214,7 @@ public class DashboardOperacoesPage
                 xpathElementoBotao = GlobalVariables.DetalhesAterrissagemReceita;
                 break;
             case "EvolucaoReceitaBandeira":
-                xpathElementoScroll = GlobalVariables.DetalhesListaParceirosPerformance;
+                xpathElementoScroll = GlobalVariables.DetalhesAterrissagemReceitaPorTipoFornecedor;
                 xpathElementoBotao = GlobalVariables.DetalhesAterrissagemReceitaPorBandeira;
                 break;
             case "EvolucaoReceitaTipoFornecedor":
