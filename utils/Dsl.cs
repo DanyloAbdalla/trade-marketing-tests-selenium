@@ -390,6 +390,7 @@ public class Dsl
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
+        string xpathElemento;
 
         if (quantidadeAvancarMeses == 0)
         {
@@ -411,26 +412,31 @@ public class Dsl
 
             if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
             {
-                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+
+                if (diaAtual == 1)
+                {
+                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+                }
+                else
+                {
+                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+                }
             }
             else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
             {
-                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
-            }
-
-            /*if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
-                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
-            else
-            {
-                var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
-
-                if (classAttribute.Contains("ant-picker-cell-in-view"))
-                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[2]")).Click();
+                if (diaAtual == 1)
+                {
+                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+                }
                 else
-                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
-            }*/
+                {
+                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+                }
+            }
         }
     }
 
@@ -445,6 +451,7 @@ public class Dsl
     {
         DateTime dataAtual = DateTime.Now;
         var diaAtual = dataAtual.Day;
+        string xpathElemento;
 
         if (quantidadeAvancarMeses == 0)
         {
@@ -466,26 +473,30 @@ public class Dsl
 
             if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
             {
-                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia");
+                if (diaAtual == 1)
+                {
+                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+                }
+                else
+                {
+                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+                }
             }
             else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
             {
-                var xpathElemento = $"//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia Trade");
-            }
-
-            /*if (ContarExistenciaDoElemento(webDriver, $"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td") == 0)
-                webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
-            else
-            {
-                var classAttribute = webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]/ancestor::td")).GetAttribute("class");
-
-                if (classAttribute.Contains("ant-picker-cell-in-view"))
-                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[2]")).Click();
+                if (diaAtual == 1)
+                {
+                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+                }
                 else
-                    webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[2]//div[text()='{diaAtual}'])[1]")).Click();
-            }*/
+                {
+                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+                }
+            }
         }
     }
 
