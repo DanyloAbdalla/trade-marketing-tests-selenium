@@ -203,11 +203,13 @@ public class PlanosContratosPage
 
         if (contextoDeTeste.Equals("SemPlantaLoja"))
         {
+            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadProcurandoEtapa);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02SP");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowSP, "Campo Selecionar Usuário Responsável");
         }
         else
         {
+            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadProcurandoEtapa);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02CP");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowCP, "Campo Selecionar Usuário Responsável");
         }
