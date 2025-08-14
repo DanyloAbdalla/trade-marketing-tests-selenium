@@ -12,6 +12,8 @@ public class GlobalVariables
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
     public static string urlPrdPlataforma = "https://login.meucliente.app.br/";
+    public static string[] emailUsuarios = { "homologacao.start@meucliente.app.br", "homologacao.pro@meucliente.app.br", "homologacao.expert@meucliente.app.br" };
+    public static string[] senhaUsuarios = { "Meucliente@st@123", "Meucliente@pr@123", "Meucliente@ex@123" };
     public static string emailUsuarioSemPlanta = "homologacao.sp@meucliente.app.br";
     public static string senhaUsuarioSemPlanta = "Meucliente@hml@123";
     public static string emailUsuarioComPlanta = "homologacao.cp@meucliente.app.br";
@@ -42,6 +44,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Login
+    public static string LoadCarregandoPaginaSecreta { get; set; } = "//div[text()='Carregando...']";
     public static string PreencherUsuarioEmail { get; set; } = "//input[@id='username']";
     public static string PreencherUsuarioSenha { get; set; } = "//input[@id='password']";
     public static string SubmeterLogin { get; set; } = "//button/*[text()='Login']";
@@ -108,10 +111,13 @@ public class GlobalVariables
     public static string FiltroDesempenhoAtivo { get; set; } = "//*[@class='ant-modal-content']//*[text()='Maior Retorno']";
     public static string TextoCardMaisVendidosDepartamento { get; set; } = "//*[text()='Mais vendidos do Departamento']";
     public static string ModalDashboardDetalhesCards { get; set; } = "//*[@class='ant-modal-content']";
+    public static string LoadCarregandoDashboard { get; set; } = "//div[text()='Carregando dashboard...']";
     #endregion
 
     #region Elementos de página - Planos
-    public static string LoadTelaListaDePlanos { get; set; } = "(//div[@class='thin-card ant-card']//*[contains(@class,'ant-spin-dot-item')])[1]";
+    public static string LoadCarregandoPlanos { get; set; } = "//div[text()='Carregando cadastro contrato...']";
+    public static string LoadListaPlanos { get; set; } = "//h1[text()='Gestão de Planos']/../../../../..//*[@class='ant-spin-dot ant-spin-dot-spin']";
+    public static string LoadModalPlano { get; set; } = "//div[contains(@class,'contrato-loading-overlay')]";
     public static string TabelaPlanos { get; set; } = "//table/tbody/tr";
     public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[contains(@class,'select-selector')]/span[2]";
     public static string SelecionarTodosPlanos { get; set; } = "//div[@class='rc-virtual-list']//div[@title='Todos']";
@@ -202,6 +208,7 @@ public class GlobalVariables
     public static string FecharPlanoConfirmacao { get; set; } = "//button/*[text()='Fechar mesmo assim']";
     public static string EtapasWorkflowPlano { get; set; } = "//div[contains(@class,'etapas-item')]/span";
     public static string EtapasWorkflowGraficoPlano { get; set; } = "//div[@class='ant-row etapas-container-grafico ']";
+    public static string SalvarPlano { get; set; } = "//div[contains(@class,'contrato')]//button/*[text()='Salvar']";
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados

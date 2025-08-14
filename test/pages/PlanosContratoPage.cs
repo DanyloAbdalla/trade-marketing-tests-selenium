@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using OpenQA.Selenium;
 
 namespace MeuClienteWebTestProject;
@@ -21,7 +22,12 @@ public class PlanosContratosPage
         ativosGraficos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosGraficos");
         ativosFisicos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosFisicos");
         abasPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "abasPlanoEsperado");
-        etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "etapaNomeWorkflowPlanoEsperado");
+
+        var teste = TestContext.CurrentContext.Test.MethodName;
+        if (teste.Equals("TestCriarPlanoComWorkflow"))
+            etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestCriarPlanoComWorkflow", "etapaNomeWorkflowPlanoEsperado");
+        else
+            etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "etapaNomeWorkflowPlanoEsperado");
     }
 
     /// <summary>
@@ -33,7 +39,7 @@ public class PlanosContratosPage
         var mensagemConfirmacaoEsperadaReutilizarDadosSalvosAnteriormente = "Existemdadossalvosdaultimasimulação,desejareutiliza-los?";
 
         Dsl.Clicar(webDriver, GlobalVariables.NovoRegistro, "Botão Nova Simulação");
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SelecionarAtivos, "Botão Selecionar Ativos");
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TituloModalConfirmacao) > 0)
         {
@@ -311,8 +317,7 @@ public class PlanosContratosPage
     public PlanosContratosPage AbrirEdicaoDoPlano()
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano, "Botão Editar Plano");
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.AplicarDesconto, "Botão Aplicar Desconto");
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SalvarPlano, "Botão Salvar Plano");
 
         return this;
     }

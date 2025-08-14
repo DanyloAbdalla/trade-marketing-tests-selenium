@@ -10,6 +10,9 @@ namespace MeuClienteWebTestProject;
 /// </summary>
 [TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
 [TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
+[TestFixture("ClienteStart")]
+[TestFixture("ClientPro")]
+[TestFixture("ClienteExpert")]
 //[Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
 {
@@ -34,6 +37,12 @@ public class PlanosTest
         statusEsperado = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "statusEsperado");
         farolEsperado = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "farolEsperado");
         tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
+
+        var teste = TestContext.CurrentContext.Test.MethodName;
+        if (teste.Equals("TestCriarPlanoComWorkflow"))
+            tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "tipoMidiaAtivo");
+        else
+            tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
     }
 
     /// <summary>
@@ -58,6 +67,35 @@ public class PlanosTest
             Assert.Ignore("Pular teste, o teste anterior falhou");
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
+
+        /*if (contextoDeTeste.Equals("ClienteStart")) determinando com qual usuário será feito o teste
+        {
+            new LoginPage(webDriver)
+            .RealizarLogin(GlobalVariables.emailUsuarios[0], GlobalVariables.senhaUsuarios[0]);
+
+            new HomePage(webDriver)
+            .AcessarCadastroPlanos(nomeTeste);
+        }
+        else if (contextoDeTeste.Equals("ClientePro"))
+        {
+            new LoginPage(webDriver)
+            .RealizarLogin(GlobalVariables.emailUsuarios[1], GlobalVariables.senhaUsuarios[1]);
+
+            new HomePage(webDriver)
+            .AcessarCadastroPlanos(nomeTeste);
+        }
+        else if (contextoDeTeste.Equals("ClienteExpert"))
+        {
+            new LoginPage(webDriver)
+            .RealizarLogin(GlobalVariables.emailUsuarios[2], GlobalVariables.senhaUsuarios[2]);
+
+            new HomePage(webDriver)
+            .AcessarCadastroPlanos(nomeTeste);
+        }
+        else
+        {
+           Assert.Fail("Contexto de teste inválido");
+        }*/
 
         if (contextoDeTeste.Contains("SemPlantaLoja"))
         {
@@ -138,7 +176,6 @@ public class PlanosTest
     [Test, Order(2)]
     public void TestCriarPlanoComWorkflow()
     {
-        string tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "tipoMidiaAtivo");
         string nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "nomeCampanha");
 
         new PlanosContratosPage(webDriver)

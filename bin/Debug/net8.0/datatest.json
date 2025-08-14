@@ -60,14 +60,18 @@
       ],
       "etapaNomeWorkflowPlanoEsperado": [
         "Arte",
-        "Montagem",
         "Comprovação"
       ]
     },
     "TestCriarPlanoComWorkflowPadrao": {},
     "TestCriarPlanoComWorkflow": {
       "tipoMidiaAtivo": "Fisica",
-      "nomeCampanha": "PlanoComWorkflowMassaAutomatizada"
+      "nomeCampanha": "PlanoComWorkflowMassaAutomatizada",
+      "etapaNomeWorkflowPlanoEsperado": [
+        "Arte",
+        "Montagem",
+        "Comprovação"
+      ]
     },
     "TestEditarPlanoExistenteAlterandoVigenciaDoPlano": {},
     "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel": {},
