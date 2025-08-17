@@ -12,6 +12,7 @@ public class GlobalVariables
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
     public static string urlPrdPlataforma = "https://login.meucliente.app.br/";
+    public static string[] clienteUpsell = { "ClienteStart", "ClientePro", "ClienteExpert" };
     public static string[] emailUsuarios = { "homologacao.start@meucliente.app.br", "homologacao.pro@meucliente.app.br", "homologacao.expert@meucliente.app.br" };
     public static string[] senhaUsuarios = { "Meucliente@st@123", "Meucliente@pr@123", "Meucliente@ex@123" };
     public static string emailUsuarioSemPlanta = "homologacao.sp@meucliente.app.br";
@@ -137,6 +138,9 @@ public class GlobalVariables
     #region Elementos de página - Planos - Simulação
     public static string PreencherIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
     public static string PesquisarIndustria { get; set; } = "//div[@label='Indústria']/div/div/div/div/input";
+    public static string SelecionarIndustriaClienteStart { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='116873']";
+    public static string SelecionarIndustriaClientePro { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
+    public static string SelecionarIndustriaClientExpert { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
     public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//input[@name='NomeCampanha']";

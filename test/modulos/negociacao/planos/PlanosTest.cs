@@ -68,7 +68,7 @@ public class PlanosTest
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        /*if (contextoDeTeste.Equals("ClienteStart")) determinando com qual usuário será feito o teste
+        /*if (contextoDeTeste.Equals("ClienteStart")) determinando com qual usuário upsell será feito o teste
         {
             new LoginPage(webDriver)
             .RealizarLogin(GlobalVariables.emailUsuarios[0], GlobalVariables.senhaUsuarios[0]);
