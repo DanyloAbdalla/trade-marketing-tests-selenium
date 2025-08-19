@@ -2,16 +2,17 @@ using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using OpenQA.Selenium;
+using OpenQA.Selenium.BiDi.Modules.Browser;
 
 namespace MeuClienteWebTestProject;
 
 /// <summary>
 /// Classe com os testes para o Cadastro de Planos\Contratos
 /// </summary>
-[TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
-[TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
+//[TestFixture("SemPlantaLoja", Category = "PlanosSemPlantaDeLoja")]
+//[TestFixture("ComPlantaLoja", Category = "PlanosComPlantaDeLoja")]
 [TestFixture("ClienteStart")]
-[TestFixture("ClientPro")]
+[TestFixture("ClientePro")]
 [TestFixture("ClienteExpert")]
 //[Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
@@ -26,23 +27,16 @@ public class PlanosTest
     private readonly string nomeCampanha;
     private readonly string statusEsperado;
     private readonly string farolEsperado;
-    private readonly string tipoMidiaAtivo;
+    private string tipoMidiaAtivo;
 
     public PlanosTest(string contextoDeTeste)
     {
         this.contextoDeTeste = contextoDeTeste;
-        nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
         DataLoader.CarregarArquivo();
+        nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
         nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "nomeCampanha");
         statusEsperado = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "statusEsperado");
         farolEsperado = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "farolEsperado");
-        tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
-
-        var teste = TestContext.CurrentContext.Test.MethodName;
-        if (teste.Equals("TestCriarPlanoComWorkflow"))
-            tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "tipoMidiaAtivo");
-        else
-            tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
     }
 
     /// <summary>
@@ -68,51 +62,29 @@ public class PlanosTest
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        /*if (contextoDeTeste.Equals("ClienteStart")) determinando com qual usuário upsell será feito o teste
-        {
-            new LoginPage(webDriver)
-            .RealizarLogin(GlobalVariables.emailUsuarios[0], GlobalVariables.senhaUsuarios[0]);
-
-            new HomePage(webDriver)
-            .AcessarCadastroPlanos(nomeTeste);
-        }
-        else if (contextoDeTeste.Equals("ClientePro"))
-        {
-            new LoginPage(webDriver)
-            .RealizarLogin(GlobalVariables.emailUsuarios[1], GlobalVariables.senhaUsuarios[1]);
-
-            new HomePage(webDriver)
-            .AcessarCadastroPlanos(nomeTeste);
-        }
-        else if (contextoDeTeste.Equals("ClienteExpert"))
-        {
-            new LoginPage(webDriver)
-            .RealizarLogin(GlobalVariables.emailUsuarios[2], GlobalVariables.senhaUsuarios[2]);
-
-            new HomePage(webDriver)
-            .AcessarCadastroPlanos(nomeTeste);
-        }
+        if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
+            tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "tipoMidiaAtivo");
         else
-        {
-           Assert.Fail("Contexto de teste inválido");
-        }*/
+            tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
 
-        if (contextoDeTeste.Contains("SemPlantaLoja"))
+        if (!Enum.TryParse(contextoDeTeste, out ClienteUpSell cliente))
         {
-            new LoginPage(webDriver)
-            .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
-
-            new HomePage(webDriver)
-            .AcessarCadastroPlanos(nomeTeste);
+            Assert.Fail("Contexto de teste inválido");
         }
-        else if (contextoDeTeste.Contains("ComPlantaLoja"))
-        {
-            new LoginPage(webDriver)
-            .RealizarLogin(GlobalVariables.emailUsuarioComPlanta, GlobalVariables.senhaUsuarioComPlanta);
 
-            new HomePage(webDriver)
+        int indiceUsuario = cliente switch
+        {
+            ClienteUpSell.ClienteStart => 0,
+            ClienteUpSell.ClientePro => 1,
+            ClienteUpSell.ClienteExpert => 2,
+            _ => throw new ArgumentOutOfRangeException(nameof(cliente), "ClienteUpSell não reconhecido")
+        };
+
+        new LoginPage(webDriver)
+            .RealizarLogin(GlobalVariables.emailUsuarios[indiceUsuario], GlobalVariables.senhaUsuarios[indiceUsuario]);
+
+        new HomePage(webDriver)
             .AcessarCadastroPlanos(nomeTeste);
-        }
     }
 
     /// <summary>
@@ -133,27 +105,50 @@ public class PlanosTest
     /// E Workflow padrão
     /// </summary>
     [Test, Order(1)]
-    public void TestCriarPlanoComWorkflowPadrao()
+    public void TestCriarPlanoComAtivosTipoMidiaGrafica()
     {
         primeiroTeste = true;
 
-        new PlanosContratosPage(webDriver)
-        .NovaSimulacaoDePlano()
-        .PreencherCampoIndustria(contextoDeTeste)
-        .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos(tipoMidiaAtivo)
-        .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
-        .SelecionarLojas()
-        .GerarPrePlano(contextoDeTeste)
-        .SalvarPlano()
-        .FecharDadosDoPlano()
-        .BuscarPlanos(nomeCampanha)
-        .AbrirEdicaoDoPlano()
-        .ValidarReceitasDoPlano(contextoDeTeste)
-        .ValidarPlanoCriado()
-        .FecharDadosDoPlano()
-        .BuscarPlanos(nomeCampanha)
-        .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
+        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell cliente) && cliente == ClienteUpSell.ClienteExpert) //Se contexto de teste for cliente upsell Expert, cria o plano através da nova tela de simulação
+        {
+            new PlanosContratosPage(webDriver)
+            .NovaSimulacaoDePlano()
+            .PreencherCampoIndustria(contextoDeTeste)
+            .PreencherCampoCampanha(nomeCampanha)
+            .SelecionarAtivos(tipoMidiaAtivo, contextoDeTeste)
+            .SelecionarLojas(contextoDeTeste)
+            .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
+            .GerarPrePlano(contextoDeTeste)
+            .SalvarPlano()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .AbrirEdicaoDoPlano()
+            .ValidarReceitasDoPlano(contextoDeTeste)
+            .ValidarPlanoCriado()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
+        }
+        else
+        {
+            new PlanosContratosPage(webDriver)
+            .NovaSimulacaoDePlano()
+            .PreencherCampoIndustria(contextoDeTeste)
+            .PreencherCampoCampanha(nomeCampanha)
+            .SelecionarAtivos(tipoMidiaAtivo, contextoDeTeste)
+            .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
+            .SelecionarLojas(contextoDeTeste)
+            .GerarPrePlano(contextoDeTeste)
+            .SalvarPlano()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .AbrirEdicaoDoPlano()
+            .ValidarReceitasDoPlano(contextoDeTeste)
+            .ValidarPlanoCriado()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
+        }
     }
 
     /// <summary>
@@ -174,27 +169,51 @@ public class PlanosTest
     /// E com as etapas do Workflow
     /// </summary>
     [Test, Order(2)]
-    public void TestCriarPlanoComWorkflow()
+    public void TestCriarPlanoComAtivosTipoMidiaFisica()
     {
-        string nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "nomeCampanha");
+        string nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "nomeCampanha");
 
-        new PlanosContratosPage(webDriver)
-        .NovaSimulacaoDePlano()
-        .PreencherCampoIndustria(contextoDeTeste)
-        .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarAtivos(tipoMidiaAtivo)
-        .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
-        .SelecionarLojas()
-        .GerarPrePlano(contextoDeTeste)
-        .SalvarPlano()
-        .FecharDadosDoPlano()
-        .BuscarPlanos(nomeCampanha)
-        .AbrirEdicaoDoPlano()
-        .ValidarReceitasDoPlano(contextoDeTeste)
-        .ValidarPlanoCriado()
-        .FecharDadosDoPlano()
-        .BuscarPlanos(nomeCampanha)
-        .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
+        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell cliente) && cliente == ClienteUpSell.ClienteExpert)
+        {
+            new PlanosContratosPage(webDriver)
+            .NovaSimulacaoDePlano()
+            .PreencherCampoIndustria(contextoDeTeste)
+            .PreencherCampoCampanha(nomeCampanha)
+            .SelecionarAtivos(tipoMidiaAtivo, contextoDeTeste)
+            .SelecionarLojas(contextoDeTeste)
+            .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
+            .GerarPrePlano(contextoDeTeste)
+            .SalvarPlano()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .AbrirEdicaoDoPlano()
+            .ValidarReceitasDoPlano(contextoDeTeste)
+            .ValidarPlanoCriado()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
+        }
+        else
+        {
+            new PlanosContratosPage(webDriver)
+            .NovaSimulacaoDePlano()
+            .PreencherCampoIndustria(contextoDeTeste)
+            .PreencherCampoCampanha(nomeCampanha)
+            .SelecionarAtivos(tipoMidiaAtivo, contextoDeTeste)
+            .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
+            .SelecionarLojas(contextoDeTeste)
+            .GerarPrePlano(contextoDeTeste)
+            .SalvarPlano()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .AbrirEdicaoDoPlano()
+            .ValidarReceitasDoPlano(contextoDeTeste)
+            .ValidarPlanoCriado()
+            .FecharDadosDoPlano()
+            .BuscarPlanos(nomeCampanha)
+            .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
+        }
+
     }
 
     /// <summary>
@@ -347,16 +366,32 @@ public class PlanosTest
     [Test, Order(8)]
     public void TestCriarPlanoComAlertaDeInventario()
     {
-        new PlanosContratosPage(webDriver)
-        .NovaSimulacaoDePlano()
-        .PreencherCampoIndustria(contextoDeTeste)
-        .PreencherCampoCampanha(nomeCampanha)
-        .SelecionarVigenciaDoPlano()
-        .SelecionarAtivos(tipoMidiaAtivo)
-        .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
-        .SelecionarLojas()
-        .ValidarIndisponibilidadeDeInventario()
-        .FecharDadosDoPlano();
+        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell cliente) && cliente == ClienteUpSell.ClienteExpert)
+        {
+            new PlanosContratosPage(webDriver)
+            .NovaSimulacaoDePlano()
+            .PreencherCampoIndustria(contextoDeTeste)
+            .PreencherCampoCampanha(nomeCampanha)
+            .SelecionarVigenciaDoPlano()
+            .SelecionarAtivos(tipoMidiaAtivo, contextoDeTeste)
+            .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
+            .SelecionarLojas(contextoDeTeste)
+            .ValidarIndisponibilidadeDeInventario()
+            .FecharDadosDoPlano();
+        }
+        else
+        {
+            new PlanosContratosPage(webDriver)
+            .NovaSimulacaoDePlano()
+            .PreencherCampoIndustria(contextoDeTeste)
+            .PreencherCampoCampanha(nomeCampanha)
+            .SelecionarVigenciaDoPlano()
+            .SelecionarAtivos(tipoMidiaAtivo, contextoDeTeste)
+            .PreencherQuantidadeAtivos(contextoDeTeste, tipoMidiaAtivo)
+            .SelecionarLojas(contextoDeTeste)
+            .ValidarIndisponibilidadeDeInventario()
+            .FecharDadosDoPlano();
+        }
     }
 
     /// <summary>

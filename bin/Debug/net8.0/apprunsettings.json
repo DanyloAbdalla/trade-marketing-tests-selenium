@@ -4,9 +4,24 @@
       "ClassName": "PlanosTest",
       "FixturesNames": [
         {
-          "FixtureName": "SemPlantaLoja",
+          "FixtureName": "ClienteStart",
           "Tests": [
             { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": true },
+            { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "TestSkip": false },
+            { "TestName": "TestAprovarPlano", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAlertaDeInventario", "TestSkip": false },
+            { "TestName": "TestCancelarPlano", "TestSkip": false },
+            { "TestName": "TestExcluirPlano", "TestSkip": false }
+          ]
+        },
+        {
+          "FixtureName": "ClientePro",
+          "Tests": [
+            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": true },
             { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
@@ -19,9 +34,9 @@
           ]
         },
         {
-          "FixtureName": "ComPlantaLoja",
+          "FixtureName": "ClienteExpert",
           "Tests": [
-            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": true },
             { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },

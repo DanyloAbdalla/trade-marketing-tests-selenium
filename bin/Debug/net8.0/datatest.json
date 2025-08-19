@@ -33,7 +33,7 @@
   "negociacoes_planos": {
     "TestGlobalData": {
       "atributoTesteId": "data-testid",
-      "nomeCampanha": "PlanoComWorkflowPadraoMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
       "statusEsperado": "Simulado",
       "farolEsperado": "PLANEJADO",
       "tipoMidiaAtivo": "Grafica",
@@ -61,12 +61,19 @@
       "etapaNomeWorkflowPlanoEsperado": [
         "Arte",
         "Comprovação"
+      ],
+      "lojas": [
+        "L1 - Loja 01",
+        "L2 - Loja 02",
+        "L3 - Loja 03",
+        "L4 - Loja 04",
+        "L5 - Loja 05"
       ]
     },
-    "TestCriarPlanoComWorkflowPadrao": {},
-    "TestCriarPlanoComWorkflow": {
+    "TestCriarPlanoComAtivosTipoMidiaGrafica": {},
+    "TestCriarPlanoComAtivosTipoMidiaFisica": {
       "tipoMidiaAtivo": "Fisica",
-      "nomeCampanha": "PlanoComWorkflowMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaFisicaMassaAutomatizada",
       "etapaNomeWorkflowPlanoEsperado": [
         "Arte",
         "Montagem",
@@ -87,8 +94,8 @@
     },
     "TestExcluirPlano": {
       "nomeCampanhas": [
-        "PlanoComWorkflowPadraoMassaAutomatizada",
-        "PlanoComWorkflowMassaAutomatizada"
+        "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
+        "PlanoComAtivosTipoMidiaFisicaMassaAutomatizada"
       ]
     }
   }

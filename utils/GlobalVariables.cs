@@ -1,3 +1,4 @@
+using System.Globalization;
 using OpenQA.Selenium.DevTools.V128.Page;
 
 namespace MeuClienteWebTestProject;
@@ -6,8 +7,8 @@ public class GlobalVariables
 {
     #region Projeto
     public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se handLessMode igual false
-    public static bool devMode = false;
-    public static bool hmlMode = true;
+    public static bool devMode = true;
+    public static bool hmlMode = false;
     public static bool prodMode = false;
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
@@ -150,8 +151,13 @@ public class GlobalVariables
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//button/*[text()='Selecionar Ativos']";
+    public static string FiltrarInvetario { get; set; } = "//button/*[text()='Filtrar Inventários']";
     public static string AceleradorQuantidadeAlocarSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//*[@title='Qtd por Loja']/../..//input";
     public static string AplicarAceleradorPorLojaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//button/*[text()='Aplicar']";
+    public static string TipoMidia { get; set; } = "//span[text()='Tipo Mídia']/../../..//input";
+    public static string Loja { get; set; } = "//span[text()='Loja']/../../..//input";
+    public static string SelecionarTipoMidiaGrafica { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Gráfica']";
+    public static string ConfirmarFiltroInventario { get; set; } = "//button/*[text()='Confirmar']";
     public static string CarregarLojas { get; set; } = "//button/*[text()='Carregar Lojas']";
     public static string InventarioAlerta { get; set; } = "//td[9]//button[contains(@class,'btn-dangerous')]";
     public static string InventarioOk { get; set; } = "//td[9]//span[contains(@class,'check-inventario')]";
@@ -170,6 +176,7 @@ public class GlobalVariables
     public static string PesquisarAtivos { get; set; } = "//div[@class='ant-table-filter-dropdown']/div/span/input";
     public static string SelecionarAtivosFiltro { get; set; } = "//li[@class='ant-dropdown-menu-item']";
     public static string TelaFiltrarAtivo { get; set; } = "//div[@class='ant-table-filter-dropdown-btns']";
+    public static string TelaFiltrarInventario { get; set; } = "(//*[@class='ant-modal-content'])[2]";
     public static string OkFiltroAtivos { get; set; } = "//button/*[text()='OK']";
     public static string SelecionarTodosAtivos { get; set; } = "(//span[@class='ant-checkbox'])[1]";
     public static string ResetarFiltroAtivo { get; set; } = "//button/*[text()='Resetar']";
