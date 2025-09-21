@@ -124,7 +124,7 @@ public class PlanosTest
             .BuscarPlanos(nomeCampanha)
             .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano(contextoDeTeste)
-            .ValidarPlanoCriado()
+            .ValidarPlanoCriado(contextoDeTeste)
             .FecharDadosDoPlano()
             .BuscarPlanos(nomeCampanha)
             .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
@@ -144,7 +144,7 @@ public class PlanosTest
             .BuscarPlanos(nomeCampanha)
             .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano(contextoDeTeste)
-            .ValidarPlanoCriado()
+            .ValidarPlanoCriado(contextoDeTeste)
             .FecharDadosDoPlano()
             .BuscarPlanos(nomeCampanha)
             .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
@@ -188,7 +188,7 @@ public class PlanosTest
             .BuscarPlanos(nomeCampanha)
             .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano(contextoDeTeste)
-            .ValidarPlanoCriado()
+            .ValidarPlanoCriado(contextoDeTeste)
             .FecharDadosDoPlano()
             .BuscarPlanos(nomeCampanha)
             .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);
@@ -208,7 +208,7 @@ public class PlanosTest
             .BuscarPlanos(nomeCampanha)
             .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano(contextoDeTeste)
-            .ValidarPlanoCriado()
+            .ValidarPlanoCriado(contextoDeTeste)
             .FecharDadosDoPlano()
             .BuscarPlanos(nomeCampanha)
             .ValidarStatusFarolDoPlano(statusEsperado, farolEsperado);

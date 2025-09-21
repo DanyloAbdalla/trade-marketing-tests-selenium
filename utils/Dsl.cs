@@ -135,6 +135,7 @@ public class Dsl
     {
         EsperarVisibilidadeDoElemento(webDriver, XPath);
         EsperarInvisibilidadeDoElemento(webDriver, XPath);
+        Esperar(500);
     }
 
     public static IWebElement EncontrarElemento(IWebDriver webDriver, string XPath, string elemento)

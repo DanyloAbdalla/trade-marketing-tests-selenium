@@ -6,8 +6,8 @@
         {
           "FixtureName": "ClienteStart",
           "Tests": [
-            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
-            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": true },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaGrafica", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaFisica", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
@@ -21,8 +21,8 @@
         {
           "FixtureName": "ClientePro",
           "Tests": [
-            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": true },
-            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaGrafica", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaFisica", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
@@ -36,8 +36,8 @@
         {
           "FixtureName": "ClienteExpert",
           "Tests": [
-            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": true },
-            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaGrafica", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaFisica", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },

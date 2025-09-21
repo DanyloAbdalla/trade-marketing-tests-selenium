@@ -118,7 +118,7 @@ public class GlobalVariables
 
     #region Elementos de página - Planos
     public static string LoadCarregandoPlanos { get; set; } = "//div[text()='Carregando cadastro contrato...']";
-    public static string LoadListaPlanos { get; set; } = "//h1[text()='Gestão de Planos']/../../../../..//*[@class='ant-spin-dot ant-spin-dot-spin']";
+    public static string LoadListaPlanos { get; set; } = "//h1[text()='Gestão de Planos']/../../../../..//*[@class='ant-spin-dot ant-spin-dot-spin']/i[1]";
     public static string LoadModalPlano { get; set; } = "//div[contains(@class,'contrato-loading-overlay')]";
     public static string TabelaPlanos { get; set; } = "//table/tbody/tr";
     public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[contains(@class,'select-selector')]/span[2]";
@@ -191,7 +191,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Dados do Plano
-    public static string LoadDeTelaDadosPlano { set; get; } = "//*[contains(@class,'contrato-loading-overlay')]";
+    public static string LoadDeTelaDadosPlano { set; get; } = "(//*[contains(@id,'panel-1')]//*[contains(@class,'ant-spin-dot-item')])[1]";
     public static string AbasPlano { get; set; } = "//div[@class='ant-tabs-nav-list']";
     public static string AbaDadosPlano { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Dados do Plano')]";
     public static string SituacaoPlano { get; set; } = "//*[@name='Status']";
@@ -234,6 +234,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados - Editar Alocação do Ativo por Loja
+    public static string LoadDeTelaAlocacaoPorLoja { get; set; } = "(//*[@class='ativos-alocados-container']//*[contains(@class,'ant-spin-dot-item')])[1]";
     public static string TabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody";
     public static string LinhaTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody/tr[@data-row-key='0']";
     public static string ScrollTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[contains(@class,'ant-table-scroll-horizontal')]";
@@ -258,6 +259,18 @@ public class GlobalVariables
     public static string NomeAtivoAlocao { get; set; } = "//*[text()='Ativo: ']/../div/div/span[2]";
     public static string AbaAlocacaoPorLojaAtivo { get; set; } = "//*[contains(text(),'Alocação por Loja')]";
     public static string AplicarAceleradorPorLojaAtivoAlocado { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//button/*[text()='Aplicar']";
+    #endregion
+
+    #region Elementos de página - Planos - Anexos
+    public static string LoadDeTelaAnexos { set; get; } = "(//*[contains(@id,'panel-10')]//*[contains(@class,'ant-spin-dot-item')])[1]";
+    #endregion
+
+    #region Elementos de página - Planos - Book Fotográfico
+    public static string LoadDeTelaBookFotografico { set; get; } = "(//*[contains(@id,'panel-7')]//*[contains(@class,'ant-spin-dot-item')])[1]";
+    #endregion
+
+    #region Elementos de página - Planos - Book Fotográfico
+    public static string LoadDeTelaPainelIndustria { set; get; } = "(//*[contains(@id,'panel-11')]//*[contains(@class,'ant-spin-dot-item')])[1]";
     #endregion
 
     #region Elementos de página - SmartIA
