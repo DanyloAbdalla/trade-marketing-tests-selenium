@@ -12,14 +12,16 @@ public class PlanosContratosPage
 {
     private IWebDriver webDriver;
     private string atributoTesteId;
+    private ClienteUpSell clienteUpSellAtual;
     private IList<string> ativosGraficos;
     private IList<string> ativosFisicos;
     private IList<string> abasPlanoEsperado;
     private IList<string> etapaNomeWorkflowPlanoEsperado;
 
-    public PlanosContratosPage(IWebDriver webDriver)
+    public PlanosContratosPage(IWebDriver webDriver, ClienteUpSell clienteUpSell)
     {
         this.webDriver = webDriver;
+        clienteUpSellAtual = clienteUpSell;
         atributoTesteId = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "atributoTesteId");
         ativosGraficos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosGraficos");
         ativosFisicos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosFisicos");
@@ -56,24 +58,24 @@ public class PlanosContratosPage
     /// Métodos para preencher o campo Indústria
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage PreencherCampoIndustria(string contextoDeTeste)
+    public PlanosContratosPage PreencherCampoIndustria()
     {
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.PesquisarIndustria);
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PesquisarIndustria, "Campo Indústria");
 
-        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteStart) && clienteStart == ClienteUpSell.ClienteStart) //determinando com qual usuário upsell será feito o teste
+        if (clienteUpSellAtual == ClienteUpSell.ClienteStart)
         {
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaClienteStart);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
             Dsl.Clicar(webDriver, GlobalVariables.SelecionarIndustriaClienteStart, "Campo Selecionar Indústria");
         }
-        else if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clientePro) && clientePro == ClienteUpSell.ClientePro)
+        else if (clienteUpSellAtual == ClienteUpSell.ClientePro)
         {
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaClientePro);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
             Dsl.Clicar(webDriver, GlobalVariables.SelecionarIndustriaClientePro, "Campo Selecionar Indústria");
         }
-        else if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteExpert) && clienteExpert == ClienteUpSell.ClienteExpert)
+        else if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaClientExpert);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
@@ -98,12 +100,11 @@ public class PlanosContratosPage
     /// Método para filtrar e selecionar os ativos
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage SelecionarAtivos(string tipoMidiaAtivo, string contextoDeTeste)
+    public PlanosContratosPage SelecionarAtivos(string tipoMidiaAtivo)
     {
-        Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteUpSell);
         List<string> lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
 
-        switch (clienteUpSell)
+        switch (clienteUpSellAtual)
         {
             case ClienteUpSell.ClienteStart:
             case ClienteUpSell.ClientePro:
@@ -194,12 +195,12 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="contextoDeTestes"></param>
     /// <returns></returns>
-    public PlanosContratosPage PreencherQuantidadeAtivos(string contextoDeTestes, string tipoAtivoMidia)
+    public PlanosContratosPage PreencherQuantidadeAtivos(string tipoAtivoMidia)
     {
-        switch (contextoDeTestes)
+        switch (clienteUpSellAtual)
         {
-            case "ClienteStart": //determinando com qual usuário upsell será feito o teste
-            case "ClientePro":
+            case ClienteUpSell.ClienteStart:
+            case ClienteUpSell.ClientePro:
                 if (tipoAtivoMidia.Equals("Grafica"))
                 {
                     Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
@@ -225,7 +226,7 @@ public class PlanosContratosPage
                     }
                 }
                 break;
-            case "ClienteExpert":
+            case ClienteUpSell.ClienteExpert:
                 break;
                 /*case "SemPlantaLoja":
                         if (tipoAtivoMidia.Equals("Grafica"))
@@ -270,12 +271,11 @@ public class PlanosContratosPage
     /// Método para selecionar as lojas carregadas na simulação do plano, para alocação dos ativos
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage SelecionarLojas(string contextoDeTeste)
+    public PlanosContratosPage SelecionarLojas()
     {
         List<string> lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
-        Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteUpSell);
 
-        switch (clienteUpSell)
+        switch (clienteUpSellAtual)
         {
             case ClienteUpSell.ClienteStart:
             case ClienteUpSell.ClientePro:
@@ -316,36 +316,25 @@ public class PlanosContratosPage
     /// Método para gerar o pré-plano, clicando no botão Gera Pré-Plano
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage GerarPrePlano(string contextoDeTeste)
+    public PlanosContratosPage GerarPrePlano()
     {
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlano, "Botão Gerar Pré-Plano");
 
-        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clientePro) && clientePro == ClienteUpSell.ClientePro) //determinando com qual usuário upsell será feito o teste
+        if (clienteUpSellAtual == ClienteUpSell.ClientePro)
         {
             Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadProcurandoEtapa);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02Pro");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowSP, "Campo Selecionar Usuário Responsável");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
         }
-        else if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteExpert) && clienteExpert == ClienteUpSell.ClienteExpert)
+        else if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
             Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadProcurandoEtapa);
             Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02Expert");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowCP, "Campo Selecionar Usuário Responsável");
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
         }
-
-        /*if (contextoDeTeste.Equals("SemPlantaLoja"))
-        {
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02SP");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowSP, "Campo Selecionar Usuário Responsável");
-        }
-        else
-        {
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02CP");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowCP, "Campo Selecionar Usuário Responsável");
-        }*/
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarRegistro);
 
@@ -356,9 +345,9 @@ public class PlanosContratosPage
     /// Método para validar a tela de plano após a criação do mesmo
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage ValidarPlanoCriado(string contextoDeTeste)
+    public PlanosContratosPage ValidarPlanoCriado()
     {
-        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clientePro) && clientePro == ClienteUpSell.ClienteStart)
+        if (clienteUpSellAtual == ClienteUpSell.ClienteStart)
         {
             for (int i = 0; i < abasPlanoEsperado.Count - 1; i++)
             {
@@ -751,12 +740,11 @@ public class PlanosContratosPage
     public PlanosContratosPage SalvarPlano()
     {
         var mensagemPlanoAlteradoEsperada = "OPlanofoialteradocomsucesso!";
+        var teste = TestContext.CurrentContext.Test.MethodName;
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AbaDadosPlano, "Aba Dados Plano");
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarRegistro);
         Dsl.Clicar(webDriver, GlobalVariables.SalvarRegistro, "Botão Salvar Plano");
-
-        var teste = TestContext.CurrentContext.Test.MethodName;
 
         if (!string.IsNullOrEmpty(teste) && teste.Equals("TestCancelarPlano"))
             ConfirmarCancelamentoDoPlano();
@@ -1363,135 +1351,17 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="contextoDeTeste"></param>
     /// <returns></returns>
-    public PlanosContratosPage ValidarReceitasDoPlano(string contextoDeTeste)
+    public PlanosContratosPage ValidarReceitasDoPlano()
     {
         var tipoAtributo = "value";
         var teste = TestContext.CurrentContext.Test.MethodName;
-        Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteUpSell);
 
         if (string.IsNullOrEmpty(teste))
             throw new ArgumentException("Variável teste vazia ou nulo");
-
-        /*try determinando com qual usuário upsell será feito o teste
-        {
-            switch (contextoDeTeste)
-            {
-                case "ClientePro":
-                    if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
-                    {
-                        var valorReceitaAtivosEsperado = 750.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 825.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Ativos");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    else if (teste.Equals("TestCriarPlanoComWorkflow"))
-                    {
-                        var valorReceitaAtivosEsperado = 527.50;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 605.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    else if (teste.Equals("TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel"))
-                    {
-                        var valorReceitaAtivosEsperado = 900.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 990.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    else if (teste.Equals("TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel"))
-                    {
-                        var valorReceitaAtivosEsperado = 950.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 1045.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    break;
-                case "ClienteExpert":
-                    if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
-                    {
-                        var valorReceitaAtivosEsperado = 3000.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 3300.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    else if (teste.Equals("TestCriarPlanoComWorkflow"))
-                    {
-                        var valorReceitaAtivosEsperado = 2000.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 2200.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    else if (teste.Equals("TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel"))
-                    {
-                        var valorReceitaAtivosEsperado = 3200.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 3520.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    else if (teste.Equals("TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel"))
-                    {
-                        var valorReceitaAtivosEsperado = 3800.00;
-                        var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
-                        var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
-
-                        var valorReceitaPlanoEsperado = 4140.00;
-                        var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
-                        var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
-
-                        Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
-                        Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
-                    }
-                    break;
-            }
-        }
-        catch (Exception ex)
-        { throw new Exception(ex.Message + "\n"); }*/
-
+        
         try
         {
-            switch (clienteUpSell)
+            switch (clienteUpSellAtual)
             {
                 case ClienteUpSell.ClienteStart:
                     if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaGrafica"))
@@ -1549,7 +1419,7 @@ public class PlanosContratosPage
                     break;
                 case ClienteUpSell.ClientePro:
                 case ClienteUpSell.ClienteExpert:
-                /*if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
+                if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaGrafica"))
                 {
                     var valorReceitaAtivosEsperado = 3000.00;
                     var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
@@ -1562,7 +1432,7 @@ public class PlanosContratosPage
                     Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
                     Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
                 }
-                else if (teste.Equals("TestCriarPlanoComWorkflow"))
+                else if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
                 {
                     var valorReceitaAtivosEsperado = 2000.00;
                     var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
@@ -1601,7 +1471,7 @@ public class PlanosContratosPage
                     Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
                     Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
                 }
-                break;*/
+                break;
                 default:
                     throw new InvalidOperationException("Contexto de teste inválido");
             }

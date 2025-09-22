@@ -8,10 +8,12 @@ namespace MeuClienteWebTestProject;
 public class LoginPage
 {
     private IWebDriver webDriver;
+    private readonly ClienteUpSell clienteUpSellAtual;
 
-    public LoginPage(IWebDriver webDriver)
+    public LoginPage(IWebDriver webDriver, ClienteUpSell clienteUpSell)
     {
         this.webDriver = webDriver;
+        clienteUpSellAtual = clienteUpSell;
     }
 
     /// <summary>
@@ -51,7 +53,7 @@ public class LoginPage
         if (webDriver.Url.Contains("dashboard"))
             Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadCarregandoDashboard);
 
-        return new HomePage(webDriver);
+        return new HomePage(webDriver, clienteUpSellAtual);
     }
 
     /// <summary>
@@ -66,6 +68,6 @@ public class LoginPage
         PreencherSenhaUsuario(senhaUsuario);
         SubmeterLogin();
 
-        return new HomePage(webDriver);
+        return new HomePage(webDriver, clienteUpSellAtual);
     }
 }

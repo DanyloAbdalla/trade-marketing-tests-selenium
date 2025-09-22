@@ -6,22 +6,24 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes para o DashBoard de Operações
 /// </summary>
-[TestFixture]
+[TestFixture("ClienteStart")]
 public class DashboardOperacoesTest
 {
     private RunSettings runSettings;
     private IWebDriver webDriver;
     private readonly BrowserType browserType = BrowserType.Chrome;
+    private readonly ClienteUpSell clienteUpSellAtual;
     private readonly string nomeClasse;
     private readonly string nomeAtivo;
     private readonly string nomeAtivoEsperado;
     private readonly string nomeCampanha;
 
-    public DashboardOperacoesTest()
+    public DashboardOperacoesTest(ClienteUpSell clienteUpSell)
     {
+        clienteUpSellAtual = clienteUpSell;
         nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
         DataLoader.CarregarArquivo();
-        nomeAtivo = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeAtivo")?? throw new Exception("nomeAtivo não encontrado");
+        nomeAtivo = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeAtivo") ?? throw new Exception("nomeAtivo não encontrado");
         nomeAtivoEsperado = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeAtivoEsperado");
         nomeCampanha = DataLoader.ObterDados("dashboard_operacaoes", "TestGlobalData", "nomeCampanha");
     }
@@ -40,12 +42,20 @@ public class DashboardOperacoesTest
         if (runSettings.ToSkip(nomeClasse, null, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        new LoginPage(webDriver)
-        .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
+        int indiceUsuario = clienteUpSellAtual switch
+        {
+            ClienteUpSell.ClienteStart => 0,
+            ClienteUpSell.ClientePro => 1,
+            ClienteUpSell.ClienteExpert => 2,
+            _ => throw new ArgumentOutOfRangeException(nameof(clienteUpSellAtual), "Cliente upsell não reconhecido")
+        };
+
+        new LoginPage(webDriver, clienteUpSellAtual)
+            .RealizarLogin(GlobalVariables.emailUsuarios[indiceUsuario], GlobalVariables.senhaUsuarios[indiceUsuario]);
 
         //Retorna para o Dashboard de Operações, se no último logout a plataforma parou em outra tela
-        new HomePage(webDriver)
-        .VoltarParaDashboardOperacoes();
+        new HomePage(webDriver, clienteUpSellAtual)
+            .VoltarParaDashboardOperacoes();
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TextoCardAtivosAlocados);
         Dsl.Esperar();
@@ -266,7 +276,7 @@ public class DashboardOperacoesTest
         }
         else
         {
-            new HomePage(webDriver).RealizarLogout();
+            new HomePage(webDriver, clienteUpSellAtual).RealizarLogout();
             webDriver.Quit();
             webDriver.Dispose();
         }
