@@ -499,9 +499,9 @@ public class PlanosContratosPage
     /// <param name="avancoCalendarioInicioVigencia"></param>
     /// <param name="avancoCalendarioFimVigencia"></param>
     /// <returns></returns>
-    public PlanosContratosPage SelecionarVigenciaDoTrade(IWebElement inicioVigenciaTrade, IWebElement fimVigenciaTrade, string contextoDeTeste)
+    public PlanosContratosPage SelecionarVigenciaDoTrade(IWebElement inicioVigenciaTrade, IWebElement fimVigenciaTrade)
     {
-        if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clientePro) && clientePro == ClienteUpSell.ClientePro) //determinando com qual usuário upsell será feito o teste
+        if (clienteUpSellAtual == ClienteUpSell.ClientePro)
         {
             var avancarMesCalendarioEm = 2;
 
@@ -511,7 +511,7 @@ public class PlanosContratosPage
             Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
         }
-        else if (Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteExpert) && clienteExpert == ClienteUpSell.ClienteExpert)
+        else if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
             var avancarMesCalendarioInicioVigenciaEm = 2;
             var avancarMesCalendarioFimVigenciaEm = 3;
@@ -522,39 +522,15 @@ public class PlanosContratosPage
             Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioInicioVigenciaEm);
         }
-
-        /*if (contextoDeTeste.Equals("SemPlantaLoja"))
-        {
-            var avancarMesCalendarioEm = 2;
-
-            Dsl.ClicarNoElementoId(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
-            Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
-
-            Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
-            Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
-        }
-        else if (contextoDeTeste.Equals("ComPlantaLoja"))
-        {
-            var avancarMesCalendarioInicioVigenciaEm = 2;
-            var avancarMesCalendarioFimVigenciaEm = 3;
-
-            Dsl.ClicarNoElementoId(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
-            Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioFimVigenciaEm);
-
-            Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
-            Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioInicioVigenciaEm);
-        }*/
 
         return this;
     }
 
     public PlanosContratosPage EditarVigenciaDoAtivoAlocado(string contextoDeTeste)
     {
-        Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteUpSell);
-
         var quantidadeAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
 
-        switch (clienteUpSell)
+        switch (clienteUpSellAtual)
         {
             case ClienteUpSell.ClienteStart:
             case ClienteUpSell.ClientePro:
@@ -566,7 +542,7 @@ public class PlanosContratosPage
 
                     Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaAlocacaoPorLoja);
 
-                    EditarVigenciaLoja(contextoDeTeste);
+                    EditarVigenciaLoja();
 
                     SalvarAtivoAlocado();
                 }
@@ -584,7 +560,7 @@ public class PlanosContratosPage
                     Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
                     Dsl.Esperar();
 
-                    EditarVigenciaLoja(contextoDeTeste);
+                    EditarVigenciaLoja();
 
                     SalvarAtivoAlocado();
                 }
@@ -644,11 +620,9 @@ public class PlanosContratosPage
         return this;
     }
 
-    public PlanosContratosPage EditarVigenciaLoja(string contextoDeTeste)
+    public PlanosContratosPage EditarVigenciaLoja()
     {
-        Enum.TryParse(contextoDeTeste, out ClienteUpSell clienteUpSell);
-        
-        switch (clienteUpSell)
+        switch (clienteUpSellAtual)
         {
             case ClienteUpSell.ClienteStart:
             case ClienteUpSell.ClientePro:
@@ -666,7 +640,7 @@ public class PlanosContratosPage
                         var inicioVigencia = colunas[7];
                         var fimVigencia = colunas[8];
 
-                        SelecionarVigenciaDoTrade(inicioVigencia, fimVigencia, contextoDeTeste);
+                        SelecionarVigenciaDoTrade(inicioVigencia, fimVigencia);
                     }
                 }
                 break;
@@ -678,7 +652,7 @@ public class PlanosContratosPage
 
                 Dsl.ScrollHorizontalDentroDoElementoTabela(webDriver, GlobalVariables.ScrollTabelaLojasAtivoAlocados, GlobalVariables.ColunaVeiculacaoTrade);
 
-                SelecionarVigenciaDoTrade(iniciovigencia, fimvigencia, contextoDeTeste);
+                SelecionarVigenciaDoTrade(iniciovigencia, fimvigencia);
 
                 Dsl.Clicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaAtivoAlocado, "Botão Aplicar Vigência para Todas as Lojas");
 
