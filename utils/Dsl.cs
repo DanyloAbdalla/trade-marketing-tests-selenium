@@ -41,6 +41,7 @@ public class Dsl
         try
         {
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
+            Esperar(500);
         }
         catch (Exception ex)
         { Console.WriteLine("Erro ao esperar a visibilidade do elemento na página: " + "\n" + ex.Message); }

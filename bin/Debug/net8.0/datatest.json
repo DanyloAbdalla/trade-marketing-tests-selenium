@@ -25,7 +25,7 @@
     },
     "TestAcessarVisaoDetalhadaListaParceiro": {
       "nomeCard": [
-        "EvolucaoPerformanceParceiros",
+        "EvolucaoPerformanceFornecedor",
         "InvestimentoParceiro"
       ]
     }

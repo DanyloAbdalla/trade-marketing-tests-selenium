@@ -227,6 +227,7 @@ public class DashboardOperacoesPage
         Dsl.EsperarElementoParaClicar(webDriver, xpathElementoBotao, telaElemento);
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaListagemAterrissagem);
+        Dsl.Esperar();
 
         var countTabelaDeDados = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaListagemAterrissagem);
         Debug.Assert(countTabelaDeDados > 0, "Tabela de dados não foi apresentada corretamente");
@@ -249,24 +250,24 @@ public class DashboardOperacoesPage
 
         switch (card)
         {
-            case "EvolucaoPerformanceParceiros":
+            case "EvolucaoPerformanceFornecedor":
                 xpathElementoScroll = GlobalVariables.FiltrarNegociacoes;
-                xpathElementoBotao = GlobalVariables.DetalhesListaParceirosPerformance;
+                xpathElementoBotao = GlobalVariables.DetalhesListaPerformanceFornecedor;
                 break;
             case "InvestimentoParceiro":
                 xpathElementoScroll = GlobalVariables.DetalhesDesempenhoDosAtivos;
-                xpathElementoBotao = GlobalVariables.DetalhesListaParceirosInvestimento;
+                xpathElementoBotao = GlobalVariables.DetalhesListaInvestimentoParceiro;
                 break;
         }
 
         Dsl.ScrollParaElemento(webDriver, xpathElementoScroll);
         Dsl.EsperarElementoParaClicar(webDriver, xpathElementoBotao, telaElemento);
 
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaListagemParceiros);
         Dsl.Esperar();
 
         if (!(Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0))
-            Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTela, "Paginação Tela");
+            Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.PaginacaoTelaListagemParceiros, "Paginação Tela");
 
         var countTabelaDeDados = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaListagemParceiros);
         Debug.Assert(countTabelaDeDados > 0, "Tabela de dados não foi apresentada corretamente");
