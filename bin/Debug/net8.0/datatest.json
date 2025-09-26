@@ -37,7 +37,7 @@
       "statusEsperado": "Simulado",
       "farolEsperado": "PLANEJADO",
       "tipoMidiaAtivo": "Grafica",
-      "ativoNome": "Ilha 01",
+      "ativoNome": "Stopper",
       "ativosGraficos": [
         "Adesivo de Check Out",
         "Display de Check Out",
@@ -88,6 +88,10 @@
         },
         {
           "mensagem": "Nenhuma mudança detectada na disponibilidade!",
+          "atributo": "Mc-message-info"
+        },
+        {
+          "mensagem": "Salve suas informações para poder incluir produto foco!",
           "atributo": "Mc-message-info"
         }
       ]

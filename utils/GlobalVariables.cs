@@ -1,6 +1,3 @@
-using System.Globalization;
-using OpenQA.Selenium.DevTools.V128.Page;
-
 namespace MeuClienteWebTestProject;
 
 public class GlobalVariables
@@ -28,6 +25,7 @@ public class GlobalVariables
     public static string Mensagens { get; set; } = "//*[@class='ant-message-notice']";
     public static string MensagemDeComunicacao { get; set; } = "//div[@class='Mc-message-container']/div/div";
     public static string MensagensDeFeedback { get; set; } = "//div[@class='Mc-message-container']";
+    public static string MensagemDeFeedback { get; set; } = "//div[contains(@class, 'Mc-message Mc-message')]";
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//button/*[text()='Salvar']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
@@ -194,7 +192,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Dados do Plano
-    public static string LoadDeTelaDadosPlano { set; get; } = "(//*[contains(@id,'panel-1')]//*[contains(@class,'ant-spin-dot-item')])[1]";
+    public static string LoadDeTelaDadosPlano { set; get; } = "//*[contains(@id,'panel-1')]//span[contains(@class,'ant-spin-dot-spin')]";
     public static string AbasPlano { get; set; } = "//div[@class='ant-tabs-nav-list']";
     public static string AbaDadosPlano { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Dados do Plano')]";
     public static string SituacaoPlano { get; set; } = "//*[@name='Status']";

@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+namespace MeuClienteWebTestProject;
+
 public class DataLoader
 {
     private static dynamic massaDados;

@@ -1,8 +1,6 @@
-using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using OpenQA.Selenium;
-using OpenQA.Selenium.BiDi.Modules.Browser;
 
 namespace MeuClienteWebTestProject;
 
@@ -179,6 +177,7 @@ public class PlanosTest
             .GerarPrePlano()
             .SalvarPlano()
             .FecharDadosDoPlano()
+            .RecarregarPlanos()
             .BuscarPlanos(nomeCampanha)
             .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano()
@@ -198,6 +197,7 @@ public class PlanosTest
             .GerarPrePlano()
             .SalvarPlano()
             .FecharDadosDoPlano()
+            .RecarregarPlanos()
             .BuscarPlanos(nomeCampanha)
             .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano()
@@ -253,7 +253,7 @@ public class PlanosTest
         .BuscarPlanos(nomeCampanha)
         .AbrirEdicaoDoPlano()
         .AbrirAbaAtivosAlocados()
-        .EditarVigenciaDoAtivoAlocado(contextoDeTeste)
+        .EditarVigenciaDoAtivoAlocado()
         .SalvarPlano()
         .FecharDadosDoPlano();
     }

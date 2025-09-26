@@ -135,7 +135,6 @@ public class HomePage
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarPlanosStatusVigencia, "Campo Filtro Vigência");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTodosPlanos, "Selecionar Todos Planos");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadListaPlanos);
-        Dsl.Esperar(2000);
 
         return new PlanosContratosPage(webDriver, clienteUpSellAtual);
     }
