@@ -9,19 +9,29 @@ public class PlanosContratosPage
 {
     private IWebDriver webDriver;
     private string atributoTesteId;
+    private ClienteUpSell clienteUpSellAtual;
     private IList<string> ativosGraficos;
     private IList<string> ativosFisicos;
     private IList<string> abasPlanoEsperado;
     private IList<string> etapaNomeWorkflowPlanoEsperado;
+    List<MensagemFeedback> mensagensEsperadas;
 
-    public PlanosContratosPage(IWebDriver webDriver)
+
+    public PlanosContratosPage(IWebDriver webDriver, ClienteUpSell clienteUpSell)
     {
         this.webDriver = webDriver;
+        clienteUpSellAtual = clienteUpSell;
         atributoTesteId = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "atributoTesteId");
         ativosGraficos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosGraficos");
         ativosFisicos = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "ativosFisicos");
         abasPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "abasPlanoEsperado");
-        etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "etapaNomeWorkflowPlanoEsperado");
+        mensagensEsperadas = DataLoader.ObterMensagensDeFeedback("negociacoes_planos", "TestGlobalData", "mensagensDeFeedback");
+
+        var teste = TestContext.CurrentContext.Test.MethodName;
+        if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
+            etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "etapaNomeWorkflowPlanoEsperado");
+        else
+            etapaNomeWorkflowPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "etapaNomeWorkflowPlanoEsperado");
     }
 
     /// <summary>
@@ -33,7 +43,7 @@ public class PlanosContratosPage
         var mensagemConfirmacaoEsperadaReutilizarDadosSalvosAnteriormente = "Existemdadossalvosdaultimasimulação,desejareutiliza-los?";
 
         Dsl.Clicar(webDriver, GlobalVariables.NovoRegistro, "Botão Nova Simulação");
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.SelecionarAtivos, "Botão Selecionar Ativos");
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TituloModalConfirmacao) > 0)
         {
@@ -48,23 +58,28 @@ public class PlanosContratosPage
     /// Métodos para preencher o campo Indústria
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage PreencherCampoIndustria(string contextoDeTeste)
+    public PlanosContratosPage PreencherCampoIndustria()
     {
-        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.PreencherIndustria);
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PreencherIndustria, "Campo Indústria");
 
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.PesquisarIndustria);
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.PesquisarIndustria, "Campo Indústria");
-        if (contextoDeTeste.Equals("SemPlantaLoja"))
+        if (clienteUpSellAtual == ClienteUpSell.ClienteStart)
         {
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaSemPlanta);
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustriaSemPlanta, "Campo Selecionar Indústria");
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaClienteStart);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherIndustria, "Indústria 01 F");
+            Dsl.Clicar(webDriver, GlobalVariables.SelecionarIndustriaClienteStart, "Campo Selecionar Indústria");
         }
-        else
+        else if (clienteUpSellAtual == ClienteUpSell.ClientePro)
         {
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaComPlanta);
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PesquisarIndustria, "Indústria 01 F");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarIndustriaComPlanta, "Campo Selecionar Indústria");
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaClientePro);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherIndustria, "Indústria 01 F");
+            Dsl.Clicar(webDriver, GlobalVariables.SelecionarIndustriaClientePro, "Campo Selecionar Indústria");
+        }
+        else if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
+        {
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SelecionarIndustriaClientExpert);
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherIndustria, "Indústria 01 F");
+            Dsl.Clicar(webDriver, GlobalVariables.SelecionarIndustriaClientExpert, "Campo Selecionar Indústria");
         }
 
         return this;
@@ -85,38 +100,92 @@ public class PlanosContratosPage
     /// Método para filtrar e selecionar os ativos
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage SelecionarAtivos(string tipoAtivoMidia)
+    public PlanosContratosPage SelecionarAtivos(string tipoMidiaAtivo)
     {
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarAtivos, "Botão Selecionar Ativos");
+        List<string> lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
 
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.FiltrarAtivos);
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarAtivos, "Botão Filtrar Ativo");
-
-        switch (tipoAtivoMidia)
+        switch (clienteUpSellAtual)
         {
-            case "Grafica":
-                foreach (var nomeAtivo in ativosGraficos)
+            case ClienteUpSell.ClienteStart:
+            case ClienteUpSell.ClientePro:
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarAtivos, "Botão Selecionar Ativos");
+
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.FiltrarAtivos);
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarAtivos, "Botão Filtrar Ativo");
+
+                if (tipoMidiaAtivo.Equals("Grafica"))
                 {
-                    Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.PesquisarAtivos, nomeAtivo);
-                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarAtivosFiltro, "Campo Seleciona Ativo Filtrado");
-                    webDriver.FindElement(By.XPath(GlobalVariables.PesquisarAtivos)).SendKeys(Keys.Control + "a" + Keys.Backspace); //Apagando o nome do ativo do campo de pesquisa
-                    Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarAtivo, "Tela Filtrar Ativos");
+                    foreach (var nomeAtivo in ativosGraficos)
+                    {
+                        Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.PesquisarAtivos, nomeAtivo);
+                        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarAtivosFiltro, "Campo Seleciona Ativo Filtrado");
+                        webDriver.FindElement(By.XPath(GlobalVariables.PesquisarAtivos)).SendKeys(Keys.Control + "a" + Keys.Backspace); //Apagando o nome do ativo do campo de pesquisa
+                        Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarAtivo, "Tela Filtrar Ativos");
+                    }
                 }
+                else if (tipoMidiaAtivo.Equals("Fisica"))
+                {
+                    foreach (var nomeAtivo in ativosFisicos)
+                    {
+                        Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.PesquisarAtivos, nomeAtivo);
+                        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarAtivosFiltro, "Campo Seleciona Ativo Filtrado");
+                        webDriver.FindElement(By.XPath(GlobalVariables.PesquisarAtivos)).SendKeys(Keys.Control + "a" + Keys.Backspace); //Apagando o nome do ativo do campo de pesquisa
+                        Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarAtivo, "Tela Filtrar Ativos");
+                    }
+                }
+
+                Dsl.Clicar(webDriver, GlobalVariables.OkFiltroAtivos, "Botão OK Ativos Selecionados no Filtro");
+                Dsl.Clicar(webDriver, GlobalVariables.SelecionarTodosAtivos, "Campo Selecionar Todos os Ativos");
+                Dsl.Clicar(webDriver, GlobalVariables.AplicarAtivos, "Botão Aplicar Ativos Selecionados");
                 break;
-            case "Fisica":
-                foreach (var nomeAtivo in ativosFisicos)
+            case ClienteUpSell.ClienteExpert:
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarInvetario, "Botão Filtrar Invetários");
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TipoMidia);
+
+                if (tipoMidiaAtivo.Equals("Grafica"))
                 {
-                    Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.PesquisarAtivos, nomeAtivo);
-                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarAtivosFiltro, "Campo Seleciona Ativo Filtrado");
-                    webDriver.FindElement(By.XPath(GlobalVariables.PesquisarAtivos)).SendKeys(Keys.Control + "a" + Keys.Backspace); //Apagando o nome do ativo do campo de pesquisa
-                    Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarAtivo, "Tela Filtrar Ativos");
+                    Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.TipoMidia, tipoMidiaAtivo);
+                    Dsl.Esperar(500);
+                    Dsl.Clicar(webDriver, GlobalVariables.SelecionarTipoMidiaGrafica, "Campo Seleciona Tipo Midia Filtrada");
+                    Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarInventario, "Tela Filtrar Inventário");
+
+                    Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.Loja, lojas[0]);
+                    Dsl.Esperar(500);
+                    Dsl.Clicar(webDriver, GlobalVariables.Loja, "Campo Seleciona Loja Filtrada");
+
+                    foreach (var nomeAtivo in ativosGraficos)
+                    {
+                        Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.TipoMidia, nomeAtivo);
+                        Dsl.Esperar(500);
+                        string xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
+                        Dsl.Clicar(webDriver, xpathElemento, "Campo Seleciona Ativo Filtrado");
+                        webDriver.FindElement(By.XPath(GlobalVariables.PesquisarAtivos)).SendKeys(Keys.Control + "a" + Keys.Backspace); //Apagando o nome do ativo do campo de pesquisa
+                    }
+
+                    Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarInventario, "Tela Filtrar Inventário");
                 }
+                else if (tipoMidiaAtivo.Equals("Fisica"))
+                {
+                    Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.TipoMidia, tipoMidiaAtivo);
+                    Dsl.Esperar(500);
+                    Dsl.Clicar(webDriver, GlobalVariables.SelecionarTipoMidiaGrafica, "Campo Seleciona Tipo Midia Filtrada");
+                    Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarInventario, "Tela Filtrar Inventário");
+
+                    foreach (var nomeAtivo in ativosFisicos)
+                    {
+                        Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.TipoMidia, nomeAtivo);
+                        Dsl.Esperar(500);
+                        string xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']";
+                        Dsl.Clicar(webDriver, xpathElemento, "Campo Seleciona Ativo Filtrado");
+                        webDriver.FindElement(By.XPath(GlobalVariables.PesquisarAtivos)).SendKeys(Keys.Control + "a" + Keys.Backspace); //Apagando o nome do ativo do campo de pesquisa
+                    }
+
+                    Dsl.Clicar(webDriver, GlobalVariables.TelaFiltrarInventario, "Tela Filtrar Inventário");
+                }
+
+                Dsl.Clicar(webDriver, GlobalVariables.ConfirmarFiltroInventario, "Botão Confirmar Ativos Selecionados no Filtro");
                 break;
         }
-
-        Dsl.Clicar(webDriver, GlobalVariables.OkFiltroAtivos, "Botão OK Ativos Selecionados no Filtro");
-        Dsl.Clicar(webDriver, GlobalVariables.SelecionarTodosAtivos, "Campo Selecionar Todos os Ativos");
-        Dsl.Clicar(webDriver, GlobalVariables.AplicarAtivos, "Botão Aplicar Ativos Selecionados");
 
         return this;
     }
@@ -126,11 +195,11 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="contextoDeTestes"></param>
     /// <returns></returns>
-    public PlanosContratosPage PreencherQuantidadeAtivos(string contextoDeTestes, string tipoAtivoMidia)
+    public PlanosContratosPage PreencherQuantidadeAtivos(string tipoAtivoMidia)
     {
-        switch (contextoDeTestes)
+        switch (clienteUpSellAtual)
         {
-            case "SemPlantaLoja":
+            case ClienteUpSell.ClienteStart:
                 if (tipoAtivoMidia.Equals("Grafica"))
                 {
                     Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
@@ -153,13 +222,41 @@ public class PlanosContratosPage
                     }
                 }
                 break;
-            case "ComPlantaLoja":
+            case ClienteUpSell.ClientePro:
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.AplicarAceleradorPorLojaSimulacao);
                 Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.AceleradorQuantidadeAlocarSimulacao, "5");
                 Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaSimulacao, "Botão Aplicar Quantidade para Todas as Lojas na Simulação do Plano");
                 Dsl.Esperar(500);
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
                 break;
+            case ClienteUpSell.ClienteExpert:
+                break;
+                /*case "SemPlantaLoja":
+                        if (tipoAtivoMidia.Equals("Grafica"))
+                        {
+                            Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
+                            foreach (var nomeAtivo in ativosGraficos)
+                            {
+                                for (var i = 0; i < 4; i++)
+                                {
+                                    //Informando a quantidade de ativos por loja
+                                    webDriver.FindElement(By.XPath($"//*[text()='{nomeAtivo}']/following-sibling::td[13]//span[@aria-label='Increase Value']")).Click();
+                                }
+                            }
+                        }
+                        else if (tipoAtivoMidia.Equals("Fisica"))
+                        {
+                            Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
+                            foreach (var nomeAtivo in ativosFisicos)
+                            {
+                                for (var i = 0; i < 4; i++)
+                                {
+                                    //Informando a quantidade de ativos por loja
+                                    webDriver.FindElement(By.XPath($"//*[text()='{nomeAtivo}']/following-sibling::td[13]//span[@aria-label='Increase Value']")).Click();
+                                }
+                            }
+                        }
+                        break;*/
         }
 
         return this;
@@ -172,16 +269,46 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage SelecionarLojas()
     {
-        Dsl.Clicar(webDriver, GlobalVariables.CarregarLojas, "Botão Carregar Lojas");
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MenuLojas);
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
+        List<string> lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
 
-        var lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
-
-        for (var i = 1; i <= lojas.Count; i++)
+        switch (clienteUpSellAtual)
         {
-            var lojaAtual = webDriver.FindElements(By.XPath(GlobalVariables.SelecionarLojaCheckbox(lojas[i - 1])));
-            if (lojaAtual.Count > 0) lojaAtual[0].Click();
+            case ClienteUpSell.ClienteStart:
+            case ClienteUpSell.ClientePro:
+                Dsl.Clicar(webDriver, GlobalVariables.CarregarLojas, "Botão Carregar Lojas");
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MenuLojas);
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
+
+                var quantidadeLojasCarregadas = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TabelaLojasPlano) - 1; //Contar linhas no elemento tbody da listagem de lojas carregadas na simulação do plano, ignorando a tag tr sem dados
+
+                for (var i = 1; i <= quantidadeLojasCarregadas; i++)
+                {
+                    webDriver.FindElement(By.XPath($"//tbody/tr[{i + 1}]/td[9]//input[@class='ant-checkbox-input']")).Click();
+                }
+                for (var i = 1; i <= lojas.Count; i++)
+                {
+                    var lojaAtual = webDriver.FindElements(By.XPath(GlobalVariables.SelecionarLojaCheckbox(lojas[i - 1])));
+                    if (lojaAtual.Count > 0) lojaAtual[0].Click();
+                }
+                break;
+            case ClienteUpSell.ClienteExpert:
+                foreach (var loja in lojas)
+                {
+                    for (var j = 1; j <= 12; j++)
+                    {
+                        string xpathElemento = $"(//span[@aria-label='unlock'])[{j}]";
+                        webDriver.FindElement(By.XPath(xpathElemento)).Click();
+                        Dsl.Esperar(500);
+                    }
+
+                    Dsl.Clicar(webDriver, GlobalVariables.FiltrarInvetario, "Botão Filtrar Invetários");
+                    Dsl.Esperar(500);
+                    Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.Loja, loja);
+                    Dsl.Clicar(webDriver, GlobalVariables.ConfirmarFiltroInventario, "Botão Confirmar Ativos Selecionados no Filtro");
+                    Dsl.Esperar();
+                }
+                break;
+
         }
 
         return this;
@@ -191,28 +318,26 @@ public class PlanosContratosPage
     /// Método para gerar o pré-plano, clicando no botão Gera Pré-Plano
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage GerarPrePlano(string contextoDeTeste)
+    public PlanosContratosPage GerarPrePlano()
     {
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.GerarPrePlano);
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlano, "Botão Gerar Pré-Plano");
 
-        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
-        Dsl.Esperar(500);
-
-        if (contextoDeTeste.Equals("SemPlantaLoja"))
+        if (clienteUpSellAtual == ClienteUpSell.ClientePro)
         {
             Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadProcurandoEtapa);
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02SP");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowSP, "Campo Selecionar Usuário Responsável");
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02Pro");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowPro, "Campo Selecionar Usuário Responsável");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
         }
-        else
+        else if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
             Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadProcurandoEtapa);
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02CP");
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowCP, "Campo Selecionar Usuário Responsável");
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.PreencherUsuarioResponsavelEtapaWorkflow, "UserHomolog02Expert");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarUsuarioResponsavelEtapaWorkflowExpert, "Campo Selecionar Usuário Responsável");
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
         }
 
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.GerarPrePlanoComWorkflowSelecionado, "Botão Gerar Pré-Plano com Workflow");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarRegistro);
 
         return this;
@@ -224,32 +349,62 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarPlanoCriado()
     {
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.EtapasWorkflowGraficoPlano);
-        Dsl.Esperar();
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
-
-        IList<IWebElement> elementos = Dsl.ObterListaDeElementos(webDriver, GlobalVariables.EtapasWorkflowPlano);
-        IList<string> nomesEtapasWorkflowPlanoAtual = elementos.Select(elementos => elementos.Text).ToList();
-
-        foreach (var (nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado) in nomesEtapasWorkflowPlanoAtual.Zip(etapaNomeWorkflowPlanoEsperado, (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado) => (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado)))
+        if (clienteUpSellAtual == ClienteUpSell.ClienteStart)
         {
-            Dsl.ValidarTextosNoElemento(nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado);
-        }
+            for (int i = 0; i < abasPlanoEsperado.Count - 1; i++)
+            {
+                var nomeAbaPlano = abasPlanoEsperado[i];
+                Dsl.Esperar(500);
+                var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
+                Dsl.Clicar(webDriver, xpathElemento, "Abas Edição Plano");
 
-        foreach (var nomeAbaPlano in abasPlanoEsperado)
+                var tituloAbaAtual = Dsl.ObterTextoDoElemento(webDriver, xpathElemento, "Abas Edição Plano");
+                var tituloAbaEsperado = nomeAbaPlano;
+
+                Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
+
+                if (nomeAbaPlano.Equals("Anexos"))
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaAnexos);
+                else if (nomeAbaPlano.Equals("Book Fotográfico"))
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaBookFotografico);
+                else if (nomeAbaPlano.Equals("Painel da indústria"))
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaPainelIndustria);
+            }
+        }
+        else
         {
-            Dsl.Esperar(500);
-            var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
-            Dsl.Clicar(webDriver, xpathElemento, "Abas Edição Plano");
+            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.EtapasWorkflow);
+            IList<IWebElement> elementos = Dsl.ObterListaDeElementos(webDriver, GlobalVariables.EtapasWorkflowPlano);
+            IList<string> nomesEtapasWorkflowPlanoAtual = elementos.Select(elementos => elementos.Text).ToList();
 
-            var tituloAbaAtual = Dsl.ObterTextoDoElemento(webDriver, xpathElemento, "Abas Edição Plano");
-            var tituloAbaEsperado = nomeAbaPlano;
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.EtapasWorkflowGraficoPlano);
+            Dsl.Esperar();
+            Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbasPlano);
 
-            Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
-            if (nomeAbaPlano.Equals("Anexos") || nomeAbaPlano.Equals("Book Fotográfico") || nomeAbaPlano.Equals("Painel da indústria"))
-                Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
+            foreach (var (nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado) in nomesEtapasWorkflowPlanoAtual.Zip(etapaNomeWorkflowPlanoEsperado, (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado) => (nomesEtapasWorkflowPlanoAtual, nomeEtapaWorkflowPlanoEsperado)))
+            {
+                Dsl.ValidarTextosNoElemento(nomeEtapaWorkflowAtual, nomeEtapaWorkflowEsperado);
+            }
+
+            foreach (var nomeAbaPlano in abasPlanoEsperado)
+            {
+                Dsl.Esperar(500);
+                var xpathElemento = $"//div[contains(@class,'ant-tabs-tab')]/div[contains(text(),'{nomeAbaPlano}')]";
+                Dsl.Clicar(webDriver, xpathElemento, "Abas Edição Plano");
+
+                var tituloAbaAtual = Dsl.ObterTextoDoElemento(webDriver, xpathElemento, "Abas Edição Plano");
+                var tituloAbaEsperado = nomeAbaPlano;
+
+                Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
+
+                if (nomeAbaPlano.Equals("Anexos"))
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaAnexos);
+                else if (nomeAbaPlano.Equals("Book Fotográfico"))
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaBookFotografico);
+                else if (nomeAbaPlano.Equals("Painel da indústria"))
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaPainelIndustria);
+            }
         }
-
         return this;
     }
 
@@ -266,6 +421,18 @@ public class PlanosContratosPage
 
         var farolPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.FarolPlano, "Coluna Farol Plano");
         Assert.That(farolPlanoAtual, Does.Contain(farolPlanoEsperado), "Farol atual não corresponde com o esperado");
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para recarregar planos
+    /// </summary>
+    /// <returns></returns>
+    public PlanosContratosPage RecarregarPlanos()
+    {
+        Dsl.Clicar(webDriver, GlobalVariables.RecarregarTela, "Botão Recarregar Tela");
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadListaPlanos);
 
         return this;
     }
@@ -328,7 +495,7 @@ public class PlanosContratosPage
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "nomeCampanha")), "Botão Editar Plano");
         }
-        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaDadosPlano);
         Dsl.EsperarElementoFicarClicavel(webDriver, "//*[@id='rc-tabs-0-panel-1']/div/div/div/div/form/div[1]/div[1]/div[7]/button", "Botão Abrir Modal Desconto");
 
         return this;
@@ -344,8 +511,6 @@ public class PlanosContratosPage
         int avancarMesCalendarioEm = 2;
 
         var teste = TestContext.CurrentContext.Test.MethodName;
-
-        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
 
         if (teste.Equals("TestCriarPlanoComAlertaDeInventario"))
         {
@@ -374,116 +539,116 @@ public class PlanosContratosPage
     /// <param name="avancoCalendarioInicioVigencia"></param>
     /// <param name="avancoCalendarioFimVigencia"></param>
     /// <returns></returns>
-    public PlanosContratosPage SelecionarVigenciaDoTrade(IWebElement inicioVigenciaTrade, IWebElement fimVigenciaTrade, string contextoDeTeste)
+    public PlanosContratosPage SelecionarVigenciaDoTrade(IWebElement inicioVigenciaTrade, IWebElement fimVigenciaTrade)
     {
-        if (contextoDeTeste.Equals("SemPlantaLoja"))
+        switch (clienteUpSellAtual)
         {
-            var avancarMesCalendarioEm = 2;
+            case ClienteUpSell.ClienteStart:
+                var avancarMesCalendarioEm = 2;
 
-            Dsl.ClicarNoElementoId(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
-            Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
+                Dsl.ClicarNoElementoId(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
+                Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
 
-            Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
-            Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
-        }
-        else if (contextoDeTeste.Equals("ComPlantaLoja"))
-        {
-            var avancarMesCalendarioInicioVigenciaEm = 2;
-            var avancarMesCalendarioFimVigenciaEm = 3;
+                Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
+                Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
+                break;
+            case ClienteUpSell.ClientePro:
+            case ClienteUpSell.ClienteExpert:
+                var avancarMesCalendarioInicioVigenciaEm = 2;
+                var avancarMesCalendarioFimVigenciaEm = 3;
 
-            Dsl.ClicarNoElementoId(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
-            Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioFimVigenciaEm);
+                Dsl.ClicarNoElementoId(webDriver, fimVigenciaTrade, "Campo Fim Vigência do Trade");
+                Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioFimVigenciaEm);
 
-            Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
-            Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioInicioVigenciaEm);
+                Dsl.ClicarNoElementoId(webDriver, inicioVigenciaTrade, "Campo Início Vigência do Trade");
+                Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioInicioVigenciaEm);
+                break;
         }
 
         return this;
     }
 
-    public PlanosContratosPage EditarVigenciaDoAtivoAlocado(string contextoDeTestes)
+    public PlanosContratosPage EditarVigenciaDoAtivoAlocado()
     {
-        if (contextoDeTestes.Contains("SemPlantaLoja"))
-        {
-            foreach (var nomeAtivo in ativosGraficos)
-            {
-                Console.WriteLine(GlobalVariables.EditarAtivoAlocado(nomeAtivo));
-                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoAlocado(nomeAtivo), "Botão Editar Ativo");
+        var quantidadeAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
+        string editarAtivo;
 
-                //Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+        switch (clienteUpSellAtual)
+        {
+            case ClienteUpSell.ClienteStart:
+                for (var i = 1; i <= quantidadeAtivosAlocados; i++)
+                {
+                    editarAtivo = $"//tr[{i + 1}]//button/span[@aria-label='edit']";
+
+                    Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
+
+                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaAlocacaoPorLoja);
+
+                    EditarVigenciaLoja();
+
+                    SalvarAtivoAlocado();
+                }
+                break;
+            case ClienteUpSell.ClientePro:
+            case ClienteUpSell.ClienteExpert:
+                BuscarAtivosAlocadosNoPlano(ativosGraficos[0]);
+                Dsl.Esperar();
+
+                editarAtivo = "//tr[2]//button/span[@aria-label='edit']";
+
+                Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
+
                 Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
                 Dsl.Esperar();
 
-                /*var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo");
-                var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
-                int totalLojas = (int)quantidadeAtivosAlocadosLoja;*/
-
-                EditarVigenciaLoja(contextoDeTestes);
+                EditarVigenciaLoja();
 
                 SalvarAtivoAlocado();
-            }
-        }
-        else if (contextoDeTestes.Contains("ComPlantaLoja"))
-        {
-            BuscarAtivosAlocadosNoPlano(ativosGraficos[0]);
-            Dsl.Esperar();
-
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoAlocado(ativosGraficos[0]), "Botão Editar Ativo");
-
-            //Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
-            Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
-            Dsl.Esperar();
-
-            /*var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo");
-            var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
-            int totalLojas = (int)quantidadeAtivosAlocadosLoja;*/
-
-            EditarVigenciaLoja(contextoDeTestes);
-
-            SalvarAtivoAlocado();
+                break;
         }
 
         return this;
     }
 
-    public PlanosContratosPage EditarVigenciaLoja(string contextoDeTeste)
+    public PlanosContratosPage EditarVigenciaLoja()
     {
-        if (contextoDeTeste.Equals("SemPlantaLoja"))
+
+        switch (clienteUpSellAtual)
         {
-            IList<IWebElement> linhas = Dsl.ObterLinhasDoElementoTabela(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
+            case ClienteUpSell.ClienteStart:
+                Dsl.ScrollHorizontalDentroDoElementoTabela(webDriver, GlobalVariables.ScrollHorizontalTabelaLojasAtivoAlocados, GlobalVariables.ColunaVeiculacaoTradeCheckbox);
+                IList<IWebElement> linhas = Dsl.ObterLinhasDoElementoTabela(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
 
-            foreach (IWebElement linha in linhas)
-            {
-                var valorAtributo = Dsl.ObterDadosDoAtributoDoElementoId(linha, "Linha Tabela Lojas Alocadas No Ativo", "aria-hidden");
-                IList<IWebElement> colunas = Dsl.ObterColunasDoElementoTabela(linha);
-
-                if (valorAtributo == null || valorAtributo != "true")
+                foreach (IWebElement linha in linhas)
                 {
-                    Dsl.ScrollHorizontalDentroDoElementoTabela(webDriver, GlobalVariables.ScrollHorizontalTabelaLojasAtivoAlocados, GlobalVariables.ColunaVeiculacaoTradeCheckbox);
+                    var valorAtributo = Dsl.ObterDadosDoAtributoDoElementoId(linha, "Lojas Alocadas No Ativo", "aria-hidden");
+                    IList<IWebElement> colunas = Dsl.ObterColunasDoElementoTabela(linha);
 
-                    var inicioVigencia = colunas[7]; //mudar futuramente para pegar o xpath da vigencia inicioVigencia-<NomeLoja>
-                    var fimVigencia = colunas[8]; //mudar futuramente para pegar o xpath da vigencia fimVigencia-<NomeLoja>
+                    if (valorAtributo == null || valorAtributo != "true")
+                    {
+                        Dsl.ScrollHorizontalDentroDoElementoTabela(webDriver, GlobalVariables.ScrollHorizontalTabelaLojasAtivoAlocados, GlobalVariables.ColunaVeiculacaoTradeCheckbox);
 
-                    SelecionarVigenciaDoTrade(inicioVigencia, fimVigencia, contextoDeTeste);
+                        var inicioVigencia = colunas[7]; //mudar futuramente para pegar o xpath da vigencia inicioVigencia-<NomeLoja>
+                        var fimVigencia = colunas[8]; //mudar futuramente para pegar o xpath da vigencia fimVigencia-<NomeLoja>
+
+                        SelecionarVigenciaDoTrade(inicioVigencia, fimVigencia);
+                    }
                 }
-            }
-        }
-        else if (contextoDeTeste.Equals("ComPlantaLoja"))
-        {
-            var mensagemSucessoEsperadaProdutosInseridos = "Produtosinseridoscomsucesso!";
+                break;
+            case ClienteUpSell.ClientePro:
+            case ClienteUpSell.ClienteExpert:
 
-            IWebElement iniciovigencia = Dsl.EncontrarElemento(webDriver, GlobalVariables.AceleradorInicioVigenciaTrade, "Campo Início Vigência no Acelerador");
-            IWebElement fimvigencia = Dsl.EncontrarElemento(webDriver, GlobalVariables.AceleradorFimVigenciaTrade, "Campo Fim Vigência no Acelerador");
+                IWebElement iniciovigencia = Dsl.EncontrarElemento(webDriver, GlobalVariables.AceleradorInicioVigenciaTrade, "Campo Início Vigência no Acelerador");
+                IWebElement fimvigencia = Dsl.EncontrarElemento(webDriver, GlobalVariables.AceleradorFimVigenciaTrade, "Campo Fim Vigência no Acelerador");
 
-            Dsl.ScrollHorizontalDentroDoElementoTabela(webDriver, GlobalVariables.ScrollTabelaLojasAtivoAlocados, GlobalVariables.ColunaVeiculacaoTrade);
+                SelecionarVigenciaDoTrade(iniciovigencia, fimvigencia);
 
-            SelecionarVigenciaDoTrade(iniciovigencia, fimvigencia, contextoDeTeste);
+                Dsl.Clicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaAtivoAlocado, "Botão Aplicar Vigência para Todas as Lojas");
 
-            Dsl.Clicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaAtivoAlocado, "Botão Aplicar Vigência para Todas as Lojas");
+                List<MensagemFeedback> mensagensAtuais = Dsl.ObterMensagensDeFeedback(webDriver, GlobalVariables.MensagemDeFeedback);
 
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-            ValidarMensagensDoPlano(mensagemSucessoEsperadaProdutosInseridos);
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                Dsl.ValidarMensagemDeFeedbacak(mensagensEsperadas, mensagensAtuais);
+                break;
         }
 
         return this;
@@ -499,12 +664,11 @@ public class PlanosContratosPage
     public PlanosContratosPage SalvarPlano()
     {
         var mensagemPlanoAlteradoEsperada = "OPlanofoialteradocomsucesso!";
+        var teste = TestContext.CurrentContext.Test.MethodName;
 
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AbaDadosPlano, "Aba Dados Plano");
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarRegistro);
         Dsl.Clicar(webDriver, GlobalVariables.SalvarRegistro, "Botão Salvar Plano");
-
-        var teste = TestContext.CurrentContext.Test.MethodName;
 
         if (!string.IsNullOrEmpty(teste) && teste.Equals("TestCancelarPlano"))
             ConfirmarCancelamentoDoPlano();
@@ -566,93 +730,70 @@ public class PlanosContratosPage
     /// <summary>
     /// Método para editar as quantidades dos ativos por loja
     /// </summary>
-    /// <param name="contextoDeTestes"></param>
     /// <returns></returns>
-    public PlanosContratosPage EditarQuantidadesDosAtivosNoPlano(string contextoDeTestes)
+    public PlanosContratosPage EditarQuantidadesDosAtivosNoPlano()
     {
-        var mensagemSucessoEsperadaAlocacaoAtualizada = "Alocaçãoatualizadacomsucesso!";
-        var mensagemSucessoEsperadaProdutosAtualizados = "Produtosatualizadoscomsucesso!";
+        string mensagemSucessoEsperadaAlocacaoAtualizada = "Alocaçãoatualizadacomsucesso!";
+        string nomeAtivoAlocadoEsperado;
+        string nomeAtivoAlocadoAtual;
+        string editarAtivo;
+        IList<string> nomesAtivosAlocadosEsperados = ativosGraficos;
 
-        if (contextoDeTestes.Contains("SemPlantaLoja"))
+        switch (clienteUpSellAtual)
         {
-            IList<string> nomesAtivosAlocadosEsperados = ativosGraficos;
+            case ClienteUpSell.ClienteStart:
+                int qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
 
-            var qtdAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
+                for (var i = 1; i <= qtdAtivosAlocados; i++)
+                {
+                    editarAtivo = $"//tr[{i + 1}]//button/span[@aria-label='edit']";
 
-            for (var i = 1; i <= qtdAtivosAlocados; i++)
-            {
-                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoAlocado(nomesAtivosAlocadosEsperados[i - 1]), "Botão Editar Ativo");
+                    Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
 
-                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LinhaTabelaLojasAtivoAlocados);
+                    Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LinhaTabelaLojasAtivoAlocados);
+                    Dsl.Esperar();
+
+                    nomeAtivoAlocadoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.NomeAtivoAlocacao, "Campo Nome Ativo");
+                    nomeAtivoAlocadoEsperado = nomesAtivosAlocadosEsperados[i - 1];
+
+                    Dsl.ValidarTextosNoElemento(nomeAtivoAlocadoAtual, nomeAtivoAlocadoEsperado);
+
+                    AumentarQuantidadeAtivosPorLoja();
+
+                    Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+
+                    Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+                    Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+
+                    ValidarMensagensDoPlano(mensagemSucessoEsperadaAlocacaoAtualizada);
+
+                    Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+                    Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                }
+                break;
+            case ClienteUpSell.ClientePro:
+            case ClienteUpSell.ClienteExpert:
+                nomeAtivoAlocadoEsperado = nomesAtivosAlocadosEsperados.FirstOrDefault();
+                BuscarAtivosAlocadosNoPlano(nomeAtivoAlocadoEsperado);
                 Dsl.Esperar();
 
-                var nomeAtivoAlocadoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.NomeAtivoAlocacao, "Campo Nome Ativo");
-                var nomeAtivoAlocadoEsperado = nomesAtivosAlocadosEsperados[i - 1];
+                editarAtivo = "//tr[2]//button/span[@aria-label='edit']";
 
-                Dsl.ValidarTextosNoElemento(nomeAtivoAlocadoAtual, nomeAtivoAlocadoEsperado);
+                Dsl.EsperarElementoParaClicar(webDriver, editarAtivo, "Botão Editar Ativo");
 
-                var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo");
-                var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
-
-                var lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
-
-                foreach (string loja in lojas)
-                {
-                    //Aumentando a quantidade de alocação por loja
-
-                    var elemento = webDriver.FindElement(By.XPath(GlobalVariables.QuantidadeAlocacaoLoja(loja)));
-                    if (elemento == null) continue;
-
-                    int valorAtual = int.Parse(Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.QuantidadeAlocacaoLoja(loja), "Campo Quantidade Alocada por Loja", "value")) + 1;
-                    elemento?.SendKeys(Keys.Control + "a");
-                    elemento?.SendKeys($"{valorAtual}");
-                }
-
-                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
-                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
-
-                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-
-                ValidarMensagensDoPlano(mensagemSucessoEsperadaAlocacaoAtualizada);
-
-                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-            }
-        }
-        else if (contextoDeTestes.Contains("ComPlantaLoja"))
-        {
-            //string[] nomesAtivosAlocadosEsperados = { "Adesivo de Check Out -", "Adesivo de Check Out - E01", "Adesivo de Check Out - E02", "Adesivo de Check Out - E03" };
-            string nomeAtivoAlocadoEsperado = ativosGraficos[0];
-
-            BuscarAtivosAlocadosNoPlano(nomeAtivoAlocadoEsperado);
-            Dsl.Esperar();
-
-            var quantidadeAtivosAlocados = Dsl.ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(webDriver, GlobalVariables.TabelaAtivosPlano);
-
-            for (var i = 1; i <= quantidadeAtivosAlocados; i++)
-            {
-                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoAlocado(nomeAtivoAlocadoEsperado), "Botão Editar Ativo");
-
-                //Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TabelaLojasAtivoAlocados);
                 Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
                 Dsl.Esperar(3000);
 
-                var textoQuantidadeLojasAtivoAlocado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Label Quantidade de Lojas no Ativo Alocado");
+                string textoQuantidadeLojasAtivoAlocado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Label Quantidade de Lojas no Ativo Alocado");
                 var quantidadeLojasAtivoAlocadoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(textoQuantidadeLojasAtivoAlocado, "Label Quantidade de Lojas no Ativo Alocado");
                 Dsl.ValidarNumerosNoElemento(quantidadeLojasAtivoAlocadoAtual, 20, "Label Quantidade de Loja no Ativo Alocado");
 
-                var nomeAtivoAlocadoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.NomeAtivoAlocacao, "Campo Nome Ativo");
-                //var nomeAtivoAlocadoEsperado = nomesAtivosAlocadosEsperados[i - 1];
+                nomeAtivoAlocadoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.NomeAtivoAlocacao, "Campo Nome Ativo");
 
                 Dsl.ValidarTextosNoElemento(nomeAtivoAlocadoAtual, nomeAtivoAlocadoEsperado);
 
-                Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.AceleradorQuantidadeAlocarTrade, "6");
-                Dsl.Clicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaAtivoAlocado, "Botão Aplicar Quantidade para Todas as Lojas");
-
-                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-                ValidarMensagensDoPlano(mensagemSucessoEsperadaProdutosAtualizados);
-                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                AumentarQuantidadeAtivosPorLoja();
 
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
                 Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
@@ -665,7 +806,7 @@ public class PlanosContratosPage
 
                 Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
                 Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-            }
+                break;
         }
 
         return this;
@@ -679,7 +820,6 @@ public class PlanosContratosPage
     {
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.AbaAtivosAlocados);
         Dsl.Clicar(webDriver, GlobalVariables.AbaAtivosAlocados, "Aba Ativos Alocados");
-        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
 
         return this;
     }
@@ -687,67 +827,67 @@ public class PlanosContratosPage
     /// <summary>
     /// Método para alocar um novo ativo para as lojas do plano
     /// </summary>
-    /// <param name="contextoDeTeste"></param>
     /// <returns></returns>
-    public PlanosContratosPage AlocarNovosAtivosNoPlano(string contextoDeTeste)
+    public PlanosContratosPage AlocarNovosAtivosNoPlano()
     {
         string mensagemSucessoEsperadaAlocacaoAtualizada = "Alocaçãoatualizadacomsucesso!";
         string ativoNome = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "ativoNome");
 
-        if (contextoDeTeste.Contains("SemPlantaLoja"))
+        switch (clienteUpSellAtual)
         {
-            var xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";
+            case ClienteUpSell.ClienteStart:
+                var xpathElemento = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";
 
-            Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome);
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, xpathElemento);
-            Dsl.Clicar(webDriver, xpathElemento, "Campo Selecionar Ativo");
+                Dsl.Clicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, xpathElemento);
+                Dsl.Clicar(webDriver, xpathElemento, "Campo Selecionar Ativo");
 
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LinhaTabelaLojasAtivoAlocados);
-            Dsl.Esperar();
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LinhaTabelaLojasAtivoAlocados);
+                Dsl.Esperar();
 
-            AumentarQuantidadeAtivosPorLoja(contextoDeTeste);
+                AumentarQuantidadeAtivosPorLoja();
 
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
-            Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
 
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
 
-            ValidarMensagensDoPlano(mensagemSucessoEsperadaAlocacaoAtualizada);
+                ValidarMensagensDoPlano(mensagemSucessoEsperadaAlocacaoAtualizada);
 
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-        }
-        else if (contextoDeTeste.Contains("ComPlantaLoja"))
-        {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
-            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome);
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                break;
+            case ClienteUpSell.ClientePro:
+            case ClienteUpSell.ClienteExpert:
+                Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome);
 
-            var elementoAtivoNome = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, elementoAtivoNome);
-            Dsl.Clicar(webDriver, elementoAtivoNome, "Campo Selecionar Ativo");
+                var elementoAtivoNome = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, elementoAtivoNome);
+                Dsl.Clicar(webDriver, elementoAtivoNome, "Campo Selecionar Ativo");
 
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LinhaTabelaLojasAtivoAlocados);
-            //Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaSpiner);
-            Dsl.Esperar(2000);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LinhaTabelaLojasAtivoAlocados);
+                Dsl.Esperar(2000);
 
-            var textoQuantidadeLojasAtivoAlocado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Label Quantidade de Lojas no Ativo Alocado");
-            var quantidadeLojasAtivoAlocadoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(textoQuantidadeLojasAtivoAlocado, "Label Quantidade de Lojas no Ativo Alocado");
-            Dsl.ValidarNumerosNoElemento(quantidadeLojasAtivoAlocadoAtual, 20, "Label Quantidade de Loja no Ativo Alocado");
+                var textoQuantidadeLojasAtivoAlocado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Label Quantidade de Lojas no Ativo Alocado");
+                var quantidadeLojasAtivoAlocadoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(textoQuantidadeLojasAtivoAlocado, "Label Quantidade de Lojas no Ativo Alocado");
+                Dsl.ValidarNumerosNoElemento(quantidadeLojasAtivoAlocadoAtual, 20, "Label Quantidade de Loja no Ativo Alocado");
 
-            AumentarQuantidadeAtivosPorLoja(contextoDeTeste);
+                AumentarQuantidadeAtivosPorLoja();
 
-            Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
-            Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+                Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
 
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
 
-            ValidarMensagensDoPlano(mensagemSucessoEsperadaAlocacaoAtualizada);
+                ValidarMensagensDoPlano(mensagemSucessoEsperadaAlocacaoAtualizada);
 
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
+                break;
         }
 
         return this;
@@ -756,40 +896,40 @@ public class PlanosContratosPage
     /// <summary>
     /// Método para aumentar as quantidades de ativos alocados por loja
     /// </summary>
-    /// <param name="contextoDeTeste"></param>
     /// <returns></returns>
-    public PlanosContratosPage AumentarQuantidadeAtivosPorLoja(string contextoDeTeste)
+    public PlanosContratosPage AumentarQuantidadeAtivosPorLoja()
     {
-        var mensagemAlertaSalvarInformacoes = "Salvesuasinformaçõesparapoderincluirprodutofoco!";
+        var teste = TestContext.CurrentContext.Test.MethodName;
 
-        if (contextoDeTeste.Contains("SemPlantaLoja"))
+        switch (clienteUpSellAtual)
         {
-            var texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo");
-            var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
+            case ClienteUpSell.ClienteStart:
+                string texto = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Campo Total Lojas por Ativo");
+                var quantidadeAtivosAlocadosLoja = Dsl.RemoverLetrasEspacosDeUmTexto(texto, "Campo Total Lojas por Ativo"); //Descobrindo a quantidade de lojas no plano para o ativo alocado
 
-            var lojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
+                if (quantidadeAtivosAlocadosLoja is int)
+                {
+                    int qtd = (int)quantidadeAtivosAlocadosLoja;
+                    for (var i = 1; i <= qtd; i++)
+                    {
+                        //Aumentando a quantidade de alocação por loja
+                        webDriver.FindElement(By.XPath($"//tr[{i + 1}]/td[22]/div//span[@aria-label='Increase Value']")).Click();
+                    }
+                }
+                break;
+            case ClienteUpSell.ClientePro:
+            case ClienteUpSell.ClienteExpert:
+                if (teste.Equals("TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel"))
+                    Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.AceleradorQuantidadeAlocarTrade, "1");
+                else
+                    Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.AceleradorQuantidadeAlocarTrade, "6");
 
-            foreach (string loja in lojas)
-            {
-                //Aumentando a quantidade de alocação por loja
+                Dsl.Clicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaAtivoAlocado, "Botão Aplicar Quantidade para Todas as Lojas");
 
-                var elemento = webDriver.FindElement(By.XPath(GlobalVariables.QuantidadeAlocacaoLoja(loja)));
-                if (elemento == null) continue;
+                List<MensagemFeedback> mensagensAtuais = Dsl.ObterMensagensDeFeedback(webDriver, GlobalVariables.MensagemDeFeedback);
 
-                elemento?.SendKeys(Keys.Control + "a");
-                var valorAtual = int.Parse(Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.QuantidadeAlocacaoLoja(loja), "Campo Quantidade Alocada por Loja", "value")) + 1;
-                elemento?.SendKeys($"{valorAtual}");
-            }
-        }
-        else if (contextoDeTeste.Contains("ComPlantaLoja"))
-        {
-            Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.AceleradorQuantidadeAlocarTrade, "1");
-            Dsl.Clicar(webDriver, GlobalVariables.AplicarAceleradorPorLojaAtivoAlocado, "Botão Aplicar Quantidade para Todas as Lojas");
-
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-            ValidarMensagensDoPlano(mensagemAlertaSalvarInformacoes);
-            Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeComunicacao);
-            Dsl.Esperar();
+                Dsl.ValidarMensagemDeFeedbacak(mensagensEsperadas, mensagensAtuais);
+                break;
         }
 
         return this;
@@ -804,8 +944,6 @@ public class PlanosContratosPage
     {
         var valorSetorDepartamentoCategoria = "Geral";
         var teste = TestContext.CurrentContext.Test.MethodName;
-
-        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner);
 
         if (!string.IsNullOrEmpty(teste) && teste.Equals("TestAprovarPlano"))
         {
@@ -949,9 +1087,8 @@ public class PlanosContratosPage
     /// <summary>
     /// Método para validar o valor de receita dos ativos e do plano
     /// </summary>
-    /// <param name="contextoDeTeste"></param>
     /// <returns></returns>
-    public PlanosContratosPage ValidarReceitasDoPlano(string contextoDeTeste)
+    public PlanosContratosPage ValidarReceitasDoPlano()
     {
         var tipoAtributo = "value";
         var teste = TestContext.CurrentContext.Test.MethodName;
@@ -961,29 +1098,29 @@ public class PlanosContratosPage
 
         try
         {
-            switch (contextoDeTeste)
+            switch (clienteUpSellAtual)
             {
-                case "SemPlantaLoja":
-                    if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
+                case ClienteUpSell.ClienteStart:
+                    if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaGrafica"))
                     {
-                        var valorReceitaAtivosEsperado = 750.00;
+                        var valorReceitaAtivosEsperado = 789.75;
                         var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
                         var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                        var valorReceitaPlanoEsperado = 825.00;
+                        var valorReceitaPlanoEsperado = 904.50;
                         var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
                         var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Ativos");
 
                         Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
                         Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
                     }
-                    else if (teste.Equals("TestCriarPlanoComWorkflow"))
+                    else if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
                     {
-                        var valorReceitaAtivosEsperado = 527.50;
+                        var valorReceitaAtivosEsperado = 526.50;
                         var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
                         var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                        var valorReceitaPlanoEsperado = 605.00;
+                        var valorReceitaPlanoEsperado = 603.00;
                         var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
                         var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
@@ -992,11 +1129,11 @@ public class PlanosContratosPage
                     }
                     else if (teste.Equals("TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel"))
                     {
-                        var valorReceitaAtivosEsperado = 900.00;
+                        var valorReceitaAtivosEsperado = 947.70;
                         var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
                         var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                        var valorReceitaPlanoEsperado = 990.00;
+                        var valorReceitaPlanoEsperado = 1085.40;
                         var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
                         var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
@@ -1005,11 +1142,11 @@ public class PlanosContratosPage
                     }
                     else if (teste.Equals("TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel"))
                     {
-                        var valorReceitaAtivosEsperado = 950.00;
+                        var valorReceitaAtivosEsperado = 1000.35;
                         var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
                         var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                        var valorReceitaPlanoEsperado = 1045.00;
+                        var valorReceitaPlanoEsperado = 1145.70;
                         var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
                         var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
@@ -1017,8 +1154,9 @@ public class PlanosContratosPage
                         Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
                     }
                     break;
-                case "ComPlantaLoja":
-                    if (teste.Equals("TestCriarPlanoComWorkflowPadrao"))
+                case ClienteUpSell.ClientePro:
+                case ClienteUpSell.ClienteExpert:
+                    if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaGrafica"))
                     {
                         var valorReceitaAtivosEsperado = 3000.00;
                         var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
@@ -1031,13 +1169,13 @@ public class PlanosContratosPage
                         Dsl.ValidarNumerosNoElemento(valorReceitaAtivosAtual, valorReceitaAtivosEsperado, "Campo Receita Ativos");
                         Dsl.ValidarNumerosNoElemento(valorReceitaPlanoAtual, valorReceitaPlanoEsperado, "Campo Receita Plano");
                     }
-                    else if (teste.Equals("TestCriarPlanoComWorkflow"))
+                    else if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
                     {
-                        var valorReceitaAtivosEsperado = 2000.00;
+                        var valorReceitaAtivosEsperado = 2110.00;
                         var valorReceitaAtivos = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaAtivos, "Campo Receita Ativos", tipoAtributo);
                         var valorReceitaAtivosAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaAtivos, "Campo Receita Ativos");
 
-                        var valorReceitaPlanoEsperado = 2200.00;
+                        var valorReceitaPlanoEsperado = 2420.00;
                         var valorReceitaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.ReceitaPlano, "Campo Receita Plano", tipoAtributo);
                         var valorReceitaPlanoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(valorReceitaPlano, "Campo Receita Plano");
 
@@ -1077,7 +1215,6 @@ public class PlanosContratosPage
         }
         catch (Exception ex)
         { throw new Exception(ex.Message + "\n"); }
-
 
         return this;
     }

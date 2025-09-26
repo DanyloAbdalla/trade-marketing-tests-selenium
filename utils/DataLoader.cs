@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+namespace MeuClienteWebTestProject;
+
 public class DataLoader
 {
     private static dynamic massaDados;
@@ -19,5 +21,10 @@ public class DataLoader
     public static List<string> ObterDadosEmLista(string suite, string teste, string data)
     {
         return ((JArray)massaDados[suite][teste][data]).ToObject<List<string>>();
+    }
+
+    public static List<MensagemFeedback> ObterMensagensDeFeedback(string suite, string teste, string data)
+    {
+        return ((JArray)massaDados[suite][teste][data]).ToObject<List<MensagemFeedback>>();
     }
 }

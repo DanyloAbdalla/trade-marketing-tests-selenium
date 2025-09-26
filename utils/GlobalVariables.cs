@@ -1,17 +1,18 @@
-using OpenQA.Selenium.DevTools.V128.Page;
-
 namespace MeuClienteWebTestProject;
 
 public class GlobalVariables
 {
     #region Projeto
     public static bool handLessMode = false; //Executa, mostrando o Browser na tela, se handLessMode igual false
-    public static bool devMode = false;
-    public static bool hmlMode = true;
+    public static bool devMode = true;
+    public static bool hmlMode = false;
     public static bool prodMode = false;
     public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
     public static string urlPrdPlataforma = "https://login.meucliente.app.br/";
+    public static string[] clienteUpsell = { "ClienteStart", "ClientePro", "ClienteExpert" };
+    public static string[] emailUsuarios = { "homologacao.start@meucliente.app.br", "homologacao.pro@meucliente.app.br", "homologacao.expert@meucliente.app.br" };
+    public static string[] senhaUsuarios = { "Meucliente@st@123", "Meucliente@pr@123", "Meucliente@ex@123" };
     public static string emailUsuarioSemPlanta = "homologacao.sp@meucliente.app.br";
     public static string senhaUsuarioSemPlanta = "Meucliente@hml@123";
     public static string emailUsuarioComPlanta = "homologacao.cp@meucliente.app.br";
@@ -23,6 +24,8 @@ public class GlobalVariables
     public static string SairConta { get; set; } = "//*[contains(@class,'logout')]/ancestor::a/*[text()='Sair']";
     public static string Mensagens { get; set; } = "//*[@class='ant-message-notice']";
     public static string MensagemDeComunicacao { get; set; } = "//div[@class='Mc-message-container']/div/div";
+    public static string MensagensDeFeedback { get; set; } = "//div[@class='Mc-message-container']";
+    public static string MensagemDeFeedback { get; set; } = "//div[contains(@class, 'Mc-message Mc-message')]";
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//*[@data-testid='salvarPlano']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
@@ -42,6 +45,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Login
+    public static string LoadCarregandoPaginaSecreta { get; set; } = "//div[text()='Carregando...']";
     public static string PreencherUsuarioEmail { get; set; } = "//input[@id='username']";
     public static string PreencherUsuarioSenha { get; set; } = "//input[@id='password']";
     public static string SubmeterLogin { get; set; } = "//button/*[text()='Login']";
@@ -90,16 +94,18 @@ public class GlobalVariables
     public static string FiltrarContratoPorCampanha { get; set; } = "//span[text()='Contrato']/following-sibling::span[@role='button']";
     public static string DetalhesContratosAtivosTotalReceita { get; set; } = "//*[contains(text(),'Total de Receita')]/following-sibling::div//button[1]";
     public static string TextoCardTotalReceita { get; set; } = "//div[@class='DashBoardCards']//*[contains(text(),'índice de Crescimento')]";
-    public static string TabelaListagemAterrissagem { get; set; } = "//*[@role='tabpanel']/div/div";
+    public static string TabelaListagemAterrissagem { get; set; } = "//*[text()='Listagem de Aterrissagem receita']/../../../../../../..//table";
+    public static string PaginacaoTelaListagemAterrissagem { get; set; } = "//*[text()='Listagem de Aterrissagem receita']/../../../../../../..//ul[contains(@class,'ant-pagination')]//li[2]";
     public static string ColunaMesAterrissagem { get; set; } = "//*[text()='JANEIRO']";
     public static string DetalhesAterrissagemReceita { get; set; } = "(//*[contains(text(),'Perfomance Receita')]/following-sibling::div//button[1])[1]";
     public static string DetalhesAterrissagemReceitaPorBandeira { get; set; } = "(//*[contains(text(),'Receita Bandeira')]/following-sibling::div//button[1])[1]";
     public static string DetalhesAterrissagemReceitaPorTipoFornecedor { get; set; } = "(//*[contains(text(),'Receita Tipo Fornecedor')]/following-sibling::div//button[1])[1]";
-    public static string TabelaListagemParceiros { get; set; } = "//*[@role='tabpanel']/div/div";
+    public static string TabelaListagemParceiros { get; set; } = "//*[text()='Investimento Parceiro']/../../../../../../..//table";
+    public static string PaginacaoTelaListagemParceiros { get; set; } = "//*[text()='Investimento Parceiro']/../../../../../../..//ul[contains(@class,'ant-pagination')]//li[2]";
     public static string ColunaIndustriaParcerio { get; set; } = "//*[text()='Indústria/Parceiro']";
-    public static string DetalhesListaParceirosPerformance { get; set; } = "(//*[contains(text(),'Perfomance Parceiro')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesListaPerformanceFornecedor { get; set; } = "(//*[contains(text(),'Perfomance Fornecedor')]/following-sibling::div//button[1])[1]";
     public static string FiltrarNegociacoes { get; set; } = "//button/span[text()='Filtrar']";
-    public static string DetalhesListaParceirosInvestimento { get; set; } = "(//*[contains(text(),'Investimento por Parceiro')]/following-sibling::div//button[1])[1]";
+    public static string DetalhesListaInvestimentoParceiro { get; set; } = "(//*[contains(text(),'Investimento por Parceiro')]/following-sibling::div//button[1])[1]";
     public static string DetalhesDesempenhoPorLoja { get; set; } = "(//*[contains(text(),'Desempenho por Loja')]/following-sibling::div//button[1])[1]";
     public static string GraficoDesempenhoLoja { get; set; } = "//*[@class='ant-modal-content']//*[@class='Chart']";
     public static string FiltroDesempenhoLoja { get; set; } = "//*[@class='ant-modal-content']//*[text()='Maior Retorno']";
@@ -108,10 +114,13 @@ public class GlobalVariables
     public static string FiltroDesempenhoAtivo { get; set; } = "//*[@class='ant-modal-content']//*[text()='Maior Retorno']";
     public static string TextoCardMaisVendidosDepartamento { get; set; } = "//*[text()='Mais vendidos do Departamento']";
     public static string ModalDashboardDetalhesCards { get; set; } = "//*[@class='ant-modal-content']";
+    public static string LoadCarregandoDashboard { get; set; } = "//div[text()='Carregando dashboard...']";
     #endregion
 
     #region Elementos de página - Planos
-    public static string LoadTelaListaDePlanos { get; set; } = "(//div[@class='thin-card ant-card']//*[contains(@class,'ant-spin-dot-item')])[1]";
+    public static string LoadCarregandoPlanos { get; set; } = "//div[text()='Carregando cadastro contrato...']";
+    public static string LoadListaPlanos { get; set; } = "//h1[text()='Gestão de Planos']/../../../../..//*[@class='ant-spin-dot ant-spin-dot-spin']/i[1]";
+    public static string LoadModalPlano { get; set; } = "//div[contains(@class,'contrato-loading-overlay')]";
     public static string TabelaPlanos { get; set; } = "//table/tbody/tr";
     public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[contains(@class,'select-selector')]/span[2]";
     public static string SelecionarTodosPlanos { get; set; } = "//div[@class='rc-virtual-list']//div[@title='Todos']";
@@ -131,7 +140,9 @@ public class GlobalVariables
 
     #region Elementos de página - Planos - Simulação
     public static string PreencherIndustria { get; set; } = "//*[@data-testid='nomeIndustria']//*/input";
-    public static string PesquisarIndustria { get; set; } = "//*[@data-testid='nomeIndustria']//*/input";
+    public static string SelecionarIndustriaClienteStart { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='116873']";
+    public static string SelecionarIndustriaClientePro { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
+    public static string SelecionarIndustriaClientExpert { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
     public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//*[@data-testid='nomeCampanha']";
@@ -141,8 +152,13 @@ public class GlobalVariables
     public static string AvancarCalendarioMesFimVigencia { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string FecharDetalhamento { get; set; } = "//button/*[text()='Fechar Detalhamento']";
     public static string SelecionarAtivos { get; set; } = "//*[@data-testid='selecionarAtivos']";
+    public static string FiltrarInvetario { get; set; } = "//button/*[text()='Filtrar Inventários']";
     public static string AceleradorQuantidadeAlocarSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//*[@title='Qtd por Loja']/../..//input";
     public static string AplicarAceleradorPorLojaSimulacao { get; set; } = "//*[contains(text(),'Simulação')]/../../../../..//*[text()='Selecione a quantidade de ativos por loja:']/../..//button/*[text()='Aplicar']";
+    public static string TipoMidia { get; set; } = "//span[text()='Tipo Mídia']/../../..//input";
+    public static string Loja { get; set; } = "//span[text()='Loja']/../../..//input";
+    public static string SelecionarTipoMidiaGrafica { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Gráfica']";
+    public static string ConfirmarFiltroInventario { get; set; } = "//button/*[text()='Confirmar']";
     public static string CarregarLojas { get; set; } = "//*[@data-testid='carregarLojas']";
     public static string InventarioAlerta { get; set; } = "//td[9]//*[contains(@data-testid,'inventarioIndisponivel')]";
     public static string InventarioOk { get; set; } = "//td[9]//*[contains(@data-testid,'inventarioDisponivel')]";
@@ -151,8 +167,8 @@ public class GlobalVariables
     public static string CancelarPrePlanoComWorkflowSelecionado { get; set; } = "//*[@data-testid='cancelarPlano']";
     public static string PesquisarUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[contains(text(),'Selecione o usuário')]/parent::div/div/div/div/div/div/div/div/span[2]";
     public static string PreencherUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[@data-testid='selecionarResponsavel']//*/input";
-    public static string SelecionarUsuarioResponsavelEtapaWorkflowSP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02SP']";
-    public static string SelecionarUsuarioResponsavelEtapaWorkflowCP { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02CP']";
+    public static string SelecionarUsuarioResponsavelEtapaWorkflowPro { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02Pro']";
+    public static string SelecionarUsuarioResponsavelEtapaWorkflowExpert { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02Expert']";
     public static string LoadProcurandoEtapa { get; set; } = "//div[text()='Procurando Etapa...']";
     public static string MensagemIndisponibilidadeInventario { get; set; } = "//*[@class='form-action'][2]/div/span[3]";
     #endregion
@@ -162,6 +178,7 @@ public class GlobalVariables
     public static string PesquisarAtivos { get; set; } = "//div[@class='ant-table-filter-dropdown']/div/span/input";
     public static string SelecionarAtivosFiltro { get; set; } = "//li[@class='ant-dropdown-menu-item']";
     public static string TelaFiltrarAtivo { get; set; } = "//div[@class='ant-table-filter-dropdown-btns']";
+    public static string TelaFiltrarInventario { get; set; } = "(//*[@class='ant-modal-content'])[2]";
     public static string OkFiltroAtivos { get; set; } = "//button/*[text()='OK']";
     public static string SelecionarTodosAtivos { get; set; } = "(//span[@class='ant-checkbox'])[1]";
     public static string ResetarFiltroAtivo { get; set; } = "//button/*[text()='Resetar']";
@@ -178,7 +195,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Dados do Plano
-    public static string LoadDeTelaDadosPlano { set; get; } = "//*[contains(@class,'contrato-loading-overlay')]";
+    public static string LoadDeTelaDadosPlano { set; get; } = "//*[contains(@id,'panel-1')]//span[contains(@class,'ant-spin-dot-spin')]";
     public static string AbasPlano { get; set; } = "//div[@class='ant-tabs-nav-list']";
     public static string AbaDadosPlano { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Dados do Plano')]";
     public static string SituacaoPlano { get; set; } = "//*[@data-testid='situacao']";
@@ -198,17 +215,19 @@ public class GlobalVariables
     public static string SelecionarTipoCampanha { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Tipo Campanha 01']";
     public static string QuantidadeParcelas { get; set; } = "//*[@name='QuantidadeParcelas']";
     public static string Setor { get; set; } = "//*[@data-testid='nomeSetor']//input";
-    public static string SelecionarSetor { get; set; } = "(//*[text()='Geral'])[2]";
+    public static string SelecionarSetor { get; set; } = "(//*[@class='ant-select-item-option-content'][text()='Geral'])[1]";
     public static string Departamento { get; set; } = "//*[@data-testid='nomeDepartamento']//input";
-    public static string SelecionarDepartamento { get; set; } = "(//*[text()='Geral'])[3]";
+    public static string SelecionarDepartamento { get; set; } = "(//*[@class='ant-select-item-option-content'][text()='Geral'])[2]";
     public static string Categoria { get; set; } = "//*[@data-testid='nomeCategoria']//input";
-    public static string SelecionarCategoria { get; set; } = "(//*[text()='Geral'])[5]";
+    public static string SelecionarCategoria { get; set; } = "(//*[@class='ant-select-item-option-content'][text()='Geral'])[3]";
     public static string DataCancelamentoPlano { get; set; } = "//*[contains(text(),'Data de Cancelamento')]/parent::div/div/div/div[2]//input";
     public static string SelecionarDataCancelamentoPlano { get; set; } = "//*[text()='Today']";
     public static string OkCancelamento { get; set; } = "//*[text()='OK']";
     public static string FecharPlanoConfirmacao { get; set; } = "//button/*[text()='Fechar mesmo assim']";
+    public static string EtapasWorkflow { get; set; } = "//div[contains(@class,'etapas-container')]";
     public static string EtapasWorkflowPlano { get; set; } = "//div[contains(@class,'etapas-item')]/span";
     public static string EtapasWorkflowGraficoPlano { get; set; } = "//div[@class='ant-row etapas-container-grafico ']";
+    public static string SalvarPlano { get; set; } = "//div[contains(@class,'contrato')]//button/*[text()='Salvar']";
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados
@@ -224,6 +243,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados - Editar Alocação do Ativo por Loja
+    public static string LoadDeTelaAlocacaoPorLoja { get; set; } = "(//*[@class='ativos-alocados-container']//*[contains(@class,'ant-spin-dot-item')])[1]";
     public static string TabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody";
     public static string LinhaTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../div[2]/div//tbody/tr[@data-row-key='0']";
     public static string ScrollTabelaLojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//div[contains(@class,'ant-table-scroll-horizontal')]";
@@ -250,6 +270,18 @@ public class GlobalVariables
     public static string NomeAtivoAlocacao { get; set; } = "//*[@data-testid='nomeAtivo']//span[2]";
     public static string AbaAlocacaoPorLojaAtivo { get; set; } = "//*[contains(text(),'Alocação por Loja')]";
     public static string AplicarAceleradorPorLojaAtivoAlocado { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../..//button/*[text()='Aplicar']";
+    #endregion
+
+    #region Elementos de página - Planos - Anexos
+    public static string LoadDeTelaAnexos { set; get; } = "(//*[contains(@id,'panel-10')]//*[contains(@class,'ant-spin-dot-item')])[1]";
+    #endregion
+
+    #region Elementos de página - Planos - Book Fotográfico
+    public static string LoadDeTelaBookFotografico { set; get; } = "(//*[contains(@id,'panel-7')]//*[contains(@class,'ant-spin-dot-item')])[1]";
+    #endregion
+
+    #region Elementos de página - Planos - Book Fotográfico
+    public static string LoadDeTelaPainelIndustria { set; get; } = "(//*[contains(@id,'panel-11')]//*[contains(@class,'ant-spin-dot-item')])[1]";
     #endregion
 
     #region Elementos de página - SmartIA

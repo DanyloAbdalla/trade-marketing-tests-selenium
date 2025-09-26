@@ -10,10 +10,12 @@ namespace MeuClienteWebTestProject;
 public class HomePage
 {
     private IWebDriver webDriver;
+    private readonly ClienteUpSell clienteUpSellAtual;
 
-    public HomePage(IWebDriver webDriver)
+    public HomePage(IWebDriver webDriver, ClienteUpSell clienteUpSell)
     {
         this.webDriver = webDriver;
+        clienteUpSellAtual = clienteUpSell;
     }
 
     /// <summary>
@@ -26,6 +28,7 @@ public class HomePage
 
         Dsl.Clicar(webDriver, GlobalVariables.MenuGestao, "Submenu Gestão no menu Varejo");
         Dsl.Clicar(webDriver, GlobalVariables.DashboardOperacoes, "Tela DashBoard de Operações");
+        Dsl.Esperar();
 
         return new DashboardOperacoesPage(webDriver);
     }
@@ -46,12 +49,12 @@ public class HomePage
         Dsl.Clicar(webDriver, GlobalVariables.MenuNegociacao, "Menu Negociação");
         Dsl.Clicar(webDriver, GlobalVariables.CadastroPlanosContratos, "Cadastro de Planos");
 
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadTelaListaDePlanos);
-        Dsl.Esperar(3000);
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadListaPlanos);
+        Dsl.Esperar(2000);
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.AvisoInexistenciaDados) > 0)
         {
-            return new PlanosContratosPage(webDriver);
+            return new PlanosContratosPage(webDriver, clienteUpSellAtual);
         }
         else if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.PaginacaoTela) > 0)
         {
@@ -60,7 +63,7 @@ public class HomePage
             //Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.EditarPlano(primeiroTeste), "Botão Editar Plano");
         }
 
-        return new PlanosContratosPage(webDriver);
+        return new PlanosContratosPage(webDriver, clienteUpSellAtual);
     }
 
     /// <summary>
@@ -134,9 +137,8 @@ public class HomePage
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarPlanosStatusVigencia, "Campo Filtro Vigência");
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SelecionarTodosPlanos, "Selecionar Todos Planos");
-        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadTelaListaDePlanos);
-        Dsl.Esperar(3000);
+        Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadListaPlanos);
 
-        return new PlanosContratosPage(webDriver);
+        return new PlanosContratosPage(webDriver, clienteUpSellAtual);
     }
 }

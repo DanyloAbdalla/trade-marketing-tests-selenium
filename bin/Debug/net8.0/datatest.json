@@ -25,7 +25,7 @@
     },
     "TestAcessarVisaoDetalhadaListaParceiro": {
       "nomeCard": [
-        "EvolucaoPerformanceParceiros",
+        "EvolucaoPerformanceFornecedor",
         "InvestimentoParceiro"
       ]
     }
@@ -33,15 +33,15 @@
   "negociacoes_planos": {
     "TestGlobalData": {
       "atributoTesteId": "data-testid",
-      "nomeCampanha": "PlanoComWorkflowPadraoMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
       "statusEsperado": "Simulado",
       "farolEsperado": "PLANEJADO",
       "tipoMidiaAtivo": "Grafica",
-      "ativoNome": "Ilha 01",
+      "ativoNome": "Stopper",
       "ativosGraficos": [
         "Adesivo de Check Out",
         "Display de Check Out",
-        "Woobler"
+        "Wobbler"
       ],
       "ativosFisicos": [
         "Cestão 01",
@@ -60,6 +60,48 @@
       ],
       "etapaNomeWorkflowPlanoEsperado": [
         "Arte",
+        "Comprovação"
+      ],
+      "lojas": [
+        "L1 - Loja 01",
+        "L2 - Loja 02",
+        "L3 - Loja 03",
+        "L4 - Loja 04",
+        "L5 - Loja 05"
+      ],
+      "mensagensDeFeedback": [
+        {
+          "mensagem": "Disponibilidade recalculada com sucesso!",
+          "atributo": "Mc-message-success"
+        },
+        {
+          "mensagem": "Produtos inseridos com sucesso!",
+          "atributo": "Mc-message-success"
+        },
+        {
+          "mensagem": "Produtos atualizados com sucesso!",
+          "atributo": "Mc-message-success"
+        },
+        {
+          "mensagem": "Alocação atualizada com sucesso!",
+          "atributo": "Mc-message-success"
+        },
+        {
+          "mensagem": "Nenhuma mudança detectada na disponibilidade!",
+          "atributo": "Mc-message-info"
+        },
+        {
+          "mensagem": "Salve suas informações para poder incluir produto foco!",
+          "atributo": "Mc-message-info"
+        }
+      ]
+    },
+    "TestCriarPlanoComAtivosTipoMidiaGrafica": {},
+    "TestCriarPlanoComAtivosTipoMidiaFisica": {
+      "tipoMidiaAtivo": "Fisica",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaFisicaMassaAutomatizada",
+      "etapaNomeWorkflowPlanoEsperado": [
+        "Arte",
         "Montagem",
         "Comprovação"
       ],
@@ -71,12 +113,8 @@
         "Loja 05"
       ]
     },
-    "TestCriarPlanoComWorkflowPadrao": {},
-    "TestCriarPlanoComWorkflow": {
-      "tipoMidiaAtivo": "Fisica",
-      "nomeCampanha": "PlanoComWorkflowMassaAutomatizada"
-    },
     "TestEditarPlanoExistenteAlterandoVigenciaDoPlano": {},
+    "TestEditarPlanoExistenteAlterandoVigenciaDoTrade": {},
     "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel": {},
     "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel": {},
     "TestAprovarPlano": {
@@ -90,8 +128,8 @@
     },
     "TestExcluirPlano": {
       "nomeCampanhas": [
-        "PlanoComWorkflowPadraoMassaAutomatizada",
-        "PlanoComWorkflowMassaAutomatizada"
+        "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
+        "PlanoComAtivosTipoMidiaFisicaMassaAutomatizada"
       ]
     }
   }

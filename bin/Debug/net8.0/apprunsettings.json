@@ -4,10 +4,10 @@
       "ClassName": "PlanosTest",
       "FixturesNames": [
         {
-          "FixtureName": "SemPlantaLoja",
+          "FixtureName": "ClienteStart",
           "Tests": [
-            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
-            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaGrafica", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaFisica", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
@@ -19,10 +19,25 @@
           ]
         },
         {
-          "FixtureName": "ComPlantaLoja",
+          "FixtureName": "ClientePro",
           "Tests": [
-            { "TestName": "TestCriarPlanoSemWorkflow", "TestSkip": false },
-            { "TestName": "TestCriarPlanoComWorkflow", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaGrafica", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaFisica", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },
+            { "TestName": "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "TestSkip": false },
+            { "TestName": "TestAprovarPlano", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAlertaDeInventario", "TestSkip": false },
+            { "TestName": "TestCancelarPlano", "TestSkip": false },
+            { "TestName": "TestExcluirPlano", "TestSkip": false }
+          ]
+        },
+        {
+          "FixtureName": "ClienteExpert",
+          "Tests": [
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaGrafica", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAtivosTipoMidiaFisica", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoPlano", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": false },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": false },

@@ -17,15 +17,15 @@ public class SmartIaTest
     private bool testeAnteriorPulouFalhou = false;
     private bool primeiroTeste;
     private readonly string nomeClasse;
-    private readonly string contextoDeTeste;
+    private ClienteUpSell clienteUpSellAtual;
     private readonly string nomeCampanha = "CampanhaMassaAutomatizada";
     private readonly string whatsAppResponsavel = "15988086091";
     private readonly string nomeResponsavel = "Usuário Homologacao";
     private readonly string mensagemCabecalho = "Campanha Massa Automatizada";
 
-    public SmartIaTest(string contextoDeTeste)
+    public SmartIaTest(ClienteUpSell clienteUpSell)
     {
-        this.contextoDeTeste = contextoDeTeste;
+        clienteUpSellAtual = clienteUpSell;
         nomeClasse = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
     }
 
@@ -49,13 +49,13 @@ public class SmartIaTest
 
         if (testeAnteriorPulouFalhou)
             Assert.Ignore("Pular o próximo teste, pois o teste anterior falhou");
-        else if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
+        else if (runSettings.ToSkip(nomeClasse, clienteUpSellAtual.ToString(), nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        new LoginPage(webDriver)
+        new LoginPage(webDriver, clienteUpSellAtual)
         .RealizarLogin(GlobalVariables.emailUsuarioSemPlanta, GlobalVariables.senhaUsuarioSemPlanta);
 
-        new HomePage(webDriver)
+        new HomePage(webDriver, clienteUpSellAtual)
         .AcessarCadastroSmartIa();
     }
 
@@ -164,13 +164,13 @@ public class SmartIaTest
 
             primeiroTeste = false;
 
-            new HomePage(webDriver).AcessarDashboardOperacoes();
-            new HomePage(webDriver).RealizarLogout();
+            new HomePage(webDriver, clienteUpSellAtual).AcessarDashboardOperacoes();
+            new HomePage(webDriver, clienteUpSellAtual).RealizarLogout();
         }
         else if (statusTeste == TestStatus.Passed || statusTeste == TestStatus.Failed)
         {
-            new HomePage(webDriver).AcessarDashboardOperacoes();
-            new HomePage(webDriver).RealizarLogout();
+            new HomePage(webDriver, clienteUpSellAtual).AcessarDashboardOperacoes();
+            new HomePage(webDriver, clienteUpSellAtual).RealizarLogout();
         }
     }
 
