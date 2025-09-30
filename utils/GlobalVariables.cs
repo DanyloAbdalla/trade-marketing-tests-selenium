@@ -201,7 +201,7 @@ public class GlobalVariables
     public static string SituacaoPlano { get; set; } = "//*[@data-testid='situacao']";
     public static string SituacaoPlanoAprovar { get; set; } = "//*[text()='Contrato Aprovado']";
     public static string SituacaoPlanoCancelar { get; set; } = "//*[text()='Cancelado']";
-    public static string Desconto { get; set; } = "//*[@name='Desconto']";
+    public static string Desconto { get; set; } = "//*[@data-testid='desconto']";
     public static string AplicarDesconto { get; set; } = "//button/*[text()='Aplicar']";
     public static string InicioVigenciaPlano { get; set; } = "//*[@data-testid='inicioVigencia']";
     public static string FimVigenciaPlano { get; set; } = "//*[@data-testid='fimVigencia']";

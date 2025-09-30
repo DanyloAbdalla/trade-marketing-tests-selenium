@@ -285,11 +285,11 @@ public class PlanosContratosPage
                 {
                     webDriver.FindElement(By.XPath($"//tbody/tr[{i + 1}]/td[9]//input[@class='ant-checkbox-input']")).Click();
                 }
-                for (var i = 1; i <= lojas.Count; i++)
+                /*for (var i = 1; i <= lojas.Count; i++)
                 {
                     var lojaAtual = webDriver.FindElements(By.XPath(GlobalVariables.SelecionarLojaCheckbox(lojas[i - 1])));
                     if (lojaAtual.Count > 0) lojaAtual[0].Click();
-                }
+                }*/
                 break;
             case ClienteUpSell.ClienteExpert:
                 foreach (var loja in lojas)
@@ -476,27 +476,14 @@ public class PlanosContratosPage
     public PlanosContratosPage AbrirEdicaoDoPlano()
     {
         var teste = TestContext.CurrentContext.Test.MethodName;
-        var testesWorkflowPadrao = new[] {
-            "TestCriarPlanoComWorkflowPadrao",
-            "TestEditarPlanoExistenteAlterandoVigenciaDoPlano",
-            "TestEditarPlanoExistenteAlterandoVigenciaDoTrade",
-            "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel",
-            "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel",
-            "TestAprovarPlano",
-            "TestCriarPlanoComAlertaDeInventario",
-            "TestCancelarPlano",
-        };
 
-        if (testesWorkflowPadrao.Contains(teste))
-        {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "nomeCampanha")), "Botão Editar Plano");
-        }
+        if (teste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "nomeCampanha")), "Botão Editar Plano");
         else
-        {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComWorkflow", "nomeCampanha")), "Botão Editar Plano");
-        }
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "nomeCampanha")), "Botão Editar Plano");
+
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaDadosPlano);
-        Dsl.EsperarElementoFicarClicavel(webDriver, "//*[@id='rc-tabs-0-panel-1']/div/div/div/div/form/div[1]/div[1]/div[7]/button", "Botão Abrir Modal Desconto");
+        Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.Desconto, "Botão Abrir Modal Desconto");
 
         return this;
     }
