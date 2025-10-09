@@ -62,7 +62,8 @@ public class PlanosTest
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
             Assert.Ignore("Teste ignorado pelas configurações de execução");
 
-        if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
+        //Adicionei essa condição adicional pois o teste com mídia física estava melhor para exibir o alerta de inventário
+        if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica") || nomeTeste.Equals("TestCriarPlanoComAlertaDeInventario"))
             tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "tipoMidiaAtivo");
         else
             tipoMidiaAtivo = DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "tipoMidiaAtivo");
@@ -111,8 +112,8 @@ public class PlanosTest
             .PreencherCampoIndustria()
             .PreencherCampoCampanha(nomeCampanha)
             .SelecionarAtivos(tipoMidiaAtivo)
-            .SelecionarLojas()
-            .PreencherQuantidadeAtivos(tipoMidiaAtivo)
+            .SelecionarLojas(tipoMidiaAtivo)
+            .PreencherQuantidadeAtivos(tipoMidiaAtivo, 60)
             .GerarPrePlano()
             .SalvarPlano()
             .FecharDadosDoPlano()
@@ -131,7 +132,7 @@ public class PlanosTest
             .PreencherCampoCampanha(nomeCampanha)
             .SelecionarAtivos(tipoMidiaAtivo)
             .PreencherQuantidadeAtivos(tipoMidiaAtivo)
-            .SelecionarLojas()
+            .SelecionarLojas(tipoMidiaAtivo)
             .GerarPrePlano()
             .SalvarPlano()
             .FecharDadosDoPlano()
@@ -173,8 +174,8 @@ public class PlanosTest
             .PreencherCampoIndustria()
             .PreencherCampoCampanha(nomeCampanha)
             .SelecionarAtivos(tipoMidiaAtivo)
-            .SelecionarLojas()
-            .PreencherQuantidadeAtivos(tipoMidiaAtivo)
+            .SelecionarLojas(tipoMidiaAtivo)
+            .PreencherQuantidadeAtivos(tipoMidiaAtivo, 40)
             .GerarPrePlano()
             .SalvarPlano()
             .FecharDadosDoPlano()
@@ -194,7 +195,7 @@ public class PlanosTest
             .PreencherCampoCampanha(nomeCampanha)
             .SelecionarAtivos(tipoMidiaAtivo)
             .PreencherQuantidadeAtivos(tipoMidiaAtivo)
-            .SelecionarLojas()
+            .SelecionarLojas(tipoMidiaAtivo)
             .GerarPrePlano()
             .SalvarPlano()
             .FecharDadosDoPlano()
@@ -365,10 +366,10 @@ public class PlanosTest
             .NovaSimulacaoDePlano()
             .PreencherCampoIndustria()
             .PreencherCampoCampanha(nomeCampanha)
-            .SelecionarVigenciaDoPlano()
             .SelecionarAtivos(tipoMidiaAtivo)
-            .PreencherQuantidadeAtivos(tipoMidiaAtivo)
-            .SelecionarLojas()
+            .SelecionarLojas(tipoMidiaAtivo)
+            .PreencherQuantidadeAtivos(tipoMidiaAtivo, 40)
+            .GerarPrePlano()
             .ValidarIndisponibilidadeDeInventario()
             .FecharDadosDoPlano();
         }
@@ -381,7 +382,7 @@ public class PlanosTest
             .SelecionarVigenciaDoPlano()
             .SelecionarAtivos(tipoMidiaAtivo)
             .PreencherQuantidadeAtivos(tipoMidiaAtivo)
-            .SelecionarLojas()
+            .SelecionarLojas(tipoMidiaAtivo)
             .ValidarIndisponibilidadeDeInventario()
             .FecharDadosDoPlano();
         }
