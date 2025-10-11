@@ -352,7 +352,7 @@ public class PlanosTest
             .PreencherCampoCampanha()
             .SelecionarAtivos()
             .SelecionarLojas()
-            .PreencherQuantidadeAtivos(40)
+            .PreencherQuantidadeAtivos(60)
             .GerarPrePlano()
             .ValidarIndisponibilidadeDeInventario()
             .FecharDadosDoPlano();
