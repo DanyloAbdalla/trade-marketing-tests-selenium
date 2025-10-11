@@ -561,17 +561,20 @@ public class PlanosContratosPage
         Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.Desconto, "Botão Abrir Modal Desconto");
         Dsl.Esperar(5000);
 
-        var modalInventarioIndisponivel = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ModalInventarioIndisponivel);
-        if (clienteUpSellAtual == ClienteUpSell.ClienteExpert && modalInventarioIndisponivel > 0)
+        if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.ModalInventarioIndisponivel);
-            Dsl.Esperar(500);
-            Dsl.Clicar(webDriver, GlobalVariables.ModalInventarioIndisponivelOKButton, "Botão Fechar Modal Inventário Indisponível");
-            Dsl.Esperar(500);
-        }
+            var modalInventarioIndisponivel = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ModalInventarioIndisponivel);
+            if (modalInventarioIndisponivel > 0)
+            {
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.ModalInventarioIndisponivel);
+                Dsl.Esperar(500);
+                Dsl.Clicar(webDriver, GlobalVariables.ModalInventarioIndisponivelOKButton, "Botão Fechar Modal Inventário Indisponível");
+                Dsl.Esperar(500);
+            }
 
-        Dsl.Esperar(1000);
-        Dsl.Clicar(webDriver, GlobalVariables.MaisInformacoesPlano, "Botão Mais Informações do Plano");
+            Dsl.Esperar(1000);
+            Dsl.Clicar(webDriver, GlobalVariables.MaisInformacoesPlano, "Botão Mais Informações do Plano");
+        }
 
         return this;
     }
@@ -959,7 +962,7 @@ public class PlanosContratosPage
 
                 var textoQuantidadeLojasAtivoAlocado = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.QuantidadeLojasPorAtivo, "Label Quantidade de Lojas no Ativo Alocado");
                 var quantidadeLojasAtivoAlocadoAtual = Dsl.RemoverLetrasEspacosDeUmTexto(textoQuantidadeLojasAtivoAlocado, "Label Quantidade de Lojas no Ativo Alocado");
-                Dsl.ValidarNumerosNoElemento(quantidadeLojasAtivoAlocadoAtual, 19, "Label Quantidade de Loja no Ativo Alocado"); //alterei para 19 já que o Stopper ta com um ativo a menos
+                Dsl.ValidarNumerosNoElemento(quantidadeLojasAtivoAlocadoAtual, clienteUpSellAtual == ClienteUpSell.ClienteExpert ? "19" : "20", "Label Quantidade de Loja no Ativo Alocado"); //alterei para 19 já que o Stopper ta com um ativo a menos
 
                 AumentarQuantidadeAtivosPorLoja();
 
