@@ -350,10 +350,8 @@ public class PlanosTest
             .NovaSimulacaoDePlano()
             .PreencherCampoIndustria()
             .PreencherCampoCampanha()
-            .SelecionarAtivos()
-            .SelecionarLojas()
-            .PreencherQuantidadeAtivos(60)
-            .GerarPrePlano()
+            .SelecionarVigenciaDoPlano()
+            .FiltrarInventarios()
             .ValidarIndisponibilidadeDeInventario()
             .FecharDadosDoPlano();
         }
