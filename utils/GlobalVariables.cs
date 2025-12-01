@@ -179,11 +179,12 @@ public class GlobalVariables
     public static string FiltrarInventarios { get; set; } = "//*[@data-testid='filtrarInventarios']";
     public static string FiltroTipoMidia { get; set; } = "//*[@data-testid='filtroTipoMidia']//input";
     public static string FiltroLoja { get; set; } = "//*[@data-testid='filtroLoja']//input";
+    public static string FiltroLojaPreenchido { get; set; } = "//*[@class='ant-select-selection-item' and contains(@title,'Loja')]";
     public static string FiltroAtivos { get; set; } = "//*[@data-testid='filtroAtivos']//input";
     public static string ConfirmarFiltroInventario { get; set; } = "//*[@data-testid='confirmar']";
-    public static string SelecionarLojasInventario(string nomeLoja) { return $"//div[@class='rc-virtual-list']//*[text()='{nomeLoja}']"; }
+    public static string SelecionarLojasInventario(string nomeLoja) { return $"//div[@class='rc-virtual-list']//*[contains(text(),'{nomeLoja}')]"; }
     public static string SelecionarAtivosInventario(string nomeAtivo) { return $"//div[@class='rc-virtual-list']//*[text()='{nomeAtivo}']"; }
-    public static string AlocarAtivo(string nomeLoja) { return $"(//*[contains(@data-testid, 'alocar-{nomeLoja}')])"; }
+    public static string AlocarAtivo(string nomeLoja, string inventario) { return $"//*[@data-testid='alocar-{nomeLoja} - {inventario}]"; }
     public static string AlocarAtivoOcupado { get; set; } = "(//*[@class='react-window-table-cell']//*[@class='anticon anticon-question-circle'])[1]";
     public static string AlocarTodosAtivos { get; set; } = "//*[@data-testid='alocarTodos']";
     public static string QuantidadeItensAtivo { get; set; } = "//*[@data-testid='configurarQuantidadeItens']";
@@ -194,7 +195,9 @@ public class GlobalVariables
     public static string NovaSimulacaoTabSimulacao { get; set; } = "//div[@data-node-key='1']";
     public static string NovaSimulacaoTabSelecionados { get; set; } = "//div[@data-node-key='2']";
     public static string TabSelecionadosPrimeiroElemento { get; set; } = "((//div[@class='matriz-status-legend'])[2]/..//*[contains(@data-testid, 'editarAlocacao')])[1]";
-    public static string BotaoEditarModalAtivoInventario { get; set; } = "(//*[contains(@data-testid, 'editar-')])[1]";
+    public static string EditarAtivoAlocacaoSimulacao { get; set; } = "//*[@data-testid='editarAlocacao-Loja 01 - E01 - Adesivo de Check Out']";
+    public static string ColunasAtivoAlocadoSimulado { get; set; } = "//*[text()='Vigências Configuradas']/../../../../../../..//*[@class='ant-table-header']//thead/tr";
+    public static string EditarAtivoAlocadoSimulado { get; set; } = "//*[@data-testid='editar-Loja 01 - E01 - Adesivo de Check Out']";
     public static string CampoQuantidadeModalAtivoInventario { get; set; } = "(//*[contains(@data-testid, 'editar-')])[1]/../../..//*[7]//input";
     public static string SpanQuantidadeAtivosSelecionados { get; set; } = "//*[@class='estatisticas-superiores']//span[3]";
     public static string MatrizSimulacaoVazia { get; set; } = "//*[@class='matriz-simulacao-empty-state']";

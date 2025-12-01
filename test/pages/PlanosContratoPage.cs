@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 
@@ -16,6 +17,7 @@ public class PlanosContratosPage
     private readonly string statusEsperado;
     private readonly string farolEsperado;
     private ClienteUpSell clienteUpSellAtual;
+    private IList<string> inventarios;
     private IList<string> nomeLojas;
     private IList<string> ativosGraficos;
     private IList<string> ativosFisicos;
@@ -36,7 +38,7 @@ public class PlanosContratosPage
         abasPlanoEsperado = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "abasPlanoEsperado");
         mensagensEsperadas = DataLoader.ObterMensagensDeFeedback("negociacoes_planos", "TestGlobalData", "mensagensDeFeedback");
         nomeLojas = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "lojas");
-
+        inventarios = DataLoader.ObterDadosEmLista("negociacoes_planos", "TestGlobalData", "inventarios");
 
         if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
         {
@@ -287,7 +289,7 @@ public class PlanosContratosPage
     /// </summary>
     /// <param name="quantidadeAtivosPorLoja"></param>
     /// <returns></returns>
-    public PlanosContratosPage PreencherQuantidadeAtivos(int quantidadeAtivosPorLoja = 0)
+    public PlanosContratosPage PreencherQuantidadeAtivos()
     {
         switch (clienteUpSellAtual)
         {
@@ -322,7 +324,29 @@ public class PlanosContratosPage
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.CarregarLojas);
                 break;
             case ClienteUpSell.ClienteExpert:
-                var teste = TestContext.CurrentContext.Test.MethodName;
+                Dsl.Clicar(webDriver, GlobalVariables.EditarAtivoAlocacaoSimulacao, "Botão Editar Ativo Alocado na Simulação");
+                Dsl.Esperar(500);
+                Dsl.Clicar(webDriver, GlobalVariables.EditarAtivoAlocadoSimulado, "Botão Editar Dados Ativo Alocado na Simulação");
+
+                IWebElement headers = webDriver.FindElement(By.XPath(GlobalVariables.ColunasAtivoAlocadoSimulado));
+                IList<IWebElement> theads = headers.FindElements(By.XPath("/th"));
+
+                foreach (IWebElement colun in theads)
+                {
+                    string nomeColuna = colun.Text;
+                    if (nomeColuna.Equals("Qtd Alocada"))
+                    {
+                        int index = theads.IndexOf(colun) + 1;
+                        var campoQuantidade = webDriver.FindElement(By.XPath($"(//div[@class='ant-table-body']//table//tbody//tr//td[{index}]//input)[1]"));
+
+                        campoQuantidade.SendKeys(Keys.Control + "a" + Keys.Backspace);
+                        Dsl.Esperar(500);
+                        campoQuantidade.SendKeys("5");
+                        Dsl.Esperar(500);
+                    }
+                }
+
+                /*var teste = TestContext.CurrentContext.Test.MethodName;
 
                 Dsl.Clicar(webDriver, GlobalVariables.NovaSimulacaoTabSelecionados, "Tab Selecionados");
                 Dsl.Esperar(1000);
@@ -347,7 +371,7 @@ public class PlanosContratosPage
 
                 Dsl.Clicar(webDriver, GlobalVariables.BotaoEditarModalAtivoInventario, "Campo Quantidade Itens Ativo");
                 Dsl.Esperar(500);
-                Dsl.Clicar(webDriver, GlobalVariables.ReplicarConfiguracoes, "Replicar Configuracoes");
+                Dsl.Clicar(webDriver, GlobalVariables.ReplicarConfiguracoes, "Replicar Configuracoes");*/
                 break;
         }
 
@@ -412,8 +436,8 @@ public class PlanosContratosPage
                         for (var j = 1; j <= 12; j++)
                         {
                             string nomeLoja = $"Loja {n:00}";
-                            string xpath = GlobalVariables.AlocarAtivo(nomeLoja);
-                            webDriver.FindElement(By.XPath(xpath + $"[{j}]")).Click();
+                            //string xpath = GlobalVariables.AlocarAtivo(nomeLoja);
+                            //webDriver.FindElement(By.XPath(xpath + $"[{j}]")).Click();
                             Dsl.Esperar(500);
                         }
 
@@ -432,6 +456,99 @@ public class PlanosContratosPage
                 }
                 break;
         }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para filtrar e selecionar os ativos e lojas nova tela de simulação
+    /// </summary>
+    /// <returns></returns>
+    public PlanosContratosPage SelecionarAtivosELojas()
+    {
+        if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaGrafica"))
+        {
+            Dsl.Clicar(webDriver, GlobalVariables.FiltrarInventarios, "Botão Filtrar Inventários");
+            Dsl.Esperar(500);
+
+            Dsl.Clicar(webDriver, GlobalVariables.FiltroTipoMidia, "Campo Filtrar Tipo Mídia");
+            Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.FiltroTipoMidia, tipoMidiaAtivo);
+            Dsl.Clicar(webDriver, GlobalVariables.SelecionarTipoMidiaGrafica, "Seleciona Tipo Midia Filtrada");
+
+            foreach (string nomeLoja in nomeLojas)
+            {
+                Dsl.Esperar(500);
+                Dsl.Clicar(webDriver, GlobalVariables.FiltroLoja, "Campo Filtrar Loja");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.FiltroLoja, nomeLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.SelecionarLojasInventario(nomeLoja), "Seleciona Loja Filtrada");
+            }
+
+            foreach (string nomeAtivo in ativosGraficos)
+            {
+                Dsl.Esperar(500);
+                Dsl.Clicar(webDriver, GlobalVariables.FiltroAtivos, "Campo Filtrar Ativos");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.FiltroAtivos, nomeAtivo);
+                Dsl.Clicar(webDriver, GlobalVariables.SelecionarAtivosInventario(nomeAtivo), "Seleciona Ativo Filtrado");
+            }
+
+            Dsl.Clicar(webDriver, GlobalVariables.ConfirmarFiltroInventario, "Botão Confirmar Ativos Selecionados no Filtro");
+            AlocarAtivosNaSimulacao();
+        }
+        else
+        {
+            foreach (string nomeLoja in nomeLojas)
+            {
+                Dsl.Clicar(webDriver, GlobalVariables.FiltrarInventarios, "Botão Filtrar Inventários");
+                Dsl.Esperar(500);
+
+                Dsl.Clicar(webDriver, GlobalVariables.FiltroTipoMidia, "Campo Filtrar Tipo Mídia");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.FiltroTipoMidia, tipoMidiaAtivo);
+                Dsl.Clicar(webDriver, GlobalVariables.SelecionarTipoMidiaGrafica, "Seleciona Tipo Midia Filtrada");
+
+                if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.FiltroLojaPreenchido) > 0)
+                {
+                    webDriver.FindElement(By.XPath(GlobalVariables.FiltroLoja)).SendKeys(Keys.Control + "a" + Keys.Backspace);
+                }
+
+                Dsl.Esperar(500);
+                Dsl.Clicar(webDriver, GlobalVariables.FiltroLoja, "Campo Filtrar Loja");
+                Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.FiltroLoja, nomeLoja);
+                Dsl.Clicar(webDriver, GlobalVariables.SelecionarLojasInventario(nomeLoja), "Seleciona Loja Filtrada");
+
+                foreach (string nomeAtivo in ativosFisicos)
+                {
+                    Dsl.Esperar(500);
+                    Dsl.Clicar(webDriver, GlobalVariables.FiltroAtivos, "Campo Filtrar Ativos");
+                    Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.FiltroAtivos, nomeAtivo);
+                    Dsl.Clicar(webDriver, GlobalVariables.SelecionarAtivosInventario(nomeAtivo), "Seleciona Ativo Filtrado");
+                }
+
+                Dsl.Clicar(webDriver, GlobalVariables.ConfirmarFiltroInventario, "Botão Confirmar Ativos Selecionados no Filtro");
+
+                AlocarAtivosNaSimulacao(nomeLoja);
+            }
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para alocar o inventário na nova tela de simulação
+    /// </summary>
+    /// <returns></returns>
+    public PlanosContratosPage AlocarAtivosNaSimulacao([Optional] string nomeLoja)
+    {
+        if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaGrafica"))
+            Dsl.Clicar(webDriver, GlobalVariables.AlocarTodosAtivos, "Botão Alocar Todos os Ativos");
+        else
+        {
+            foreach (string inventario in inventarios)
+            {
+                Dsl.Clicar(webDriver, GlobalVariables.AlocarAtivo(nomeLoja, inventario), "Botão Alocar Ativo");
+            }
+        }
+
+        Dsl.Esperar();
 
         return this;
     }
@@ -1269,7 +1386,7 @@ public class PlanosContratosPage
                 {
                     mensagemAtual.Atributo = "Mc-message-info";
                 }
-                
+
                 ValidarMensagensDoPlano(mensagensAtuais);
                 break;
         }
