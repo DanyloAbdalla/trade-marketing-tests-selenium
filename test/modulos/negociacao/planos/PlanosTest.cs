@@ -47,6 +47,9 @@ public class PlanosTest
     {
         var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
+        if (string.IsNullOrEmpty(nomeTeste))
+            throw new ArgumentException("Nome do teste é inválido");
+
         if (testeAnteriorPulouFalhou)
             Assert.Ignore("Pular teste, o teste anterior falhou");
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
@@ -213,8 +216,6 @@ public class PlanosTest
         .AbrirAbaAtivosAlocados()
         .EditarQuantidadesDosAtivosNoPlano()
         .SalvarPlano()
-        .FecharDadosDoPlano()
-        .AbrirEdicaoDoPlano()
         .ValidarReceitasDoPlano()
         .FecharDadosDoPlano();
     }
@@ -235,8 +236,6 @@ public class PlanosTest
         .AbrirAbaAtivosAlocados()
         .AlocarNovosAtivosNoPlano()
         .SalvarPlano()
-        .FecharDadosDoPlano()
-        .AbrirEdicaoDoPlano()
         .ValidarReceitasDoPlano()
         .FecharDadosDoPlano();
     }

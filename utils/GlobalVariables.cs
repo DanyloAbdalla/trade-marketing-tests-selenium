@@ -23,7 +23,7 @@ public class GlobalVariables
     public static string MenuUsuarioLogado { get; set; } = "//header/div[@class='Log']/div[2]";
     public static string SairConta { get; set; } = "//*[contains(@class,'logout')]/ancestor::a/*[text()='Sair']";
     public static string Mensagens { get; set; } = "//*[@class='ant-message-notice']";
-    public static string MensagemDeFeedback { get; set; } = "//div[contains(@class, 'Mc-message Mc-message')]";
+    public static string MensagemDeFeedback { get; set; } = "//div[contains(@data-testid, 'Mc-message')]";
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//*[@data-testid='salvarPlano']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
