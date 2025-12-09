@@ -4,6 +4,7 @@ using SeleniumExtras.WaitHelpers;
 using OpenQA.Selenium.Interactions;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace MeuClienteWebTestProject;
 
@@ -13,6 +14,24 @@ namespace MeuClienteWebTestProject;
 /// /// </summary>
 public class Dsl
 {
+    private static TimeSpan implicitWaitOriginal;
+
+    public static DefaultWait<IWebDriver> CreateFluentWait(IWebDriver webDriver)
+    {
+        implicitWaitOriginal = webDriver.Manage().Timeouts().ImplicitWait;
+        webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
+
+        var wait = new DefaultWait<IWebDriver>(webDriver)
+        {
+            Timeout = TimeSpan.FromSeconds(20),
+            PollingInterval = TimeSpan.FromMilliseconds(250)
+        };
+
+        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
+
+        return wait;
+    }
+
     /// <summary>
     /// Método com uma espera padrão de 1 segundo
     /// </summary>
@@ -29,21 +48,17 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static bool EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(50)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
         try
         {
+            var fluentWait = CreateFluentWait(webDriver);
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
-            Esperar(500);
         }
+        catch (WebDriverTimeoutException ex)
+        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento" + "\n" + ex.Message); }
         catch (Exception ex)
         { Console.WriteLine("Erro ao esperar a visibilidade do elemento na página: " + "\n" + ex.Message); }
+        finally
+        { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
 
         return false;
     }
@@ -56,47 +71,19 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static void EsperarInvisibilidadeDoElemento(IWebDriver webDriver, string XPath)
     {
-
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(50)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
         try
         {
-            IWebElement element = webDriver.FindElement(By.XPath(XPath));
-            if (fluentWait.Until(ExpectedConditions.StalenessOf(element)) || fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)))) { return; }
+            IWebElement element = EncontrarElemento(webDriver, XPath, "");
+            var fluentWait = CreateFluentWait(webDriver);
+            //fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)));
+            fluentWait.Until(ExpectedConditions.StalenessOf(element));
         }
+        catch (WebDriverTimeoutException ex)
+        { Console.WriteLine("Tempo esgotado para espera da invisibilidade do elemento" + "\n" + ex.Message); }
         catch (Exception ex)
         { Console.WriteLine("Erro ao esperar a invisibilidade do elemento na página: " + "\n" + ex.Message); }
-    }
-
-    public static bool EsperarInvisibilidadeDoElementoMCMessageContainer(IWebDriver webDriver, string XPath)
-    {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(10),
-            PollingInterval = TimeSpan.FromMilliseconds(250)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
-
-        try
-        {
-            return fluentWait.Until(d =>
-            {
-                var elementos = d.FindElements(By.XPath(XPath));
-                return elementos.Count == 0 || elementos.All(e => !e.Displayed);
-            });
-        }
-        catch (WebDriverTimeoutException)
-        {
-            Console.WriteLine("Timeout ao esperar a invisibilidade do elemento: " + XPath);
-            return false;
-        }
+        finally
+        { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
     }
 
     /// <summary>
@@ -109,20 +96,13 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static void EsperarElementoFicarClicavel(IWebDriver webDriver, string XPath, string elemento)
     {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(100)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
         try
         {
-            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath)));
+            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(30));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath)));
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        { throw new Exception("Erro ao esperar elemento ficar clicavel: " + "\n" + ex.Message + "\n" + elemento); }
     }
 
     /// <summary>
@@ -135,20 +115,59 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static void EsperarElementoParaClicar(IWebDriver webDriver, string XPath, string elemento)
     {
-        var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-        {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(100)
-        };
-
-        fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
         try
         {
-            fluentWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
+            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(30));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        { throw new Exception("Erro ao esperar elemento para clicar: " + "\n" + ex.Message + "\n" + elemento); }
+    }
+
+    /// <summary>
+    /// Método para encontrar um elemento na tela
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <param name="elemento"></param>
+    /// <returns>Retorna o elemento encontrado</returns>
+    public static IWebElement EncontrarElemento(IWebDriver webDriver, string XPath, string elemento)
+    {
+        try
+        {
+            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(30));
+            IWebElement element = wait.Until(ExpectedConditions.ElementExists(By.XPath(XPath)));
+
+            return element;
+        }
+        catch (WebDriverTimeoutException)
+        { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
+        catch (Exception ex)
+        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+    }
+
+    /// <summary>
+    /// Método para localizar um elemento mensagem na tela
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <returns>Retorna verdadeiro se o elemento for localizado, ou falso caso contrário</returns>
+    public static bool LocalizarElementoMensagem(IWebDriver webDriver, string XPath)
+    {
+        try
+        {
+            var fluentWait = CreateFluentWait(webDriver);
+            var elemento = fluentWait.Until(ExpectedConditions.ElementExists(By.XPath(XPath)));
+            return elemento.Displayed;
+        }
+        catch (NoSuchElementException)
+        { return false; }
+        catch (StaleElementReferenceException)
+        { return false; }
+        catch (WebDriverTimeoutException)
+        { return false; }
+        finally
+        { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
     }
 
     /// <summary>
@@ -160,70 +179,6 @@ public class Dsl
     {
         EsperarVisibilidadeDoElemento(webDriver, XPath);
         EsperarInvisibilidadeDoElemento(webDriver, XPath);
-        //Esperar(500);
-    }
-
-    public static IWebElement EncontrarElemento(IWebDriver webDriver, string XPath, string elemento)
-    {
-        try
-        {
-            var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-            {
-                Timeout = TimeSpan.FromSeconds(10),
-                PollingInterval = TimeSpan.FromMilliseconds(250)
-            };
-
-            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
-            IWebElement element = fluentWait.Until(ExpectedConditions.ElementExists(By.XPath(XPath)));
-
-            return element;
-        }
-        catch (WebDriverTimeoutException)
-        { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
-        catch (Exception ex)
-        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
-    }
-
-    public static bool LocalizarElemento(IWebDriver webDriver, string XPath)
-    {
-        try
-        {
-            var fluentWait = new DefaultWait<IWebDriver>(webDriver)
-            {
-                Timeout = TimeSpan.FromSeconds(3),
-                PollingInterval = TimeSpan.FromMilliseconds(250)
-            };
-
-            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
-            var elemento = fluentWait.Until(ExpectedConditions.ElementExists(By.XPath(XPath)));
-            return elemento.Displayed || elemento.Enabled;
-        }
-        catch (NoSuchElementException)
-        { return false; }
-        catch (StaleElementReferenceException)
-        { return false; }
-        catch (WebDriverTimeoutException)
-        { return false; }
-    }
-
-    public static bool ElementoExiste(IWebDriver webDriver, string XPath)
-    {
-        try
-        {
-            var elementoExiste = webDriver.FindElement(By.XPath(XPath));
-            if (elementoExiste is not null)
-                return true;
-        }
-        catch (NoSuchElementException)
-        { return false; }
-        catch (StaleElementReferenceException)
-        { return false; }
-        catch (WebDriverTimeoutException)
-        { return false; }
-
-        return false;
     }
 
     /// <summary>
@@ -248,7 +203,13 @@ public class Dsl
         { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
     }
 
-    public static void ClicarNoElementoId(IWebDriver webDriver, IWebElement elementId, string elemento)
+    /// <summary>
+    /// Método para clicar em um elemento já localizado
+    /// </summary>
+    /// <param name="elementId"></param>
+    /// <param name="elemento"></param>
+    /// <returns></returns>
+    public static void ClicarNoElementoId(IWebElement elementId, string elemento)
     {
         try
         {
@@ -327,23 +288,11 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para obter a quantidade de linhas (tag tr) em um elemento do tipo tabela
-    /// Existem tabelas que são apresentadas no sistema com uma tag tr a mais (que não é apresentada em tela)
-    /// Nesse cenário essa tag tr a mais é desconsiderada, retornando a quantidade real de linhas apresentadas em tela
+    /// Método para obter as linhas de um elemento tabela
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <returns>Retorna um número inteiro</returns>
-    public static int ObterQuantidadeLinhasNoElementoTabelaComLinhaInvisivel(IWebDriver webDriver, string XPath)
-    {
-        IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
-        IList<IWebElement> linhas = tabela.FindElements(By.XPath("tr"));
-
-        var quantidadeLinhas = linhas.Count() - 1;
-
-        return quantidadeLinhas;
-    }
-
+    /// <returns>Retorna uma lista de elementos</returns>
     public static IList<IWebElement> ObterLinhasDoElementoTabela(IWebDriver webDriver, string XPath)
     {
         IWebElement tabela = webDriver.FindElement(By.XPath(XPath));
@@ -352,20 +301,26 @@ public class Dsl
         return linhas;
     }
 
+    /// <summary>
+    /// Método para obter as mensagens de feedback exibidas na tela
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="XPath"></param>
+    /// <returns>Retorna uma lista de mensagens de feedback</returns>
     public static List<MensagemFeedback> ObterMensagensDeFeedback(IWebDriver webDriver, string XPath)
     {
         var mensagensFeedback = new List<MensagemFeedback>();
         string atributoValor;
         string mensagemTexto;
-        bool temMensagem = true;
+        bool temMensagemNova = true;
         int count = 1;
 
-        while (temMensagem)
+        while (temMensagemNova)
         {
             string xpathElemento = $"({XPath})[{count}]";
-            temMensagem = LocalizarElemento(webDriver, xpathElemento);
+            temMensagemNova = LocalizarElementoMensagem(webDriver, xpathElemento);
 
-            if (temMensagem == false)
+            if (temMensagemNova == false)
                 break;
 
             var elemento = EncontrarElemento(webDriver, xpathElemento, "Mensagem Feedback");
@@ -379,12 +334,16 @@ public class Dsl
             });
 
             count++;
-            //Esperar();
         }
 
         return mensagensFeedback;
     }
 
+    /// <summary>
+    /// Método para obter as colunas de um elemento tabela
+    /// </summary>
+    /// <param name="linhaTabela"></param>
+    /// <returns>Retorna as colunas como uma lista de elementos</returns>
     public static IList<IWebElement> ObterColunasDoElementoTabela(IWebElement linhaTabela)
     {
         IList<IWebElement> colunas = linhaTabela.FindElements(By.XPath("td"));
@@ -398,7 +357,6 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    /// <param name="tagName"></param>
     /// <returns>Retorna uma lista de elementos</returns>
     public static IList<IWebElement> ObterListaDeElementos(IWebDriver webDriver, string XPath)
     {
@@ -420,7 +378,6 @@ public class Dsl
     {
         try
         {
-            //EsperarVisibilidadeDoElemento(webDriver, XPath);
             string valor = webDriver.FindElement(By.XPath(XPath)).GetAttribute(nomeAtributo);
 
             return valor;
@@ -429,11 +386,17 @@ public class Dsl
         { throw new Exception(ex.Message + "\n" + elemento); }
     }
 
+    /// <summary>
+    /// Método para retornar os dados do atributo de um elemento já localizado
+    /// </summary>
+    /// <param name="elementId"></param>
+    /// <param name="elemento"></param>
+    /// <param name="nomeAtributo"></param>
+    /// <returns>Retorna os dados contidos no atributo como uma string</returns>
     public static string ObterDadosDoAtributoDoElementoId(IWebElement elementId, string elemento, string nomeAtributo)
     {
         try
         {
-            //EsperarVisibilidadeDoElemento(webDriver, XPath);
             var valor = elementId.GetAttribute(nomeAtributo);
 
             return valor;
@@ -490,7 +453,6 @@ public class Dsl
     /// Avançando para os meses seguintes se quantidadeAvancarMeses for maior que 0
     /// </summary>
     /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
     /// <param name="quantidadeAvancarMeses"></param>
     public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, int quantidadeAvancarMeses)
     {
@@ -551,7 +513,6 @@ public class Dsl
     /// Avançando para os meses seguintes se quantidadeAvancarMeses for maior que 0
     /// </summary>
     /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>
     /// <param name="quantidadeAvancarMeses"></param>
     public static void PreencherCalendariosFimVigencia(IWebDriver webDriver, int quantidadeAvancarMeses)
     {
@@ -581,13 +542,13 @@ public class Dsl
             {
                 if (diaAtual == 1)
                 {
-                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[contains(@class,'ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view')]//div[text()='{diaAtual}']";
+                    Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia");
                 }
                 else
                 {
                     xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
+                    Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia");
                 }
             }
             else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
@@ -595,12 +556,12 @@ public class Dsl
                 if (diaAtual == 1)
                 {
                     xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+                    Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia Trade");
                 }
                 else
                 {
                     xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
+                    Clicar(webDriver, xpathElemento, "Campo Data Fim Vigencia Trade");
                 }
             }
         }
@@ -707,25 +668,26 @@ public class Dsl
         }
     }
 
+    /// <summary>
+    /// Método para validar mensagens de feedback
+    /// </summary>
+    /// <param name="mensagensEsperadas"></param>
+    /// <param name="mensagensAtuais"></param>
+    /// <returns></returns>
     public static void ValidarMensagemDeFeedbacak(List<MensagemFeedback> mensagensEsperadas, List<MensagemFeedback> mensagensAtuais)
     {
-        var erro = mensagensAtuais.FirstOrDefault(m => m.Atributo == "MC-message-error");
+        var erros = mensagensAtuais.Where(m => m.Atributo == "MC-message-error").ToList();
 
-        if (erro != null)
+        if (erros.Any())
         {
-            Assert.Fail($" Mensagem de erro apresentada: '{erro.Mensagem}' com atributo '{erro.Atributo}'");
+            string mensagensErro = string.Join(Environment.NewLine, erros.Select(e => e.Mensagem));
+            Assert.Fail($"Foram encontrados erros:\n{mensagensErro}");
         }
 
         foreach (var atual in mensagensAtuais)
         {
             Assert.That(mensagensEsperadas.Any(esperada => esperada.Mensagem == atual.Mensagem && esperada.Atributo == atual.Atributo), Is.True);
         }
-
-        Console.WriteLine("Mensagens atuais:");
-        mensagensAtuais.ForEach(ma => Console.WriteLine($" - {ma.Mensagem}"));
-
-        Console.WriteLine("Mensagens esperadas:");
-        mensagensEsperadas.ForEach(me => Console.WriteLine($" - {me.Mensagem}"));
     }
 
     /// <summary>
@@ -819,6 +781,13 @@ public class Dsl
         action.MoveToElement(webElement).Perform();
     }
 
+    /// <summary>
+    /// Método para realizar scroll horizontal dentro de um elemento tabela
+    /// </summary>
+    /// <param name="webDriver"></param>
+    /// <param name="tabelaXPath"></param>
+    /// <param name="colunaXPath"></param>
+    /// returns></returns>
     public static void ScrollHorizontalDentroDoElementoTabela(IWebDriver webDriver, string tabelaXPath, string colunaXPath)
     {
         IWebElement tabela = webDriver.FindElement(By.XPath(tabelaXPath));
@@ -854,11 +823,28 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para recarregar a página (F5)
+    /// Método para calcular a quantidade de dias entre duas datas
     /// </summary>
-    /// <param name="webDriver"></param>
-    public static void RecarregarPagina(IWebDriver webDriver)
+    /// <param name="inicioStr"></param>
+    /// <param name="fimStr"></param>
+    /// <returns>Retorna a quantidade de dias entre as duas datas, incluindo o dia inicial e o dia final</returns>
+    public static int CalcularDiasEntreDatas(string inicioStr, string fimStr)
     {
-        webDriver.Navigate().Refresh();
+        string[] formatosAceitos = { "dd/MM/yyyy", "dd/MMM/yyyy" };
+
+        if (DateTime.TryParseExact(inicioStr, formatosAceitos, CultureInfo.InvariantCulture,
+                                   DateTimeStyles.None, out DateTime inicio) &&
+            DateTime.TryParseExact(fimStr, formatosAceitos, CultureInfo.InvariantCulture,
+                                   DateTimeStyles.None, out DateTime fim))
+        {
+            if (fim < inicio)
+                throw new ArgumentException("A data final não pode ser anterior à data inicial.");
+
+            return (fim - inicio).Days + 1;
+        }
+        else
+        {
+            throw new FormatException("As datas fornecidas não estão no formato esperado 'dd/MMM/yyyy'.");
+        }
     }
 }
