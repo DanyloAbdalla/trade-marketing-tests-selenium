@@ -47,6 +47,9 @@ public class PlanosTest
     {
         var nomeTeste = TestContext.CurrentContext.Test.MethodName;
 
+        if (string.IsNullOrEmpty(nomeTeste))
+            throw new ArgumentException("Nome do teste é inválido");
+
         if (testeAnteriorPulouFalhou)
             Assert.Ignore("Pular teste, o teste anterior falhou");
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
@@ -85,17 +88,14 @@ public class PlanosTest
             .NovaSimulacaoDePlano()
             .PreencherCampoIndustria()
             .PreencherCampoCampanha()
-            .SelecionarAtivos()
-            .SelecionarLojas()
-            .PreencherQuantidadeAtivos(60)
+            .SelecionarAtivosELojas()
+            .PreencherQuantidadeAtivos()
             .GerarPrePlano()
             .SalvarPlano()
-            .FecharDadosDoPlano()
-            .BuscarPlanos()
-            .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano()
             .ValidarPlanoCriado()
             .FecharDadosDoPlano()
+            .BuscarPlanos()
             .ValidarStatusFarolDoPlano();
         }
         else
@@ -109,12 +109,10 @@ public class PlanosTest
             .SelecionarLojas()
             .GerarPrePlano()
             .SalvarPlano()
-            .FecharDadosDoPlano()
-            .BuscarPlanos()
-            .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano()
             .ValidarPlanoCriado()
             .FecharDadosDoPlano()
+            .BuscarPlanos()
             .ValidarStatusFarolDoPlano();
         }
     }
@@ -129,26 +127,20 @@ public class PlanosTest
     [Test, Order(2)]
     public void TestCriarPlanoComAtivosTipoMidiaFisica()
     {
-        string nomeCampanha = DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "nomeCampanha");
-
         if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
             new PlanosContratosPage(webDriver, clienteUpSellAtual)
             .NovaSimulacaoDePlano()
             .PreencherCampoIndustria()
             .PreencherCampoCampanha()
-            .SelecionarAtivos()
-            .SelecionarLojas()
-            .PreencherQuantidadeAtivos(40)
+            .SelecionarAtivosELojas()
+            .PreencherQuantidadeAtivos()
             .GerarPrePlano()
             .SalvarPlano()
-            .FecharDadosDoPlano()
-            .RecarregarPlanos()
-            .BuscarPlanos()
-            .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano()
             .ValidarPlanoCriado()
             .FecharDadosDoPlano()
+            .BuscarPlanos()
             .ValidarStatusFarolDoPlano();
         }
         else
@@ -162,13 +154,10 @@ public class PlanosTest
             .SelecionarLojas()
             .GerarPrePlano()
             .SalvarPlano()
-            .FecharDadosDoPlano()
-            .RecarregarPlanos()
-            .BuscarPlanos()
-            .AbrirEdicaoDoPlano()
             .ValidarReceitasDoPlano()
             .ValidarPlanoCriado()
             .FecharDadosDoPlano()
+            .BuscarPlanos()
             .ValidarStatusFarolDoPlano();
         }
 
@@ -227,8 +216,6 @@ public class PlanosTest
         .AbrirAbaAtivosAlocados()
         .EditarQuantidadesDosAtivosNoPlano()
         .SalvarPlano()
-        .FecharDadosDoPlano()
-        .AbrirEdicaoDoPlano()
         .ValidarReceitasDoPlano()
         .FecharDadosDoPlano();
     }
@@ -249,8 +236,6 @@ public class PlanosTest
         .AbrirAbaAtivosAlocados()
         .AlocarNovosAtivosNoPlano()
         .SalvarPlano()
-        .FecharDadosDoPlano()
-        .AbrirEdicaoDoPlano()
         .ValidarReceitasDoPlano()
         .FecharDadosDoPlano();
     }
