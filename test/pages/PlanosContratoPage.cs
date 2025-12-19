@@ -542,13 +542,28 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarStatusFarolDoPlano()
     {
-        var statusPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.StatusPlano, "Coluna Status Plano");
-        Assert.That(statusPlanoAtual, Does.Contain(statusEsperado), "Status atual não corresponde com o esperado");
+        IWebElement headers = Dsl.EncontrarElemento(webDriver, GlobalVariables.ColunasPlanosCadastrados, "Colunas Infos Planos Cadastrados");
+        IList<IWebElement> theads = headers.FindElements(By.XPath("th"));
 
-        if (clienteUpSellAtual != ClienteUpSell.ClienteStart)
+        foreach (IWebElement colun in theads)
         {
-            var farolPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.FarolPlano, "Coluna Farol Plano");
-            Assert.That(farolPlanoAtual, Does.Contain(farolEsperado), "Farol atual não corresponde com o esperado");
+            string nomeColuna = colun.Text;
+            if (nomeColuna.Equals("Status"))
+            {
+                int index = theads.IndexOf(colun) + 1;
+                var statusPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.StatusPlano(index), "Coluna Status Plano");
+                Assert.That(statusPlanoAtual, Does.Contain(statusEsperado), "Status atual não corresponde com o esperado");
+            }
+
+            if (clienteUpSellAtual != ClienteUpSell.ClienteStart)
+            {
+                if (nomeColuna.Equals("Farol"))
+                {
+                    int index = theads.IndexOf(colun) + 1;
+                    var farolPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.FarolPlano(index), "Coluna Farol Plano");
+                    Assert.That(farolPlanoAtual, Does.Contain(farolEsperado), "Farol atual não corresponde com o esperado");
+                }
+            }
         }
 
         return this;
@@ -818,7 +833,7 @@ public class PlanosContratosPage
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AbaDadosPlano, "Aba Dados Plano");
 
-        if(clienteUpSellAtual == ClienteUpSell.ClienteExpert || clienteUpSellAtual == ClienteUpSell.ClientePro)
+        if (clienteUpSellAtual == ClienteUpSell.ClienteExpert || clienteUpSellAtual == ClienteUpSell.ClientePro)
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.EtapasWorkflow);
 
         Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarRegistro);
@@ -833,7 +848,7 @@ public class PlanosContratosPage
         ValidarMensagensDoPlano(mensagensAtuais);
         Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeFeedback);
 
-        if(clienteUpSellAtual == ClienteUpSell.ClienteStart || clienteUpSellAtual == ClienteUpSell.ClientePro)
+        if (clienteUpSellAtual == ClienteUpSell.ClienteStart || clienteUpSellAtual == ClienteUpSell.ClientePro)
             Dsl.ScrollParaElemento(webDriver, GlobalVariables.ReceitaAtivos);
         else if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {

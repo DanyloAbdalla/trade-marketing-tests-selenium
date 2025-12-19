@@ -125,8 +125,9 @@ public class GlobalVariables
     public static string FiltrarPlanoPorCampanha { get; set; } = "//thead//th[@title='Nome Campanha']//span[@role='button']";
     public static string PesquisarNomeCampanha { get; set; } = "//div[@class='ant-table-filter-dropdown']//input";
     public static string ColunaFimVigencia { get; set; } = "//*[text()='Fim Vigência']";
-    public static string StatusPlano { get; set; } = "//tbody/tr[2]/td[7]";
-    public static string FarolPlano { get; set; } = "//tbody/tr[2]/td[8]/div";
+    public static string ColunasPlanosCadastrados { get; set; } = "//*[text()='Gestão de Planos']/../../../../../../../../../..//*[@class='ant-table-header']//thead/tr";
+    public static string StatusPlano(int index) { return $"//tbody/tr[2]/td[{index}]"; }
+    public static string FarolPlano(int index) { return $"//tbody/tr[2]/td[{index}]/div"; }
     public static string CadastrarPlano { get; set; } = "//*[@data-testid='cadastrarPlano']";
     public static string EditarPlano(string nomePlano) { return $"//*[@data-testid='editarPlano-{nomePlano}']"; }
     public static string ExcluirPlano(string nomePlano) { return $"//*[@data-testid='excluirPlano-{nomePlano}']"; }
