@@ -542,28 +542,29 @@ public class PlanosContratosPage
     /// <returns></returns>
     public PlanosContratosPage ValidarStatusFarolDoPlano()
     {
-        int index = 0;
         IWebElement headers = Dsl.EncontrarElemento(webDriver, GlobalVariables.ColunasPlanosCadastrados, "Colunas Infos Planos Cadastrados");
         IList<IWebElement> theads = headers.FindElements(By.XPath("th"));
-        
+
         foreach (IWebElement colun in theads)
         {
             string nomeColuna = colun.Text;
             if (nomeColuna.Equals("Status"))
             {
+                int index = theads.IndexOf(colun) + 1;
                 var statusPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.StatusPlano(index), "Coluna Status Plano");
                 Assert.That(statusPlanoAtual, Does.Contain(statusEsperado), "Status atual não corresponde com o esperado");
+            }
 
-                if (clienteUpSellAtual != ClienteUpSell.ClienteStart)
+            if (clienteUpSellAtual != ClienteUpSell.ClienteStart)
+            {
+                if (nomeColuna.Equals("Farol"))
                 {
+                    int index = theads.IndexOf(colun) + 1;
                     var farolPlanoAtual = Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.FarolPlano(index), "Coluna Farol Plano");
                     Assert.That(farolPlanoAtual, Does.Contain(farolEsperado), "Farol atual não corresponde com o esperado");
                 }
             }
-            index = theads.IndexOf(colun) + 1;            
         }
-
-
 
         return this;
     }
