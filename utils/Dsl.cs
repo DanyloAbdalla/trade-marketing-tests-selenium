@@ -77,9 +77,9 @@ public class Dsl
             fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)));
         }
         catch (WebDriverTimeoutException ex)
-        { Console.WriteLine("Tempo esgotado para espera da invisibilidade do elemento" + "\n" + ex.Message); }
+        { Console.WriteLine("Tempo esgotado para espera da invisibilidade do elemento:" + "\n" + ex.Message); }
         catch (Exception ex)
-        { Console.WriteLine("Erro ao esperar a invisibilidade do elemento na página: " + "\n" + ex.Message); }
+        { Console.WriteLine("Erro ao esperar a invisibilidade do elemento na página:" + "\n" + ex.Message); }
         finally
         { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
     }
