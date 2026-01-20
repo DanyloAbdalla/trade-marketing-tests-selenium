@@ -29,41 +29,39 @@ pipelines:
             - apt-get install -y wget unzip
             - wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
             - apt install -y ./google-chrome-stable_current_amd64.deb
-            - wget -q https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.35/linux64/chromedriver-linux64.zip
+            - wget -q https://storage.googleapis.com/chrome-for-testing-public/144.0.7559.59/linux64/chromedriver-linux64.zip
             - unzip chromedriver-linux64.zip
             - ls -al
             - export CHROMEDRIVER_PATH="/usr/local/bin"
             - mv chromedriver-linux64 $CHROMEDRIVER_PATH/chromedriver
             - chmod +x $CHROMEDRIVER_PATH/chromedriver
+      - step:
+          name: PlanosTest ClienteStart
+          caches:
+            - dotnetcore
+          script:
+            - dotnet test --filter TestCategory=Start
 
-      - parallel:
-        - step:
-            name: PlanosTest (SemPlantaLoja)
-            caches:
-              - dotnetcore
-            script:
-              - dotnet test --filter TestCategory=PlanosSemPlantaDeLoja
+      - step:
+          name: PlanosTest ClientePro
+          caches:
+            - dotnetcore
+          script:
+            - dotnet test --filter TestCategory=Pro
 
-        - step:
-            name: PlanosTest (ComPlantaLoja)
-            caches:
-              - dotnetcore
-            script:
-              - dotnet test --filter TestCategory=PlanosComPlantaDeLoja
-        
-        - step:
-            name: DashboardOperacoesTest
-            caches:
-              - dotnetcore
-            script:
-              - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
+      - step:
+          name: PlanosTest ClienteExpert
+          caches:
+            - dotnetcore
+          script:
+            - dotnet test --filter TestCategory=Expert
 
-        #- step:
-            #name: SmartIaTest
-            #caches:
-              #- dotnetcore
-            #script:
-              #- dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.SmartIaTest
+      - step:
+          name: DashboardOperacoesTest
+          caches:
+            - dotnetcore
+          script:
+            - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
 
 definitions:
   caches:

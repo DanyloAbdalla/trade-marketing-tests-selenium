@@ -8,7 +8,6 @@ namespace MeuClienteWebTestProject;
 /// </summary>
 [TestFixture("SemPlantaLoja")]
 [TestFixture("ComPlantaLoja")]
-[Parallelizable(ParallelScope.Fixtures)]
 public class SmartIaTest
 {
     private RunSettings runSettings;
@@ -65,13 +64,6 @@ public class SmartIaTest
     /// Como comercial de trade marketing
     /// Eu quero criar uma campanha com pacotes de ativos disponíveis no inventário da loja para alocação
     /// Para comunicar meus clientes sobre vendas destes pacotes na campanha
-    /// 
-    /// Dado que eu não tenho permissão de planta de loja
-    /// E que eu tenho disponibilidade de inventário
-    /// Quando eu iniciar uma nova campanha, preenchendo os campos de cabeçalho
-    /// E reservar o ativo, colocando as quantidades para as lojas, clicando no botão “Salvar”
-    /// E clicar no botão “Salvar” da campanha
-    /// Então a campanha será criada com sucesso com Status = Criando
     /// </summary>
     [Test, Order(1)]
     public void TestCriarCampanhaSmartIA()
@@ -99,13 +91,6 @@ public class SmartIaTest
     /// Como comercial de trade marketing
     /// Eu quero alterar as quantidades dos ativos reservados
     /// Para atualizar minha campanha
-    /// 
-    /// Dado que eu não tenho permissão de planta de loja
-    /// E que eu tenho uma campanha criada, contendo um ativo com disponibilidade de inventário
-    /// Quando eu acessar a tela de edição da campanha
-    /// E alterar a quantidade do ativo, clicando no botão "Salvar"
-    /// E clicar no botão “Salvar” da campanha
-    /// Então a campanha será salva com a nova quantidade
     /// </summary>
     [Test, Order(2)]
     public void TestEditarAtivosReservadosNaCampanhaExistente()
@@ -127,13 +112,6 @@ public class SmartIaTest
     /// Como comercial de trade marketing
     /// Eu quero reservar um novo ativo para as lojas
     /// Para os valores da minha campanha, com o novo ativo
-    /// 
-    /// Dado que eu não tenho permissão de planta de loja
-    /// E que eu tenho uma campanha criada no SmartIA
-    /// Quando acessar a tela de edição
-    /// E reservar um novo ativo para as lojas com disponibilidade de inventário, clicando no botão "Salvar"
-    /// E clicar no botão "Salvar" da campanha
-    /// Então a campanha será salva com o novo ativo
     /// </summary>
     [Test, Order(3)]
     public void TestReservarNovoAtivoNaCampanhaExistente()

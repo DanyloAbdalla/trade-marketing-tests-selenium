@@ -7,10 +7,9 @@ namespace MeuClienteWebTestProject;
 /// <summary>
 /// Classe com os testes para o Cadastro de Planos\Contratos
 /// </summary>
-[TestFixture("ClienteStart")]
-[TestFixture("ClientePro")]
-[TestFixture("ClienteExpert")]
-//[Parallelizable(ParallelScope.Fixtures)]
+[TestFixture("ClienteStart", Category = "Start")]
+[TestFixture("ClientePro", Category = "Pro")]
+[TestFixture("ClienteExpert", Category = "Expert")]
 public class PlanosTest
 {
     private RunSettings runSettings;
