@@ -10,7 +10,6 @@ namespace MeuClienteWebTestProject;
 [TestFixture("ClienteStart")]
 [TestFixture("ClientePro")]
 [TestFixture("ClienteExpert")]
-//[Parallelizable(ParallelScope.Fixtures)]
 public class PlanosTest
 {
     private RunSettings runSettings;

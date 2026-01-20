@@ -68,11 +68,6 @@ public class DashboardOperacoesTest
     /// Como gerente de loja
     /// Eu quero acessar os detalhes do card de Lojas Ativas no Dashboard de Operações
     /// Para visualizar o aproveitamento para cada loja cadastrada na plataforma
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Lojas Ativas" no card de Lojas Ativas 
-    /// Então a tela será apresentada, mostrando o aproveitamento de alocação cada de loja
     /// </summary>
     [Test, Order(1)]
     public void TestAcessarVisaoDetalhadaLojasAtivas()
@@ -88,15 +83,6 @@ public class DashboardOperacoesTest
     /// Como gerente de loja
     /// Eu quero acessar os detalhes do card de Ativos Alocados no Dashboard de Operações
     /// Para visualizar a disponibiliade, negociação e potêncial receita de cada ativo na plataforma
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Disponibilidade de Ativos" 
-    /// E clicar no botão "Visualizar Ativos Negociados" 
-    /// E clicar no botão "Visualizar Listagem Potencial Receita" no card de Ativos Alocados
-    /// Então a tela será apresentada, mostrando a disponibilidade versos a alocação
-    /// E as negociações dos planos vigentes
-    /// E o potencial da receita de alocação de cada ativo
     /// </summary>
     [Test, Order(2)]
     public void TestAcessarVisaoDetalhadaDeAtivosAlocados()
@@ -117,13 +103,6 @@ public class DashboardOperacoesTest
     /// Eu quero acessar os detalhes do card de Contratos Vigentes no Dashboard de Operações
     /// Para visualizar os contratos ativos 
     /// E contratos vencendo na plataforma
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Contratos Ativos" 
-    /// E clicar no botão "Visualizar Contratos Vencendo" no card Contratos Vigentes 
-    /// Então a tela será apresentada, mostrando os contratos ativos
-    /// E os contratos vencendo
     /// </summary>
     [Test, Order(3)]
     public void TestAcessarVisaoDetalhadaDeContratosVigentes()
@@ -143,11 +122,6 @@ public class DashboardOperacoesTest
     /// Como gerente de loja
     /// Eu quero acessar os detalhes do card Total de Receita no Dashboard de Operações
     /// Para visualizar a receita para cada contrato cadastrado na plataforma
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Contratos" no card Total de Receita
-    /// Então a tela será apresentada, mostrando o total de receita de cada contrato
     /// </summary>
     [Test, Order(4)]
     public void TestAcessarVisaoDetalhadaTotalReceita()
@@ -167,13 +141,6 @@ public class DashboardOperacoesTest
     /// E acessar os detalhes do card Evolução Performance Receita Bandeira
     /// E acessar os detalhes do card Evolução Performance Receita Tipo Fornecedor no Dashboard de Operações
     /// Para visualizar a evolução da receita para cada mês do ano
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Listagem de Aterrisagem Receita" no card Evolução Performance Receita
-    /// E clicar no botão "Visualizar Listagem de Aterrisagem Receita" no card Evolução Performance Receita Bandeira
-    /// E clicar no botão "Visualizar Listagem de Aterrisagem Receita" no card Evolução Performance Receita Tipo Fornecedor
-    /// Então a tela será apresentada, mostrando a evolução da receita de cada mês do ano
     /// </summary>
     [Test, Order(5)]
     public void TestAcessarVisaoDetalhadaAterrissagemReceita()
@@ -194,12 +161,6 @@ public class DashboardOperacoesTest
     /// Como gerente de loja
     /// Eu quero acessar os detalhes do card Evolução Performance Parceiro
     /// Para visualizar a evolução do parceiro em negociações realizadas, juntamento com seus investimentos
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Lista Parceiro" no card Evolução Performance Parceiros
-    /// E clicar no botão "Visualizar Lista Parceiro" no card Investimento por Parceiro
-    /// Então a tela será apresentada, mostrando a evolução do parceiro em negociações realizadas
     /// </summary>
     [Test, Order(6)]
     public void TestAcessarVisaoDetalhadaListaParceiro()
@@ -220,11 +181,6 @@ public class DashboardOperacoesTest
     /// Como gerente de loja
     /// Eu quero acessar os detalhes do card Desempenho por Loja
     /// Para visualizar a evolução da loja em negociações realizadas
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Detalhe Desempenho por Loja" no card Desempenho por Loja
-    /// Então a tela será apresentada, mostrando o desempenho do por loja em negociações realizadas
     /// </summary>
     [Test, Order(7)]
     public void TestAcessarVisaoDetalhadaDesempenhoLoja()
@@ -240,11 +196,6 @@ public class DashboardOperacoesTest
     /// Como gerente de loja
     /// Eu quero acessar os detalhes do card Desempenho por Ativos
     /// Para visualizar a evolução do ativo em negociações realizadas
-    /// 
-    /// Dado que eu tenho acesso ao Dashboard de Operações
-    /// Quando acessar o Dashboard
-    /// E clicar no botão "Visualizar Detalhe Desempenho dos Ativos" no card Desempenho de Ativos
-    /// Então a tela será apresentada, mostrando o desempenho do ativo em negociações realizadas
     /// </summary>
     [Test, Order(8)]
     public void TestAcessarVisaoDetalhadaDesempenhoAtivo()
