@@ -36,7 +36,7 @@ public class DriverFactory
                     chromeOptions.AddArgument("--window-size=1920,1080");
                     chromeOptions.AddArgument("--disable-software-rasterizer");
                     chromeOptions.AddArgument("--remote-allow-origins=*");
-                    chromeOptions.BinaryLocation = "/usr/bin/google-chrome";
+                    chromeOptions.BinaryLocation = "/usr/bin/google-chrome-stable";
                     chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
                 }
 
