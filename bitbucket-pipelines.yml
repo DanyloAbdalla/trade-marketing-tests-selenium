@@ -26,16 +26,15 @@ pipelines:
             - dotnetcore
           script:
             - apt-get update
-            - apt-get install -y wget unzip curl
+            - apt-get install -y wget unzip curl gnupg
             - wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
             - apt install -y ./google-chrome-stable_current_amd64.deb
             - google-chrome --version
-            - CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
-            - wget -q https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip
-            - unzip chromedriver-linux64.zip
-            - export CHROMEDRIVER_PATH="/usr/local/bin"
-            - mv chromedriver-linux64/chromedriver $CHROMEDRIVER_PATH/
-            - chmod +x $CHROMEDRIVER_PATH/chromedriver
+            - CHROME_VERSION=$(google-chrome --version | grep -oP '\d+' | head -1)
+            - DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
+            - wget -q https://storage.googleapis.com/chrome-for-testing-public/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip
+            - unzip chromedriver-linux64.zip -d /usr/local/bin/
+            - chmod +x /usr/local/bin/chromedriver
             - which chromedriver
             - chromedriver --version
 
