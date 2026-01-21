@@ -23,17 +23,9 @@ public class DriverFactory
         {
             case BrowserType.Chrome:
                 var chromeOptions = new ChromeOptions();
-                var environment = Environment.GetEnvironmentVariable("Environment");
+                var environment = Environment.GetEnvironmentVariable("environment");
 
-                if (environment != "CD")
-                {
-                    chromeOptions.AddArgument("--start-maximized");
-                    Console.WriteLine("Iniciando o ChromeDriver em modo visível...");
-                    webDriver = new ChromeDriver(chromeOptions);
-                    webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
-                    webDriver.Navigate().GoToUrl(GlobalVariables.urlDevPlataforma);
-                }
-                else
+                if (environment.Equals("CD"))
                 {
                     var service = ChromeDriverService.CreateDefaultService(driverPath: "/usr/local/bin");
                     chromeOptions.AddArgument("--headless");
@@ -71,6 +63,14 @@ public class DriverFactory
 
                     webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(90);
                     webDriver.Navigate().GoToUrl(GlobalVariables.urlHmlPlataforma);
+                }
+                else
+                {
+                    chromeOptions.AddArgument("--start-maximized");
+                    Console.WriteLine("Iniciando o ChromeDriver em modo visível...");
+                    webDriver = new ChromeDriver(chromeOptions);
+                    webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+                    webDriver.Navigate().GoToUrl(GlobalVariables.urlDevPlataforma);
                 }
 
                 break;

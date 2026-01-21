@@ -24,8 +24,8 @@ pipelines:
           name: Setup Selenium Environment
           caches:
             - dotnetcore
-          variables: 
-            Environment: "CD"
+          input-variables: 
+            environment: "CD"
           script:
             - apt-get update
             - apt-get install -y net-tools
@@ -63,8 +63,8 @@ pipelines:
       #     name: PlanosTest ClienteStart
       #     caches:
       #       - dotnetcore
-      #     variables: 
-      #       Environment: "CD"
+      #     input-variables:
+      #       environment: "CD"
       #     script:
       #       - dotnet test --filter TestCategory=Start
 
@@ -72,8 +72,8 @@ pipelines:
       #     name: PlanosTest ClientePro
       #     caches:
       #       - dotnetcore
-      #     variables: 
-      #       Environment: "CD"
+      #     input-variables:
+      #       environment: "CD"
       #     script:
       #       - dotnet test --filter TestCategory=Pro
 
@@ -81,8 +81,8 @@ pipelines:
       #     name: PlanosTest ClienteExpert
       #     caches:
       #       - dotnetcore
-      #     variables: 
-      #       Environment: "CD"
+      #     input-variables:
+      #       environment: "CD"
       #     script:
       #       - dotnet test --filter TestCategory=Expert
 
@@ -90,8 +90,8 @@ pipelines:
           name: DashboardOperacoesTest
           caches:
             - dotnetcore
-          variables: 
-            Environment: "CD"
+          input-variables:
+            environment: "CD"
           script:
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
 
