@@ -22,25 +22,52 @@ public class DriverFactory
         switch (browserType)
         {
             case BrowserType.Chrome:
-                ChromeOptions chromeOptions = new ChromeOptions();
+                var chromeOptions = new ChromeOptions();
 
                 if (!GlobalVariables.headLessMode)
                 {
                     chromeOptions.AddArgument("--start-maximized");
+                    webDriver = new ChromeDriver(chromeOptions);
+                    webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
                 }
                 else
                 {
+                    var service = ChromeDriverService.CreateDefaultService(driverPath: "/usr/local/bin");
                     chromeOptions.AddArgument("--headless");
                     chromeOptions.AddArgument("--no-sandbox");
                     chromeOptions.AddArgument("--disable-dev-shm-usage");
                     chromeOptions.AddArgument("--disable-gpu");
                     chromeOptions.AddArgument("--window-size=1920,1080");
                     chromeOptions.AddArgument("--remote-allow-origins=*");
+                    chromeOptions.AddArgument("--remote-debugging-port=9222");
+                    chromeOptions.AddArgument("--no-first-run");
+                    chromeOptions.AddArgument("--disable-extensions");
+                    chromeOptions.AddArgument("--disable-sync");
+                    chromeOptions.AddArgument("--disable-translate");
+                    chromeOptions.AddArgument("--disable-background-networking");
+                    chromeOptions.AddArgument("--disable-component-extensions-with-background-pages");
                     chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
+
+                    try
+                    {
+                        webDriver = new ChromeDriver(service, chromeOptions);
+                    }
+                    catch (WebDriverException ex)
+                    {
+                        Console.Error.WriteLine("Erro ao iniciar o ChromeDriver em modo headless: ");
+                        Console.Error.WriteLine(ex.Message);
+                        Console.Error.WriteLine($"Inner: {ex.InnerException?.Message}");
+                        Console.Error.WriteLine($"ChromeDriver Path: {Environment.GetEnvironmentVariable("PATH")}");
+
+                        throw new InvalidOperationException(
+                            "Falha ao iniciar o ChromeDriver. Verifique se o ChromeDriver está instalado corretamente e acessível no PATH do sistema.",
+                            ex
+                        );
+                    }
+
+                    webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(90);
                 }
 
-                webDriver = new ChromeDriver(chromeOptions);
-                webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
                 if (GlobalVariables.devMode)
                     webDriver.Navigate().GoToUrl(GlobalVariables.urlDevPlataforma);
                 if (GlobalVariables.hmlMode)
