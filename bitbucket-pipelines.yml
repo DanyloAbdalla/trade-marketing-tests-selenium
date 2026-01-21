@@ -81,7 +81,7 @@ pipelines:
       #     caches:
       #       - dotnetcore
       #     script:
-      #       environment: "CD"
+      #       - echo $environment
       #       - dotnet test --filter TestCategory=Expert
 
       - step:
