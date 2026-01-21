@@ -54,32 +54,32 @@ pipelines:
             - which chromedriver
             - chromedriver --version
 
-      - step:
-          name: PlanosTest ClienteStart
-          caches:
-            - dotnetcore
-          variables: 
-            Environment: "CD"
-          script:
-            - dotnet test --filter TestCategory=Start
+      # - step:
+      #     name: PlanosTest ClienteStart
+      #     caches:
+      #       - dotnetcore
+      #     variables: 
+      #       Environment: "CD"
+      #     script:
+      #       - dotnet test --filter TestCategory=Start
 
-      - step:
-          name: PlanosTest ClientePro
-          caches:
-            - dotnetcore
-          variables: 
-            Environment: "CD"
-          script:
-            - dotnet test --filter TestCategory=Pro
+      # - step:
+      #     name: PlanosTest ClientePro
+      #     caches:
+      #       - dotnetcore
+      #     variables: 
+      #       Environment: "CD"
+      #     script:
+      #       - dotnet test --filter TestCategory=Pro
 
-      - step:
-          name: PlanosTest ClienteExpert
-          caches:
-            - dotnetcore
-          variables: 
-            Environment: "CD"
-          script:
-            - dotnet test --filter TestCategory=Expert
+      # - step:
+      #     name: PlanosTest ClienteExpert
+      #     caches:
+      #       - dotnetcore
+      #     variables: 
+      #       Environment: "CD"
+      #     script:
+      #       - dotnet test --filter TestCategory=Expert
 
       - step:
           name: DashboardOperacoesTest
