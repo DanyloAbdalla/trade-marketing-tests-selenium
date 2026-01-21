@@ -25,7 +25,7 @@ public class DriverFactory
                 var chromeOptions = new ChromeOptions();
                 var environment = Environment.GetEnvironmentVariable("environment");
 
-                if (environment.Equals("CD"))
+                if (environment != null && environment.Equals("CD"))
                 {
                     var service = ChromeDriverService.CreateDefaultService(driverPath: "/usr/local/bin");
                     chromeOptions.AddArgument("--headless");

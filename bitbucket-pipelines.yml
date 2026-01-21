@@ -24,11 +24,10 @@ pipelines:
           name: Setup Selenium Environment
           caches:
             - dotnetcore
-          input-variables: 
-            environment: "CD"
           script:
             - apt-get update
             - apt-get install -y net-tools
+            - echo "environment=CD"
       
             # 1️⃣ Instalar ferramentas base
             - apt-get install -y wget unzip curl gnupg
@@ -58,41 +57,39 @@ pipelines:
 
             # 7️⃣ Encerrar processos do Chrome (se houver)
             - pkill -f google-chrome || true
+          outputs-variables:
+            - echo environment
 
       # - step:
       #     name: PlanosTest ClienteStart
       #     caches:
       #       - dotnetcore
-      #     input-variables:
-      #       environment: "CD"
       #     script:
+      #       - echo $environment
       #       - dotnet test --filter TestCategory=Start
 
       # - step:
       #     name: PlanosTest ClientePro
       #     caches:
       #       - dotnetcore
-      #     input-variables:
-      #       environment: "CD"
       #     script:
+      #       - echo $environment
       #       - dotnet test --filter TestCategory=Pro
 
       # - step:
       #     name: PlanosTest ClienteExpert
       #     caches:
       #       - dotnetcore
-      #     input-variables:
-      #       environment: "CD"
       #     script:
+      #       environment: "CD"
       #       - dotnet test --filter TestCategory=Expert
 
       - step:
           name: DashboardOperacoesTest
           caches:
             - dotnetcore
-          input-variables:
-            environment: "CD"
           script:
+            - echo $environment
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
 
 definitions:
