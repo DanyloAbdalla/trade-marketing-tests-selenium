@@ -8,6 +8,12 @@
 
 image: mcr.microsoft.com/dotnet/sdk:8.0
 
+definitions:
+  caches:
+    dotnetcore: ~/.nuget/packages
+  variables:
+    environment: "CD"
+
 pipelines:
   custom:
     automated:
@@ -27,7 +33,6 @@ pipelines:
           script:
             - apt-get update
             - apt-get install -y net-tools
-            - echo "environment=CD"
       
             # 1️⃣ Instalar ferramentas base
             - apt-get install -y wget unzip curl gnupg
@@ -57,8 +62,6 @@ pipelines:
 
             # 7️⃣ Encerrar processos do Chrome (se houver)
             - pkill -f google-chrome || true
-          outputs-variables:
-            - echo environment
 
       # - step:
       #     name: PlanosTest ClienteStart
@@ -91,7 +94,3 @@ pipelines:
           script:
             - echo $environment
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
-
-definitions:
-  caches:
-    dotnetcore: ~/.nuget/packages
