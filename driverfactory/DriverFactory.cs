@@ -27,7 +27,7 @@ public class DriverFactory
 
                 if (environment != null && environment == "true")
                 {
-                    var service = ChromeDriverService.CreateDefaultService(driverPath: "/usr/local/bin");
+                    var service = ChromeDriverService.CreateDefaultService(driverPath: "/usr/local/bin/chromedriver");
                     chromeOptions.AddArgument("--headless");
                     chromeOptions.AddArgument("--no-sandbox");
                     chromeOptions.AddArgument("--disable-dev-shm-usage");
