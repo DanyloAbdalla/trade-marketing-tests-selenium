@@ -6,7 +6,7 @@
 # To run your pipeline on a Windows machine, create a self-hosted Windows runner.
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
 
-image: mcr.microsoft.com/dotnet/sdk:8.0
+image: danyloabdalla/dotnet-selenium-chrome:latest
 
 definitions:
   caches:
@@ -23,65 +23,6 @@ pipelines:
             - echo "Starting build..."
             - dotnet restore
             - dotnet build --configuration Release
-
-      - step:
-          name: Setup Selenium Environment
-          caches:
-            - dotnetcore
-          script:
-            - apt-get update
-            - apt-get install -y net-tools
-      
-            # 1️⃣ Instalar ferramentas base
-            - apt-get install -y wget unzip curl gnupg
-      
-            # 2️⃣ Instalar dependências do Chrome (CRÍTICO)
-            - apt-get install -y libxss1 fonts-liberation xdg-utils libnss3 libatk-bridge2.0-0 libcups2 libxcomposite1 libxrandr2 libgbm1
-      
-            # 3️⃣ Instalar Google Chrome
-            - wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            - apt install -y ./google-chrome-stable_current_amd64.deb
-            - ps aux | grep chrome
-      
-            # 4️⃣ Validar instalação do Chrome
-            - google-chrome --version
-      
-            # 5️⃣ Baixar e extrair ChromeDriver compatível
-            - CHROME_VERSION=$(google-chrome --version | grep -oP '\d+' | head -1)
-            - DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
-            - wget -q https://storage.googleapis.com/chrome-for-testing-public/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip
-            - unzip chromedriver-linux64.zip
-            - mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
-            - chmod +x /usr/bin/chromedriver
-      
-            # 6️⃣ Validar instalação do ChromeDriver
-            - which chromedriver
-            - chromedriver --version
-            - ls -l /usr/bin/chromedriver
-
-            # 7️⃣ Encerrar processos do Chrome (se houver)
-            - pkill -f google-chrome || true
-
-      # - step:
-      #     name: PlanosTest ClienteStart
-      #     caches:
-      #       - dotnetcore
-      #     script:
-      #       - dotnet test --filter TestCategory=Start
-
-      # - step:
-      #     name: PlanosTest ClientePro
-      #     caches:
-      #       - dotnetcore
-      #     script:
-      #       - dotnet test --filter TestCategory=Pro
-
-      # - step:
-      #     name: PlanosTest ClienteExpert
-      #     caches:
-      #       - dotnetcore
-      #     script:
-      #       - dotnet test --filter TestCategory=Expert
 
       - step:
           name: DashboardOperacoesTest
