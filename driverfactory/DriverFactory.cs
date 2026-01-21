@@ -25,9 +25,10 @@ public class DriverFactory
                 var chromeOptions = new ChromeOptions();
                 var environment = Environment.GetEnvironmentVariable("Environment");
 
-                if (environment is null || environment != "CD")
+                if (environment != "CD")
                 {
                     chromeOptions.AddArgument("--start-maximized");
+                    Console.WriteLine("Iniciando o ChromeDriver em modo visível...");
                     webDriver = new ChromeDriver(chromeOptions);
                     webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
                     webDriver.Navigate().GoToUrl(GlobalVariables.urlDevPlataforma);
