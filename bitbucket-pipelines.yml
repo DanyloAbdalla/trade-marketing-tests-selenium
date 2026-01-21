@@ -8,6 +8,12 @@
 
 image: mcr.microsoft.com/dotnet/sdk:8.0
 
+definitions:
+  caches:
+    dotnetcore: ~/.nuget/packages
+  variables:
+    environment: "CD"
+
 pipelines:
   custom:
     automated:
@@ -24,8 +30,6 @@ pipelines:
           name: Setup Selenium Environment
           caches:
             - dotnetcore
-          input-variables: 
-            environment: "CD"
           script:
             - apt-get update
             - apt-get install -y net-tools
@@ -63,38 +67,30 @@ pipelines:
       #     name: PlanosTest ClienteStart
       #     caches:
       #       - dotnetcore
-      #     input-variables:
-      #       environment: "CD"
       #     script:
+      #       - echo $environment
       #       - dotnet test --filter TestCategory=Start
 
       # - step:
       #     name: PlanosTest ClientePro
       #     caches:
       #       - dotnetcore
-      #     input-variables:
-      #       environment: "CD"
       #     script:
+      #       - echo $environment
       #       - dotnet test --filter TestCategory=Pro
 
       # - step:
       #     name: PlanosTest ClienteExpert
       #     caches:
       #       - dotnetcore
-      #     input-variables:
-      #       environment: "CD"
       #     script:
+      #       - echo $environment
       #       - dotnet test --filter TestCategory=Expert
 
       - step:
           name: DashboardOperacoesTest
           caches:
             - dotnetcore
-          input-variables:
-            environment: "CD"
           script:
+            - echo $environment
             - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
-
-definitions:
-  caches:
-    dotnetcore: ~/.nuget/packages
