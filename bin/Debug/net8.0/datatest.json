@@ -147,6 +147,10 @@
     "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel": {},
     "TestAprovarPlano": {
       "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
+      "tipoCampanha": "Tipo Campanha 01",
+      "Setor": "Setor 01",
+      "Departamento": "Departamento 01",
+      "Categoria": "Categoria 01",
       "statusEsperado": "Aprovado",
       "farolEsperado": "APROVADO"
     },

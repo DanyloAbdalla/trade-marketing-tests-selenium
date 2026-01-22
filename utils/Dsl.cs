@@ -119,7 +119,7 @@ public class Dsl
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
         }
         catch (Exception ex)
-        { throw new Exception("Erro ao esperar elemento para clicar: " + "\n" + ex.Message + "\n" + elemento); }
+        { throw new Exception("Erro ao esperar elemento para clicar: " + elemento + "\n" + ex.Message); }
     }
 
     /// <summary>
@@ -527,11 +527,16 @@ public class Dsl
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
-                Esperar();
                 if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                {
                     webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                    Esperar();
+                }
                 else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                {
                     webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
+                    Esperar();
+                }
             }
 
             var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
