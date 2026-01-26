@@ -32,6 +32,7 @@ public class GlobalVariables
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
     public static string CancelarAcao { get; set; } = "//button/*[text()='Cancelar']";
+    public static string AvancarCalendarioMes { get; set; } = "//*[@class='ant-picker-date-panel']/../../../..//*[not(contains(@class,'picker-dropdown-hidden'))]//div//div/div//div//button[contains(@class,'header-next-btn')]";
     public static string AvancarMesesCalendariosBotton { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//*[@class='ant-picker-header-next-btn']";
     public static string AvancarMesesCalendariosTop { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//*[@class='ant-picker-header-next-btn']";
     #endregion
@@ -233,7 +234,6 @@ public class GlobalVariables
     public static string AplicarDesconto { get; set; } = "//button/*[text()='Aplicar']";
     public static string InicioVigenciaPlano { get; set; } = "//*[@data-testid='inicioVigencia']";
     public static string FimVigenciaPlano { get; set; } = "//*[@data-testid='fimVigencia']";
-    public static string AvancarCalendarioMes { get; set; } = "//*[contains(@class,'header-next-btn')]";
     public static string ReceitaAtivos { get; set; } = "//*[@data-testid='receitaAtivos']";
     public static string ReceitaAtivosDesconto { get; set; } = "//*[@data-testid='receitaAtivosDesconto']";
     public static string ReceitaPlano { get; set; } = "//*[@data-testid='receita']";
@@ -260,7 +260,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados
-    public static string FiltrarAtivoAlocado { get; set; } = "//thead//th[@title='Ativo']//span[@role='button']";
+    public static string FiltrarAtivoAlocado { get; set; } = "//thead//th[@aria-label='Ativo']//span[@role='button']";
     public static string PreencherNomeAtivo { get; set; } = "(//div[@style='padding: 5px;'])[2]/input";
     public static string BuscarAtivoAlocado { get; set; } = "(//div[@style='padding: 5px;'])[2]/button/span[text()='Buscar']";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";

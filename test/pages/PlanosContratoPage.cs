@@ -630,6 +630,7 @@ public class PlanosContratosPage
     {
         Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoAlocado(nomeAtivo), "Botão Editar Ativo Alocado");
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaAlocacaoPorLoja, "Load Tela Alocação por Loja");
+        Dsl.Esperar(5000);
 
         return this;
     }
@@ -646,7 +647,7 @@ public class PlanosContratosPage
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "nomeCampanha")), "Botão Editar Plano");
 
         Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaDadosPlano, "Load Aba Dados do Plano");
-        Dsl.Esperar();
+        Dsl.Esperar(10000);
 
         if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
@@ -692,7 +693,14 @@ public class PlanosContratosPage
             avancarMesCalendarioFimVigenciaEm = 2;
         }
 
-        if (nomeTeste.Equals("TestCriarPlanoComAlertaDeInventario"))
+        Dsl.Clicar(webDriver, GlobalVariables.FimVigenciaPlano, "Campo Fim Vigencia Plano");
+        Dsl.PreencherCalendarios(webDriver, avancarMesCalendarioFimVigenciaEm, "Calendário Fim Vigência Plano");
+
+        Dsl.Clicar(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigencia Plano");
+        Dsl.PreencherCalendarios(webDriver, avancarMesCalendarioInicioVigenciaEm, "Calendário Início Vigência Plano");
+
+
+        /*if (nomeTeste.Equals("TestCriarPlanoComAlertaDeInventario"))
         {
             Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaSimulacao, "Campo Fim Vigencia Novo Plano");
             Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioFimVigenciaEm);
@@ -702,12 +710,12 @@ public class PlanosContratosPage
         }
         else if (nomeTeste.Equals("TestEditarPlanoExistenteAlterandoVigenciaDoPlano"))
         {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigencia Editar Plano");
+            Dsl.Clicar(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigencia Editar Plano");
             Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioInicioVigenciaEm);
 
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FimVigenciaPlano, "Campo Fim Vigencia Editar Plano");
+            Dsl.Clicar(webDriver, GlobalVariables.FimVigenciaPlano, "Campo Fim Vigencia Editar Plano");
             Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioFimVigenciaEm);
-        }
+        }*/
 
         return this;
     }
@@ -727,11 +735,11 @@ public class PlanosContratosPage
 
                 Dsl.ClicarNoElementoId(fimVigenciaTrade, "Campo Fim Vigência do Trade");
                 Dsl.Esperar(2000);
-                Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioEm);
+                Dsl.PreencherCalendarios(webDriver, avancarMesCalendarioEm, "Calendário Fim Vigência Trade");
 
                 Dsl.ClicarNoElementoId(inicioVigenciaTrade, "Campo Início Vigência do Trade");
                 Dsl.Esperar(2000);
-                Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioEm);
+                Dsl.PreencherCalendarios(webDriver, avancarMesCalendarioEm, "Calendário Início Vigência Trade");
                 break;
             case ClienteUpSell.ClientePro:
             case ClienteUpSell.ClienteExpert:
@@ -740,11 +748,11 @@ public class PlanosContratosPage
 
                 Dsl.ClicarNoElementoId(fimVigenciaTrade, "Campo Fim Vigência do Trade");
                 Dsl.Esperar(2000);
-                Dsl.PreencherCalendariosFimVigencia(webDriver, avancarMesCalendarioFimVigenciaEm);
+                Dsl.PreencherCalendarios(webDriver, avancarMesCalendarioFimVigenciaEm, "Calendário Fim Vigência Trade");
 
                 Dsl.ClicarNoElementoId(inicioVigenciaTrade, "Campo Início Vigência do Trade");
                 Dsl.Esperar(2000);
-                Dsl.PreencherCalendariosInicioVigencia(webDriver, avancarMesCalendarioInicioVigenciaEm);
+                Dsl.PreencherCalendarios(webDriver, avancarMesCalendarioInicioVigenciaEm, "Calendário Início Vigência Trade");
                 break;
         }
 

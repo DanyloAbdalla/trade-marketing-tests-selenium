@@ -24,7 +24,6 @@ public class DriverFactory
             case BrowserType.Chrome:
                 var chromeOptions = new ChromeOptions();
                 var environment = Environment.GetEnvironmentVariable("CI");
-                GlobalVariables.ExplicitWait = TimeSpan.FromSeconds(30);
 
                 if (environment != null && environment == "true")
                 {
@@ -58,13 +57,15 @@ public class DriverFactory
                             "Falha ao iniciar o ChromeDriver. Verifique se o ChromeDriver está instalado corretamente e acessível no PATH do sistema.", ex);
                     }
 
-                    webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(90);
+                    GlobalVariables.ExplicitWait = TimeSpan.FromSeconds(90);
+                    webDriver.Manage().Timeouts().ImplicitWait = GlobalVariables.ExplicitWait;
                     webDriver.Navigate().GoToUrl(GlobalVariables.urlHmlPlataforma);
                 }
                 else
                 {
                     chromeOptions.AddArgument("--start-maximized");
                     webDriver = new ChromeDriver(chromeOptions);
+                    GlobalVariables.ExplicitWait = TimeSpan.FromSeconds(50);
                     webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
                     webDriver.Navigate().GoToUrl(GlobalVariables.urlDevPlataforma);
                 }

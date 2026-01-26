@@ -23,8 +23,8 @@ public class Dsl
 
         var wait = new DefaultWait<IWebDriver>(webDriver)
         {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(250)
+            Timeout = TimeSpan.FromSeconds(20),
+            PollingInterval = TimeSpan.FromMilliseconds(500)
         };
 
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
@@ -54,7 +54,7 @@ public class Dsl
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
         }
         catch (WebDriverTimeoutException ex)
-        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento:" + "\n" + ex.Message + "\n" + elemento); }
+        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento:" + "\n" + elemento + "\n" + ex.Message); }
         catch (Exception ex)
         { Console.WriteLine("Erro ao esperar a visibilidade do elemento na página:" + "\n" + ex.Message); }
         finally
@@ -100,7 +100,7 @@ public class Dsl
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath)));
         }
         catch (Exception ex)
-        { throw new Exception("Erro ao esperar elemento ficar clicavel: " + "\n" + ex.Message + "\n" + elemento); }
+        { throw new Exception("Erro ao esperar elemento ficar clicavel: " + "\n" + elemento + "\n" + ex.Message); }
     }
 
     /// <summary>
@@ -196,8 +196,8 @@ public class Dsl
             IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
             jsExecutor.ExecuteScript("arguments[0].click();", element);
         }
-        catch (NoSuchElementException)
-        { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
+        catch (NoSuchElementException ex)
+        { throw new NoSuchElementException("Elemento \"" + elemento + "\" não localizado " + ex.Message); }
         catch (Exception ex)
         { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
     }
@@ -448,36 +448,53 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para selecionar datas de início vingencia, baseado na data atual
+    /// Método para selecionar datas de vingencia, baseado na data atual
     /// Avançando para os meses seguintes se quantidadeAvancarMeses for maior que 0
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="quantidadeAvancarMeses"></param>
-    public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, int quantidadeAvancarMeses)
+    /// <param name="elemento"></param>
+    public static void PreencherCalendarios(IWebDriver webDriver, int quantidadeAvancarMeses, string elemento)
     {
         DateTime dataAtual = DateTime.Now;
-        var diaAtual = dataAtual.Day;
         string xpathElemento;
 
         if (quantidadeAvancarMeses == 0)
         {
-            webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
+            webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{dataAtual.Day}'])[1]")).Click();
         }
         else if (quantidadeAvancarMeses > 0)
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
-                Esperar();
-                if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                /*if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                {
                     webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                    Esperar();
+                }
                 else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                {
                     webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
+                }*/
+                Clicar(webDriver, GlobalVariables.AvancarCalendarioMes, "Botão Avançar Mês Calendário");
+                Esperar(2000);
             }
 
-            var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
-            var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
+            var xpathElementoCalendario = "//*[@class='ant-picker-date-panel']";
 
-            if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
+            if (dataAtual.Day == 1)
+                xpathElemento = $"{xpathElementoCalendario}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{dataAtual.Day}']";
+            else if (EhUltimoDiaDoMes(dataAtual))
+                xpathElemento = $"{xpathElementoCalendario}//td[@class='ant-picker-cell ant-picker-cell-end ant-picker-cell-in-view']//div[text()='{dataAtual.Day}']";
+            else
+                xpathElemento = $"{xpathElementoCalendario}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{dataAtual.Day}']";
+
+            Clicar(webDriver, xpathElemento, elemento);
+
+            //var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
+            //var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
+
+            /*if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
             {
 
                 if (diaAtual == 1)
@@ -503,7 +520,7 @@ public class Dsl
                     xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
                     Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
                 }
-            }
+            }*/
         }
     }
 
@@ -852,4 +869,10 @@ public class Dsl
             throw new FormatException("As datas fornecidas não estão no formato esperado 'dd/MMM/yyyy'.");
         }
     }
+
+    public static bool EhUltimoDiaDoMes(DateTime data)
+    {
+        return data.Day == DateTime.DaysInMonth(data.Year, data.Month);
+    }
+
 }
