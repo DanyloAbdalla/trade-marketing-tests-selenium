@@ -90,7 +90,7 @@ public class PlanosContratosPage
     {
         var mensagemConfirmacaoEsperadaReutilizarDadosSalvosAnteriormente = "Existemdadossalvosdaultimasimulação,desejareutiliza-los?";
 
-        Dsl.Clicar(webDriver, GlobalVariables.NovoRegistro, "Botão Nova Simulação");
+        Dsl.Clicar(webDriver, GlobalVariables.CadastrarPlano, "Botão Novo Plano");
 
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TituloModalConfirmacao) > 0)
@@ -848,8 +848,8 @@ public class PlanosContratosPage
         if (clienteUpSellAtual == ClienteUpSell.ClienteExpert || clienteUpSellAtual == ClienteUpSell.ClientePro)
             Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.EtapasWorkflow, "Display Etapas Workflow do Plano");
 
-        Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarRegistro, "Botão Salvar Plano");
-        Dsl.Clicar(webDriver, GlobalVariables.SalvarRegistro, "Botão Salvar Plano");
+        Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarPlano, "Botão Salvar Plano");
+        Dsl.Clicar(webDriver, GlobalVariables.SalvarPlano, "Botão Salvar Plano");
         Dsl.Esperar(1000);
 
         if (!string.IsNullOrEmpty(nomeTeste) && nomeTeste.Equals("TestCancelarPlano"))

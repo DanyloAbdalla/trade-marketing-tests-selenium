@@ -141,8 +141,6 @@ public class GlobalVariables
     public static string SelecionarIndustriaClienteStart { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='116873']";
     public static string SelecionarIndustriaClientePro { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
     public static string SelecionarIndustriaClientExpert { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
-    public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
-    public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//*[@data-testid='nomeCampanha']";
     public static string InicioVigenciaSimulacao { get; set; } = "//input[@data-testid='inicioVigencia']";
     public static string FimVigenciaSimulacao { get; set; } = "//input[@data-testid='fimVigencia']";

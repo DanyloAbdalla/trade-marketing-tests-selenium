@@ -54,9 +54,9 @@ public class Dsl
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
         }
         catch (WebDriverTimeoutException ex)
-        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento:" + "\n" + elemento + "\n" + ex.Message); }
+        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento: " + elemento); }
         catch (Exception ex)
-        { Console.WriteLine("Erro ao esperar a visibilidade do elemento na página:" + "\n" + ex.Message); }
+        { Console.WriteLine("Ocorreu o erro: " + ex.Message + " ao esperar a visibilidade do elemento " + elemento); }
         finally
         { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
 
@@ -100,7 +100,7 @@ public class Dsl
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath)));
         }
         catch (Exception ex)
-        { throw new Exception("Erro ao esperar elemento ficar clicavel: " + "\n" + elemento + "\n" + ex.Message); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao esperar o elemento " + elemento + " ficar apto ao click"); }
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public class Dsl
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
         }
         catch (Exception ex)
-        { throw new Exception("Erro ao esperar elemento para clicar: " + elemento + "\n" + ex.Message); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao esperar o elemento " + elemento + " para realizar o click"); }
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public class Dsl
         catch (WebDriverTimeoutException)
         { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
         catch (Exception ex)
-        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao encontrar o elemento " + elemento); }
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ public class Dsl
         catch (NoSuchElementException ex)
         { throw new NoSuchElementException("Elemento \"" + elemento + "\" não localizado " + ex.Message); }
         catch (Exception ex)
-        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao clicar no elemento " + elemento); }
     }
 
     /// <summary>
@@ -215,7 +215,9 @@ public class Dsl
             elementId.Click();
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao clicar no elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -242,7 +244,9 @@ public class Dsl
             return elementCount;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao contar a existência do elemento na tela.");
+        }
     }
 
     /// <summary>
@@ -283,7 +287,9 @@ public class Dsl
             return textoElemento;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao obter dados o texto do elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -382,7 +388,9 @@ public class Dsl
             return valor;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao obter dados do atributo do elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -426,7 +434,10 @@ public class Dsl
             Esperar();
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao digitar no elemento " + elemento);
+        }
+
     }
 
     /// <summary>
@@ -467,20 +478,9 @@ public class Dsl
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
-                /*if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
-                {
-                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
-                    Esperar();
-                }
-                else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
-                {
-                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
-                }*/
                 Clicar(webDriver, GlobalVariables.AvancarCalendarioMes(GlobalVariables.Calendario), "Botão Avançar Mês Calendário");
                 Esperar();
             }
-
-            //var xpathElementoCalendario = "//*[@class='ant-picker-date-panel']/../../../../div[not(contains(@class,'picker-dropdown-hidden'))]";
 
             if (dataAtual.Day == 1)
                 xpathElementoData = GlobalVariables.CalendarioDataInicioMes(GlobalVariables.Calendario, dataAtual.Day.ToString());
@@ -489,43 +489,8 @@ public class Dsl
             else
                 xpathElementoData = GlobalVariables.CalendarioData(GlobalVariables.Calendario, dataAtual.Day.ToString());
 
-            //xpathElementoData = $"{xpathElementoCalendario}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{dataAtual.Day}']";
-            //xpathElementoData = $"{xpathElementoCalendario}//td[@class='ant-picker-cell ant-picker-cell-end ant-picker-cell-in-view']//div[text()='{dataAtual.Day}']";
-            //xpathElementoData = $"{xpathElementoCalendario}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{dataAtual.Day}']";
-
             Esperar();
             Clicar(webDriver, xpathElementoData, elemento);
-
-            //var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
-            //var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
-
-            /*if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
-            {
-
-                if (diaAtual == 1)
-                {
-                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
-                }
-                else
-                {
-                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
-                }
-            }
-            else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
-            {
-                if (diaAtual == 1)
-                {
-                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
-                }
-                else
-                {
-                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
-                }
-            }*/
         }
     }
 
@@ -610,7 +575,7 @@ public class Dsl
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message + "\n" + elemento);
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao remover numeros do texto no elemento " + elemento);
         }
     }
 
@@ -629,17 +594,13 @@ public class Dsl
             var textoTratado = Regex.Replace(texto, @"[\d\s:]", "");
 
             if (textoTratado.Any(char.IsLetter) || textoTratado.Any(char.IsPunctuation))
-            {
                 return textoTratado;
-            }
             else
-            {
                 throw new FormatException("Texto não contém letras/pontuação");
-            }
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message + "\n" + elemento);
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao remover numeros e espaços do texto no elemento " + elemento);
         }
     }
 
@@ -669,7 +630,9 @@ public class Dsl
             return numero;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao remover letras e espaços do texto no elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -761,13 +724,13 @@ public class Dsl
         {
             int valorAtual = (int)numeroAtual;
             int valorEsperado = (int)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para " + elemento + " - ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
         }
         else if (numeroAtual is double)
         {
             double valorAtual = (double)numeroAtual;
             double valorEsperado = (double)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para " + elemento + " - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
         }
     }
 
@@ -875,9 +838,12 @@ public class Dsl
         }
     }
 
+    /// <summary>
+    /// Método para verificar se a data é o último dia do mês
+    /// </summary>
+    /// <param name="data"></param>
     public static bool EhUltimoDiaDoMes(DateTime data)
     {
         return data.Day == DateTime.DaysInMonth(data.Year, data.Month);
     }
-
 }
