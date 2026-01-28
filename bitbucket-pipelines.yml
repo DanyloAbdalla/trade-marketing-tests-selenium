@@ -25,6 +25,13 @@ pipelines:
             - dotnet build --configuration Release
 
       - step:
+         name: PlanosTest ClienteStart
+         caches:
+          - dotnetcore
+         script:
+           - dotnet test --filter TestCategory=Start
+           
+      - step:
           name: DashboardOperacoesTest
           caches:
             - dotnetcore
