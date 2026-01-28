@@ -53,7 +53,7 @@ public class Dsl
             var fluentWait = CreateFluentWait(webDriver);
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
         }
-        catch (WebDriverTimeoutException ex)
+        catch (WebDriverTimeoutException)
         { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento: " + elemento); }
         catch (Exception ex)
         { Console.WriteLine("Ocorreu o erro: " + ex.Message + " ao esperar a visibilidade do elemento " + elemento); }
@@ -613,17 +613,15 @@ public class Dsl
     /// <returns>Retorna o valor numérico inteiro OU decimal contido em uma string</returns>
     /// <exception cref="FormatException"></exception>
     /// <exception cref="Exception"></exception>
-    public static object RemoverLetrasEspacosDeUmTexto(string texto, string elemento)
+    public static double RemoverLetrasEspacosDeUmTexto(string texto, string elemento)
     {
-        object numero;
+        double numero;
         try
         {
             var valorTratado = Regex.Replace(texto, @"[a-zA-Z\s:$]", "");
 
-            if (int.TryParse(valorTratado, out int numeroInteiro))
-                numero = numeroInteiro;
-            else if (double.TryParse(valorTratado, out double numeroDecimal))
-                numero = numeroDecimal;
+            if (double.TryParse(valorTratado, NumberStyles.Any, new CultureInfo("pt-BR"), out double numeroDouble))
+                numero = numeroDouble;
             else
                 throw new FormatException("A string não tem um número válido");
 
@@ -718,20 +716,9 @@ public class Dsl
     /// <param name="numeroAtual"></param>
     /// <param name="numeroEsperado"></param>
     /// <param name="elemento"></param>
-    public static void ValidarNumerosNoElemento(object numeroAtual, object numeroEsperado, string elemento)
+    public static void ValidarNumerosNoElemento(double numeroAtual, double numeroEsperado, string elemento)
     {
-        if (numeroAtual is int)
-        {
-            int valorAtual = (int)numeroAtual;
-            int valorEsperado = (int)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
-        }
-        else if (numeroAtual is double)
-        {
-            double valorAtual = (double)numeroAtual;
-            double valorEsperado = (double)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
-        }
+        Debug.Assert(numeroAtual == numeroEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + numeroAtual + " ValorEsperado: " + numeroEsperado);
     }
 
     /// <summary>
