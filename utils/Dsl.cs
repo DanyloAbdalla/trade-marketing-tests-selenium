@@ -15,7 +15,6 @@ namespace MeuClienteWebTestProject;
 public class Dsl
 {
     private static TimeSpan implicitWaitOriginal;
-    private static TimeSpan explicitWait = TimeSpan.FromSeconds(50);
 
     public static DefaultWait<IWebDriver> CreateFluentWait(IWebDriver webDriver)
     {
@@ -24,8 +23,8 @@ public class Dsl
 
         var wait = new DefaultWait<IWebDriver>(webDriver)
         {
-            Timeout = TimeSpan.FromSeconds(30),
-            PollingInterval = TimeSpan.FromMilliseconds(250)
+            Timeout = TimeSpan.FromSeconds(20),
+            PollingInterval = TimeSpan.FromMilliseconds(500)
         };
 
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
@@ -47,7 +46,7 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <exception cref="Exception"></exception>
-    public static bool EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath)
+    public static bool EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
         try
         {
@@ -55,9 +54,9 @@ public class Dsl
             fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
         }
         catch (WebDriverTimeoutException ex)
-        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento:" + "\n" + ex.Message); }
+        { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento: " + elemento); }
         catch (Exception ex)
-        { Console.WriteLine("Erro ao esperar a visibilidade do elemento na página:" + "\n" + ex.Message); }
+        { Console.WriteLine("Ocorreu o erro: " + ex.Message + " ao esperar a visibilidade do elemento " + elemento); }
         finally
         { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
 
@@ -97,11 +96,11 @@ public class Dsl
     {
         try
         {
-            WebDriverWait wait = new WebDriverWait(webDriver, explicitWait);
+            WebDriverWait wait = new WebDriverWait(webDriver, GlobalVariables.ExplicitWait);
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath)));
         }
         catch (Exception ex)
-        { throw new Exception("Erro ao esperar elemento ficar clicavel: " + "\n" + ex.Message + "\n" + elemento); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao esperar o elemento " + elemento + " ficar apto ao click"); }
     }
 
     /// <summary>
@@ -116,11 +115,11 @@ public class Dsl
     {
         try
         {
-            WebDriverWait wait = new WebDriverWait(webDriver, explicitWait);
+            WebDriverWait wait = new WebDriverWait(webDriver, GlobalVariables.ExplicitWait);
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(XPath))).Click();
         }
         catch (Exception ex)
-        { throw new Exception("Erro ao esperar elemento para clicar: " + "\n" + ex.Message + "\n" + elemento); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao esperar o elemento " + elemento + " para realizar o click"); }
     }
 
     /// <summary>
@@ -134,7 +133,7 @@ public class Dsl
     {
         try
         {
-            WebDriverWait wait = new WebDriverWait(webDriver, explicitWait);
+            WebDriverWait wait = new WebDriverWait(webDriver, GlobalVariables.ExplicitWait);
             IWebElement element = wait.Until(ExpectedConditions.ElementExists(By.XPath(XPath)));
 
             return element;
@@ -142,7 +141,7 @@ public class Dsl
         catch (WebDriverTimeoutException)
         { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
         catch (Exception ex)
-        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao encontrar o elemento " + elemento); }
     }
 
     /// <summary>
@@ -173,10 +172,11 @@ public class Dsl
     /// Método para aguardar o load da tela
     /// </summary>
     /// <param name="webDriver"></param>
-    /// <param name="XPath"></param>*
-    public static void EsperarLoadDaTela(IWebDriver webDriver, string XPath)
+    /// <param name="XPath"></param>
+    /// <param name="elemento"></param>
+    public static void EsperarLoadDaTela(IWebDriver webDriver, string XPath, string elemento)
     {
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
+        EsperarVisibilidadeDoElemento(webDriver, XPath, elemento);
         EsperarInvisibilidadeDoElemento(webDriver, XPath);
     }
 
@@ -196,10 +196,10 @@ public class Dsl
             IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)webDriver;
             jsExecutor.ExecuteScript("arguments[0].click();", element);
         }
-        catch (NoSuchElementException)
-        { throw new Exception("Elemento \"" + elemento + "\" não localizado"); }
+        catch (NoSuchElementException ex)
+        { throw new NoSuchElementException("Elemento \"" + elemento + "\" não localizado " + ex.Message); }
         catch (Exception ex)
-        { throw new Exception("Ocorreu um erro: " + ex.Message + " no elemento: " + elemento); }
+        { throw new Exception("Ocorreu o erro: " + ex.Message + " ao clicar no elemento " + elemento); }
     }
 
     /// <summary>
@@ -215,7 +215,9 @@ public class Dsl
             elementId.Click();
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao clicar no elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -242,7 +244,9 @@ public class Dsl
             return elementCount;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao contar a existência do elemento na tela.");
+        }
     }
 
     /// <summary>
@@ -283,7 +287,9 @@ public class Dsl
             return textoElemento;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao obter dados o texto do elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -382,7 +388,9 @@ public class Dsl
             return valor;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao obter dados do atributo do elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -411,12 +419,13 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <param name="textoValor"></param>
+    /// <param name="elemento"></param>
     /// <exception cref="Exception"></exception>
-    public static void DigitarNoCampoTextoComboList(IWebDriver webDriver, string XPath, string textoValor)
+    public static void DigitarNoCampoTextoComboList(IWebDriver webDriver, string XPath, string textoValor, string elemento)
     {
         try
         {
-            EsperarVisibilidadeDoElemento(webDriver, XPath);
+            EsperarVisibilidadeDoElemento(webDriver, XPath, elemento);
 
             for (int i = 0; i < textoValor.Length; i++)
             {
@@ -425,7 +434,10 @@ public class Dsl
             Esperar();
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao digitar no elemento " + elemento);
+        }
+
     }
 
     /// <summary>
@@ -447,62 +459,38 @@ public class Dsl
     }
 
     /// <summary>
-    /// Método para selecionar datas de início vingencia, baseado na data atual
+    /// Método para selecionar datas de vingencia, baseado na data atual
     /// Avançando para os meses seguintes se quantidadeAvancarMeses for maior que 0
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="quantidadeAvancarMeses"></param>
-    public static void PreencherCalendariosInicioVigencia(IWebDriver webDriver, int quantidadeAvancarMeses)
+    /// <param name="elemento"></param>
+    public static void PreencherCalendarios(IWebDriver webDriver, int quantidadeAvancarMeses, string elemento)
     {
         DateTime dataAtual = DateTime.Now;
-        var diaAtual = dataAtual.Day;
-        string xpathElemento;
+        string xpathElementoData;
 
         if (quantidadeAvancarMeses == 0)
         {
-            webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{diaAtual}'])[1]")).Click();
+            webDriver.FindElement(By.XPath($"((//div[@class='ant-picker-body'])[1]//div[text()='{dataAtual.Day}'])[1]")).Click();
         }
         else if (quantidadeAvancarMeses > 0)
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
+                Clicar(webDriver, GlobalVariables.AvancarCalendarioMes(GlobalVariables.Calendario), "Botão Avançar Mês Calendário");
                 Esperar();
-                if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
-                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
-                else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
-                    webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
             }
 
-            var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
-            var xpathElementoCalendarioTop = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']";
+            if (dataAtual.Day == 1)
+                xpathElementoData = GlobalVariables.CalendarioDataInicioMes(GlobalVariables.Calendario, dataAtual.Day.ToString());
+            else if (EhUltimoDiaDoMes(dataAtual))
+                xpathElementoData = GlobalVariables.CalendarioDataFimMes(GlobalVariables.Calendario, dataAtual.Day.ToString());
+            else
+                xpathElementoData = GlobalVariables.CalendarioData(GlobalVariables.Calendario, dataAtual.Day.ToString());
 
-            if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioBotton) == 1)
-            {
-
-                if (diaAtual == 1)
-                {
-                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
-                }
-                else
-                {
-                    xpathElemento = $"{xpathElementoCalendarioBotton}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia");
-                }
-            }
-            else if (ContarExistenciaDoElemento(webDriver, xpathElementoCalendarioTop) == 1)
-            {
-                if (diaAtual == 1)
-                {
-                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
-                }
-                else
-                {
-                    xpathElemento = $"{xpathElementoCalendarioTop}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{diaAtual}']";
-                    Clicar(webDriver, xpathElemento, "Campo Data Início Vigencia Trade");
-                }
-            }
+            Esperar();
+            Clicar(webDriver, xpathElementoData, elemento);
         }
     }
 
@@ -526,11 +514,16 @@ public class Dsl
         {
             for (int i = 0; i < quantidadeAvancarMeses; i++)
             {
-                Esperar();
                 if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosBotton) == 1)
+                {
                     webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosBotton)).Click();
+                    Esperar();
+                }
                 else if (ContarExistenciaDoElemento(webDriver, GlobalVariables.AvancarMesesCalendariosTop) == 1)
+                {
                     webDriver.FindElement(By.XPath(GlobalVariables.AvancarMesesCalendariosTop)).Click();
+                    Esperar();
+                }
             }
 
             var xpathElementoCalendarioBotton = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']";
@@ -582,7 +575,7 @@ public class Dsl
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message + "\n" + elemento);
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao remover numeros do texto no elemento " + elemento);
         }
     }
 
@@ -601,17 +594,13 @@ public class Dsl
             var textoTratado = Regex.Replace(texto, @"[\d\s:]", "");
 
             if (textoTratado.Any(char.IsLetter) || textoTratado.Any(char.IsPunctuation))
-            {
                 return textoTratado;
-            }
             else
-            {
                 throw new FormatException("Texto não contém letras/pontuação");
-            }
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message + "\n" + elemento);
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao remover numeros e espaços do texto no elemento " + elemento);
         }
     }
 
@@ -641,7 +630,9 @@ public class Dsl
             return numero;
         }
         catch (Exception ex)
-        { throw new Exception(ex.Message + "\n" + elemento); }
+        {
+            throw new Exception("Ocorreu o erro " + ex.Message + " ao remover letras e espaços do texto no elemento " + elemento);
+        }
     }
 
     /// <summary>
@@ -733,13 +724,13 @@ public class Dsl
         {
             int valorAtual = (int)numeroAtual;
             int valorEsperado = (int)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para " + elemento + " - ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + valorAtual + " ValorEspeado: " + valorEsperado);
         }
         else if (numeroAtual is double)
         {
             double valorAtual = (double)numeroAtual;
             double valorEsperado = (double)numeroEsperado;
-            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para " + elemento + " - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
+            Debug.Assert(valorAtual == valorEsperado, "Valores não correspondem para elemento " + elemento + " - ValorAtual: " + valorAtual + " ValorEsperado: " + valorEsperado);
         }
     }
 
@@ -769,9 +760,10 @@ public class Dsl
     /// </summary>
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
-    public static void ScrollParaElemento(IWebDriver webDriver, string XPath)
+    /// <param name="elemento"></param>
+    public static void ScrollParaElemento(IWebDriver webDriver, string XPath, string elemento)
     {
-        EsperarVisibilidadeDoElemento(webDriver, XPath);
+        EsperarVisibilidadeDoElemento(webDriver, XPath, elemento);
 
         IWebElement webElement = webDriver.FindElement(By.XPath(XPath));
 
@@ -844,5 +836,14 @@ public class Dsl
         {
             throw new FormatException("As datas fornecidas não estão no formato esperado 'dd/MMM/yyyy'.");
         }
+    }
+
+    /// <summary>
+    /// Método para verificar se a data é o último dia do mês
+    /// </summary>
+    /// <param name="data"></param>
+    public static bool EhUltimoDiaDoMes(DateTime data)
+    {
+        return data.Day == DateTime.DaysInMonth(data.Year, data.Month);
     }
 }

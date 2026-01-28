@@ -9,6 +9,8 @@ public class GlobalVariables
     public static string[] senhaUsuarios = { "Meucliente@st@123", "Meucliente@pr@123", "Meucliente@ex@123" };
     public static string emailUsuarioSemPlanta = "homologacao.sp@meucliente.app.br";
     public static string senhaUsuarioSemPlanta = "Meucliente@hml@123";
+    private static TimeSpan explicitWait;
+    public static TimeSpan ExplicitWait { get => explicitWait; set => explicitWait = value; }
     #endregion
 
     #region Elementos de página - Elementos Comuns
@@ -30,6 +32,11 @@ public class GlobalVariables
     public static string RecarregarTela { get; set; } = "//button/*[text()='Recarregar tela']";
     public static string TituloModalConfirmacao { get; set; } = "//span[@class='ant-modal-confirm-title']";
     public static string CancelarAcao { get; set; } = "//button/*[text()='Cancelar']";
+    public static string Calendario { get; set; } = "//*[@class='ant-picker-date-panel']/../../../../div[not(contains(@class,'picker-dropdown-hidden'))]";
+    public static string AvancarCalendarioMes(string calendario) { return $"{calendario}//div//div/div//div//button[contains(@class,'header-next-btn')]"; }
+    public static string CalendarioData(string calendario, string dia) { return $"{calendario}//td[@class='ant-picker-cell ant-picker-cell-in-view']//div[text()='{dia}']"; }
+    public static string CalendarioDataInicioMes(string calendario, string dia) { return $"{calendario}//td[@class='ant-picker-cell ant-picker-cell-start ant-picker-cell-in-view']//div[text()='{dia}']"; }
+    public static string CalendarioDataFimMes(string calendario, string dia) { return $"{calendario}//td[@class='ant-picker-cell ant-picker-cell-end ant-picker-cell-in-view']//div[text()='{dia}']"; }
     public static string AvancarMesesCalendariosBotton { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-bottomLeft ']//*[@class='ant-picker-header-next-btn']";
     public static string AvancarMesesCalendariosTop { get; set; } = "//div[@class='ant-picker-dropdown ant-picker-dropdown-placement-topLeft ']//*[@class='ant-picker-header-next-btn']";
     #endregion
@@ -134,8 +141,6 @@ public class GlobalVariables
     public static string SelecionarIndustriaClienteStart { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='116873']";
     public static string SelecionarIndustriaClientePro { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
     public static string SelecionarIndustriaClientExpert { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
-    public static string SelecionarIndustriaSemPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='73189']";
-    public static string SelecionarIndustriaComPlanta { get; set; } = "//div[contains(@class,'ant-select-dropdown')]//*[@id='76331']";
     public static string PreencherCampanha { get; set; } = "//*[@data-testid='nomeCampanha']";
     public static string InicioVigenciaSimulacao { get; set; } = "//input[@data-testid='inicioVigencia']";
     public static string FimVigenciaSimulacao { get; set; } = "//input[@data-testid='fimVigencia']";
@@ -231,21 +236,20 @@ public class GlobalVariables
     public static string AplicarDesconto { get; set; } = "//button/*[text()='Aplicar']";
     public static string InicioVigenciaPlano { get; set; } = "//*[@data-testid='inicioVigencia']";
     public static string FimVigenciaPlano { get; set; } = "//*[@data-testid='fimVigencia']";
-    public static string AvancarCalendarioMes { get; set; } = "//*[contains(@class,'header-next-btn')]";
     public static string ReceitaAtivos { get; set; } = "//*[@data-testid='receitaAtivos']";
     public static string ReceitaAtivosDesconto { get; set; } = "//*[@data-testid='receitaAtivosDesconto']";
     public static string ReceitaPlano { get; set; } = "//*[@data-testid='receita']";
     public static string DespesaPlano { get; set; } = "//*[@data-testid='despesa']";
     public static string ValorComplementar { get; set; } = "//*[@data-testid='valorComplementar']";
-    public static string TipoCampanha { get; set; } = "//*[@name='SubTipoFornecedorId']";
+    public static string TipoCampanha { get; set; } = "//*[@name='SubTipoFornecedorId']//input";
     public static string SelecionarTipoCampanha { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Tipo Campanha 01']";
     public static string QuantidadeParcelas { get; set; } = "//*[@name='QuantidadeParcelas']";
     public static string Setor { get; set; } = "//*[@data-testid='nomeSetor']//input";
-    public static string SelecionarSetor { get; set; } = "(//*[@class='ant-select-item-option-content'][text()='Geral'])[1]";
+    public static string SelecionarSetor { get; set; } = "//*[@title='Setor 01']";
     public static string Departamento { get; set; } = "//*[@data-testid='nomeDepartamento']//input";
-    public static string SelecionarDepartamento { get; set; } = "(//*[@class='ant-select-item-option-content'][text()='Geral'])[2]";
+    public static string SelecionarDepartamento { get; set; } = "//*[@title='Departamento 01']";
     public static string Categoria { get; set; } = "//*[@data-testid='nomeCategoria']//input";
-    public static string SelecionarCategoria { get; set; } = "(//*[@class='ant-select-item-option-content'][text()='Geral'])[3]";
+    public static string SelecionarCategoria { get; set; } = "//*[@title='Categoria 01']";
     public static string DataCancelamentoPlano { get; set; } = "//*[contains(text(),'Data de Cancelamento')]/parent::div/div/div/div[2]//input";
     public static string SelecionarDataCancelamentoPlano { get; set; } = "//*[text()='Today']";
     public static string OkCancelamento { get; set; } = "//*[text()='OK']";
@@ -258,7 +262,7 @@ public class GlobalVariables
     #endregion
 
     #region Elementos de página - Planos - Ativos Alocados
-    public static string FiltrarAtivoAlocado { get; set; } = "//thead//th[@title='Ativo']//span[@role='button']";
+    public static string FiltrarAtivoAlocado { get; set; } = "//thead//th[@aria-label='Ativo']//span[@role='button']";
     public static string PreencherNomeAtivo { get; set; } = "(//div[@style='padding: 5px;'])[2]/input";
     public static string BuscarAtivoAlocado { get; set; } = "(//div[@style='padding: 5px;'])[2]/button/span[text()='Buscar']";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
@@ -289,6 +293,8 @@ public class GlobalVariables
     public static string QuantidadeLojasPorAtivo { get; set; } = "//*[contains(text(),'Total de lojas')]";
     public static string QuantidadeAlocacaoAtivo(string nomeAtivo) { return $"//*[@data-testid='quantidadeAlocacaoLoja-{nomeAtivo}']"; }
     public static string QuantidadeAlocacaoLoja(string nomeLoja) { return $"//*[@data-testid='quantidadeAlocacaoLoja-{nomeLoja}']"; }
+    public static string InicioVigenciaLoja(string nomeLoja) { return $"//*[@data-testid='inicioVigencia-{nomeLoja}']"; }
+    public static string FimVigenciaLoja(string nomeLoja) { return $"//*[@data-testid='fimVigencia-{nomeLoja}']"; }
     public static string SalvarAlocacaoLoja { get; set; } = "//*[@data-testid='salvarEdicaoAtivo']";
     public static string FecharAlocacaoAtivoPorLoja { get; set; } = "//*[@data-testid='fecharEdicaoAtivo']";
     public static string MensagemSucessoAlocacaoAtivo { get; set; } = "//*[contains(text(), 'Alocação atualizada')]";
@@ -360,5 +366,6 @@ public class GlobalVariables
     public static string FecharReservaAtivoLojasCampanha { get; set; } = "(//button/*[text()='Fechar'])[2]";
     public static string QuantidadeReservadaAtivoCampanha { get; set; } = "//tbody/tr/td[5]/input";
     public static string QuantidadeLojasReservaCampanha { get; set; } = "(//*[@class='ant-modal-content'])[2]//tbody/tr";
+    
     #endregion
 }
