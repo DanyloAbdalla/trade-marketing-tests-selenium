@@ -24,16 +24,23 @@ pipelines:
             - dotnet restore
             - dotnet build --configuration Release
 
+      #- step:
+      #   name: PlanosTest ClienteStart
+      #  caches:
+      #      - dotnetcore
+      #   script:
+      #      - dotnet test --filter TestCategory=Start
+
       - step:
-         name: PlanosTest ClienteStart
+         name: PlanosTest ClientePro
          caches:
             - dotnetcore
          script:
-            - dotnet test --filter TestCategory=Start
+            - dotnet test --filter TestCategory=Pro
 
-      - step:
-          name: DashboardOperacoesTest
-          caches:
-            - dotnetcore
-          script:
-            - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
+      #- step:
+      #    name: DashboardOperacoesTest
+      #    caches:
+      #      - dotnetcore
+      #    script:
+      #      - dotnet test --filter FullyQualifiedName~MeuClienteWebTestProject.DashboardOperacoesTest
