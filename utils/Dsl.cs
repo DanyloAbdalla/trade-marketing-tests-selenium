@@ -945,6 +945,6 @@ public class Dsl
 
     private static DateTime ConverterDatasStringParaDateTime(string data)
     {
-        return DateTime.ParseExact(data, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        return DateTime.ParseExact(data, "dd/MM/yyyy", new CultureInfo("pt-BR"));
     }
 }
