@@ -889,14 +889,14 @@ public class Dsl
 
     internal static void CalcularAvancoMesesVigencia(IWebDriver webDriver, out int avancarMesCalendarioFimVigenciaEm, out int avancarMesCalendarioInicioVigenciaEm)
     {
-        string fimVigenciaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.FimVigenciaPlano, "Campo Fim Vigência do Plano", "value");
-        string inicioVigenciaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigência do Plano", "value");
+        string fimVigenciaPlano = ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.FimVigenciaPlano, "Campo Fim Vigência do Plano", "value");
+        string inicioVigenciaPlano = ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigência do Plano", "value");
         string diaFimVigenciaPlano = fimVigenciaPlano.Substring(0, 2);
         string diaInicioVigenciaPlano = inicioVigenciaPlano.Substring(0, 2);
-        int quantidadeDiasVigencia = Dsl.CalcularDiasEntreDatas(inicioVigenciaPlano, fimVigenciaPlano);
+        int quantidadeDiasVigencia = CalcularDiasEntreDatas(inicioVigenciaPlano, fimVigenciaPlano);
 
-        if ((diaInicioVigenciaPlano.Equals("01") && quantidadeDiasVigencia >= 31)
-        || (DateTime.Parse(fimVigenciaPlano).Month == DateTime.Parse(inicioVigenciaPlano).Month))
+        if ((diaInicioVigenciaPlano.Equals("01") && quantidadeDiasVigencia >= 31) || 
+        (ConverterDatasStringParaDateTime(fimVigenciaPlano).Month == ConverterDatasStringParaDateTime(inicioVigenciaPlano).Month))
         {
             avancarMesCalendarioFimVigenciaEm = 3;
             avancarMesCalendarioInicioVigenciaEm = 2;
@@ -931,7 +931,7 @@ public class Dsl
             avancarMesCalendarioFimVigenciaEm = 1;
             avancarMesCalendarioInicioVigenciaEm = 2;
         }
-        else if (DateTime.Parse(fimVigenciaPlano).Month == DateTime.Parse(inicioVigenciaPlano).Month)
+        else if (ConverterDatasStringParaDateTime(fimVigenciaPlano).Month == ConverterDatasStringParaDateTime(inicioVigenciaPlano).Month)
         {
             avancarMesCalendarioFimVigenciaEm = 2;
             avancarMesCalendarioInicioVigenciaEm = 1;
@@ -941,5 +941,10 @@ public class Dsl
             avancarMesCalendarioFimVigenciaEm = 2;
             avancarMesCalendarioInicioVigenciaEm = 2;
         }
+    }
+
+    private static DateTime ConverterDatasStringParaDateTime(string data)
+    {
+        return DateTime.ParseExact(data, "dd/MM/yyyy", CultureInfo.InvariantCulture);
     }
 }
