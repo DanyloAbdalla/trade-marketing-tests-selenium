@@ -893,8 +893,8 @@ public class Dsl
         string inicioVigenciaPlano = ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.InicioVigenciaPlano, "Campo Início Vigência do Plano", "value");
         string diaFimVigenciaPlano = fimVigenciaPlano.Substring(0, 2);
         string diaInicioVigenciaPlano = inicioVigenciaPlano.Substring(0, 2);
-        string mesFimVigenciaPlano = fimVigenciaPlano.Substring(3, 2);
-        string mesInicioVigenciaPlano = inicioVigenciaPlano.Substring(3, 2);
+        string mesFimVigenciaPlano = fimVigenciaPlano.Substring(3, 3);
+        string mesInicioVigenciaPlano = inicioVigenciaPlano.Substring(3, 3);
         int quantidadeDiasVigencia = CalcularDiasEntreDatas(inicioVigenciaPlano, fimVigenciaPlano);
 
         if ((diaInicioVigenciaPlano.Equals("01") && quantidadeDiasVigencia >= 31) || (mesFimVigenciaPlano == mesInicioVigenciaPlano))
@@ -920,8 +920,8 @@ public class Dsl
         string inicioVigenciaPlano = Dsl.ObterDadosDoAtributoDoElemento(webDriver, GlobalVariables.InicioVigenciaLoja(nomeLoja), "Campo Início Vigência do Plano", "value");
         string diaInicioVigenciaPlano = inicioVigenciaPlano.Substring(0, 2);
         string diaFimVigenciaPlano = fimVigenciaPlano.Substring(0, 2);
-        string mesFimVigenciaPlano = fimVigenciaPlano.Substring(3, 2);
-        string mesInicioVigenciaPlano = inicioVigenciaPlano.Substring(3, 2);
+        string mesFimVigenciaPlano = fimVigenciaPlano.Substring(3, 3);
+        string mesInicioVigenciaPlano = inicioVigenciaPlano.Substring(3, 3);
         int quantidadeDiasVigencia = Dsl.CalcularDiasEntreDatas(inicioVigenciaPlano, fimVigenciaPlano);
 
         if (diaInicioVigenciaPlano.Equals("01") && quantidadeDiasVigencia >= 31)
