@@ -295,13 +295,33 @@ public class PlanosTest
     }
 
     /// <summary>
+    /// Testar alerta de inventário ao editar um plano
+    /// 
+    /// Como QA
+    /// Eu quero editar um plano com ativos sem disponibilidade de inventario
+    /// Para que eu seja informado de que os ativos não possuem quantidade suficente
+    /// </summary>
+    [Test, Order(9)]
+    public void TestEditarPlanoComAlertaDeInventario()
+    {
+        new PlanosContratosPage(webDriver, clienteUpSellAtual)
+        .BuscarPlanos()
+        .AbrirEdicaoDoPlanoFiltrado()
+        .ValidarMensagensDeIndisponibilidadeDeInventario()
+        .FecharMensagensDeConfirmacao()
+        .AbrirAbaAtivosAlocados()
+        .ValidarAlertasDeIndisponibilidadeDeInventario()
+        .FecharDadosDoPlano();
+    }
+
+    /// <summary>
     /// Testar cancelamento de plano
     /// 
     /// Como comercial
     /// Eu quero cancelar um plano
     /// Para que o mesmo seja desconsiderado das minhas negociações
     /// </summary>
-    [Test, Order(9)]
+    [Test, Order(10)]
     public void TestCancelarPlano()
     {
         new PlanosContratosPage(webDriver, clienteUpSellAtual)
@@ -321,7 +341,7 @@ public class PlanosTest
     /// Eu quero excluir um plano
     /// Para que o mesmo seja removido da minha lista de negociações
     /// </summary>
-    [Test, Order(10)]
+    [Test, Order(11)]
     public void TestExcluirPlano()
     {
         new PlanosContratosPage(webDriver, clienteUpSellAtual)

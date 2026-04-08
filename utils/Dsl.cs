@@ -5,8 +5,6 @@ using OpenQA.Selenium.Interactions;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Globalization;
-using System.Xml;
-using OpenQA.Selenium.DevTools.V128.Debugger;
 
 namespace MeuClienteWebTestProject;
 

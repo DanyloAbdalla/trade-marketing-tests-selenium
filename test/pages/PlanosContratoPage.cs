@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using System.Globalization;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using System.Data;
 
 namespace MeuClienteWebTestProject;
 
@@ -61,6 +61,10 @@ public class PlanosContratosPage
             Categoria = DataLoader.ObterDados("negociacoes_planos", nomeTeste, "Categoria");
             statusEsperado = DataLoader.ObterDados("negociacoes_planos", nomeTeste, "statusEsperado");
             farolEsperado = DataLoader.ObterDados("negociacoes_planos", nomeTeste, "farolEsperado");
+        }
+        else if (nomeTeste.Equals("TestEditarPlanoComAlertaDeInventario"))
+        {
+            nomeCampanha = DataLoader.ObterDados("negociacoes_planos", nomeTeste, "nomeCampanha");
         }
         else if (nomeTeste.Equals("TestCancelarPlano"))
         {
@@ -666,6 +670,18 @@ public class PlanosContratosPage
         return this;
     }
 
+    public PlanosContratosPage AbrirEdicaoDoPlanoFiltrado()
+    {
+        if (nomeTeste.Equals("TestCriarPlanoComAtivosTipoMidiaFisica"))
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestCriarPlanoComAtivosTipoMidiaFisica", "nomeCampanha")), "Botão Editar Plano");
+        else if (nomeTeste.Equals("TestEditarPlanoComAlertaDeInventario"))
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano(nomeCampanha), "Botão Editar Plano");
+        else
+            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarPlano((string)DataLoader.ObterDados("negociacoes_planos", "TestGlobalData", "nomeCampanha")), "Botão Editar Plano");
+
+        return this;
+    }
+
     /// <summary>
     /// Método para selecionar a vigencia do plano
     /// </summary>
@@ -748,9 +764,9 @@ public class PlanosContratosPage
 
         SalvarAtivoAlocado();
 
-        if(clienteUpSellAtual == ClienteUpSell.ClienteExpert)
+        if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
         {
-            Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ConfirmarAlteracaoPeriodo, "Botão Entendi Modal Confirmar Alteração de Período no Ativo Alocado");
+            Dsl.Clicar(webDriver, GlobalVariables.ConfirmarAlteracaoPeriodo, "Botão Entendi Modal Confirmar Alteração de Período no Ativo Alocado");
         }
 
         return this;
@@ -1212,6 +1228,36 @@ public class PlanosContratosPage
                 ValidarMensagensDoPlano(mensagensAtuais);
                 break;
         }
+
+        return this;
+    }
+
+    public PlanosContratosPage ValidarMensagensDeIndisponibilidadeDeInventario()
+    {
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemConfirmacaoInventarioIndisponivel, "Mensagem de Aviso de Inventário Indisponível");
+
+        List<MensagemFeedback> mensagensAtuais = Dsl.ObterMensagensDeFeedback(webDriver, GlobalVariables.MensagemConfirmacaoInventarioIndisponivel);
+
+        ValidarMensagensDoPlano(mensagensAtuais);
+
+        return this;
+    }
+
+    public PlanosContratosPage FecharMensagensDeConfirmacao()
+    {
+        Dsl.Clicar(webDriver, GlobalVariables.ConfirmarMensagemAviso, "Botão OK Mensagens de Confirmação");
+        Dsl.Esperar(500);
+
+        return this;
+    }
+
+    public PlanosContratosPage ValidarAlertasDeIndisponibilidadeDeInventario()
+    {
+        var contadorIconeAlertaAtual = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.InventarioAlertaIconeIndisponibilidade);
+        var contadorFonteVermelhaAlertaAtual = Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.InventarioAlertaFonteVermelha);
+
+        Assert.That(contadorIconeAlertaAtual, Is.EqualTo(3), "Ícone de alerta de inventário indisponível não foi apresentado corretamente: " + contadorIconeAlertaAtual);
+        Assert.That(contadorFonteVermelhaAlertaAtual, Is.EqualTo(15), "Fonte vermelha no campo de quantidade de ativos alocados não foi apresentada corretamente: " + contadorFonteVermelhaAlertaAtual);
 
         return this;
     }
