@@ -536,13 +536,13 @@ public class PlanosContratosPage
                 Dsl.ValidarTextosNoElemento(tituloAbaAtual, tituloAbaEsperado);
 
                 if (nomeAbaPlano.Equals("Anexos"))
-                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaAnexos, "Load Aba Anexos");
+                    Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaAnexos, "Load Aba Anexos");
                 else if (nomeAbaPlano.Equals("Book Fotográfico"))
-                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaBookFotografico, "Load Aba Book Fotográfico");
+                    Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaBookFotografico, "Load Aba Book Fotográfico");
                 else if (nomeAbaPlano.Equals("Painel da indústria"))
-                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaPainelIndustria, "Load Aba Painel da Indústria");
+                    Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaPainelIndustria, "Load Aba Painel da Indústria");
                 else if (nomeAbaPlano.Equals("Tarefas"))
-                    Dsl.EsperarLoadDaTela(webDriver, GlobalVariables.LoadDeTelaTarefas, "Load Aba Tarefas");
+                    Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaTarefas, "Load Aba Tarefas");
             }
         }
         return this;

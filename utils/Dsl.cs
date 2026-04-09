@@ -72,10 +72,15 @@ public class Dsl
     /// <exception cref="Exception"></exception>
     public static void EsperarInvisibilidadeDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
+        var stopwatch = Stopwatch.StartNew();
+
         try
         {
             var fluentWait = CreateFluentWait(webDriver);
             fluentWait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(XPath)));
+
+            stopwatch.Stop();
+                Console.WriteLine($"Tempo para o elemento {elemento} ficar invisível: {stopwatch.Elapsed.TotalSeconds} segundos.");
         }
         catch (WebDriverTimeoutException)
         { Console.WriteLine("Tempo esgotado para espera da invisibilidade do elemento: " + elemento); }
