@@ -33,7 +33,7 @@
   "negociacoes_planos": {
     "TestGlobalData": {
       "atributoTesteId": "data-testid",
-      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizadaNova",
       "statusEsperado": "Simulado",
       "farolEsperado": "PLANEJADO",
       "tipoMidiaAtivo": "Grafica",
@@ -119,12 +119,16 @@
         {
           "mensagem": "Inventário indisponível: já possui alocação em período conflitante",
           "atributo": null
+        },
+        {
+          "mensagem": "Alguns Ativos do Plano possuem inventário indisponível",
+          "atributo": null
         }
       ]
     },
     "TestCriarPlanoComAtivosTipoMidiaGrafica": {},
     "TestCriarPlanoComAtivosTipoMidiaFisica": {
-      "nomeCampanha": "PlanoComAtivosTipoMidiaFisicaMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaFisicaMassaAutomatizadaNova",
       "tipoMidiaAtivo": "Fisica",
       "statusEsperado": "Simulado",
       "farolEsperado": "PLANEJADO",
@@ -146,7 +150,7 @@
     "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel": {},
     "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel": {},
     "TestAprovarPlano": {
-      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizadaNova",
       "tipoCampanha": "Tipo Campanha 01",
       "Setor": "Setor 01",
       "Departamento": "Departamento 01",
@@ -155,15 +159,18 @@
       "farolEsperado": "APROVADO"
     },
     "TestCriarPlanoComAlertaDeInventario": {},
+    "TestEditarPlanoComAlertaDeInventario": {
+      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizadaExistente"
+    },
     "TestCancelarPlano": {
-      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
+      "nomeCampanha": "PlanoComAtivosTipoMidiaGraficaMassaAutomatizadaNova",
       "statusEsperado": "Cancelado",
       "farolEsperado": "CANCELADO"
     },
     "TestExcluirPlano": {
       "nomeCampanhas": [
-        "PlanoComAtivosTipoMidiaGraficaMassaAutomatizada",
-        "PlanoComAtivosTipoMidiaFisicaMassaAutomatizada"
+        "PlanoComAtivosTipoMidiaGraficaMassaAutomatizadaNova",
+        "PlanoComAtivosTipoMidiaFisicaMassaAutomatizadaNova"
       ]
     }
   }

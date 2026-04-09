@@ -3,7 +3,7 @@ namespace MeuClienteWebTestProject;
 public class GlobalVariables
 {
     #region Projeto
-    public static string urlDevPlataforma = "https://dev.meucliente.app.br/";
+    public static string urlDevPlataforma = "https://stage.meucliente.app.br/";
     public static string urlHmlPlataforma = "https://stage.meucliente.app.br/";
     public static string[] emailUsuarios = { "homologacao.start@meucliente.app.br", "homologacao.pro@meucliente.app.br", "homologacao.expert@meucliente.app.br" };
     public static string[] senhaUsuarios = { "Meucliente@st@123", "Meucliente@pr@123", "Meucliente@ex@123" };
@@ -18,6 +18,7 @@ public class GlobalVariables
     public static string SairConta { get; set; } = "//*[contains(@class,'logout')]/ancestor::a/*[text()='Sair']";
     public static string Mensagens { get; set; } = "//*[@class='ant-message-notice']";
     public static string MensagemDeFeedback { get; set; } = "//div[contains(@data-testid, 'Mc-message')]";
+    public static string ConfirmarMensagemAviso { get; set; } = "//*[contains(@class,'confirm-btns')]//button";
     public static string NovoRegistro { get; set; } = "//button[@id='Buttonclass']";
     public static string SalvarRegistro { get; set; } = "//*[@data-testid='salvarPlano']";
     public static string VoltarTela { get; set; } = "//button/*[text()='Voltar']";
@@ -259,6 +260,7 @@ public class GlobalVariables
     public static string EtapasWorkflow { get; set; } = "//div[contains(@class,'etapas-container')]";
     public static string EtapasWorkflowPlano { get; set; } = "//div[contains(@class,'etapas-item')]/span";
     public static string EtapasWorkflowGraficoPlano { get; set; } = "//div[@class='ant-row etapas-container-grafico ']";
+    public static string MensagemConfirmacaoInventarioIndisponivel { get; set; } = "//*[@class='ant-modal-confirm-body']/span[contains(@class,'confirm-title')]";
     public static string SalvarPlano { get; set; } = "//*[@data-testid='salvarPlano']";
     public static string FecharPlano { get; set; } = "//*[@data-testid='fecharPlano']";
     #endregion
@@ -268,10 +270,12 @@ public class GlobalVariables
     public static string PreencherNomeAtivo { get; set; } = "(//div[@style='padding: 5px;'])[2]/input";
     public static string BuscarAtivoAlocado { get; set; } = "(//div[@style='padding: 5px;'])[2]/button/span[text()='Buscar']";
     public static string AbaAtivosAlocados { get; set; } = "//div[@class='ant-tabs-nav-list']//*[contains(text(),'Ativos Alocados')]";
-    public static string TabelaAtivosPlano { get; set; } = "//*[contains(text(),'Ativos Alocados')]/../../../../../../../..//div[@class='ant-modal-content']//tbody";
+    public static string InventarioAlertaIconeIndisponibilidade { get; set; } = "//span[@aria-label='warning']";
+    public static string InventarioAlertaFonteVermelha { get; set; } = "//div[@style='color: red;']";
     public static string AvancarCalendarioMesInicioVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[2]";
     public static string AvancarCalendarioMesFimVigenciaTrade { get; set; } = "(//*[contains(@class,'header-next-btn')])[1]";
     public static string EditarAtivoAlocado(string nomeAtivo) { return $"//*[@data-testid='editarAtivoAlocado-{nomeAtivo}']"; }
+    public static string TabelaAtivosPlano { get; set; } = "//*[contains(text(),'Ativos Alocados')]/../../../../../../../..//div[@class='ant-modal-content']//tbody";
 
     #endregion
 
@@ -291,7 +295,7 @@ public class GlobalVariables
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
     public static string BuscarAtivoAlocacao { get; set; } = "//*[@data-testid='nomeAtivo']//*/input";
     public static string SelecionarAtivoAlocacao { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Cestão 01 - ']";
-    public static string IncluirAlocacaoAtivo { get; set; } = "//*[@data-testid='incluirAtivo']";
+    public static string IncluirAlocacaoAtivo { get; set; } = "(//*[@data-testid='incluirAtivo'])[2]";
     public static string QuantidadeLojasPorAtivo { get; set; } = "//*[contains(text(),'Total de lojas')]";
     public static string QuantidadeAlocacaoAtivo(string nomeAtivo) { return $"//*[@data-testid='quantidadeAlocacaoLoja-{nomeAtivo}']"; }
     public static string QuantidadeAlocacaoLoja(string nomeLoja) { return $"//*[@data-testid='quantidadeAlocacaoLoja-{nomeLoja}']"; }
