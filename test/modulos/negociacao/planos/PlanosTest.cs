@@ -434,7 +434,7 @@ public class PlanosTest
 
             primeiroTeste = false;
 
-            new HomePage(webDriver, clienteUpSellAtual).AcessarDashboardOperacoes();
+            Dsl.Esperar();
             new HomePage(webDriver, clienteUpSellAtual).RealizarLogout();
         }
         else if (statusTeste == TestStatus.Passed || statusTeste == TestStatus.Failed)
