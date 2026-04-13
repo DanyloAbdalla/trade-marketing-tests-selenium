@@ -1023,6 +1023,7 @@ public class PlanosContratosPage
             case ClienteUpSell.ClientePro:
             case ClienteUpSell.ClienteExpert:
                 Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.IncluirAlocacaoAtivo, "Botão Incluir Ativo");
+                Dsl.EsperarElementoFicarClicavel(webDriver, GlobalVariables.BuscarAtivoAlocacao, "Campo Buscar Ativo");
                 Dsl.DigitarNoCampoTextoComboList(webDriver, GlobalVariables.BuscarAtivoAlocacao, ativoNome, "Campo Buscar Ativo");
 
                 var elementoAtivoNome = $"//div[@class='rc-virtual-list']//*[text()='{ativoNome}']";

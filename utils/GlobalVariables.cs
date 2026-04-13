@@ -295,7 +295,7 @@ public class GlobalVariables
     public static string ColunaDisponivelTrade { get; set; } = "//div[@id='ativos-alocados-table']//thead//th[text()='Disponível']";
     public static string LojasAtivoAlocados { get; set; } = "//*[contains(text(),'Alocação por Loja')]/../../../../../..//tbody";
     public static string AplicarDadosLojas { get; set; } = "(//button/*[text()='Aplicar'])[2]";
-    public static string BuscarAtivoAlocacao { get; set; } = "//*[@data-testid='nomeAtivo']//*/input";
+    public static string BuscarAtivoAlocacao { get; set; } = "//*[@data-testid='nomeAtivo']//input";
     public static string SelecionarAtivoAlocacao { get; set; } = "//div[@class='rc-virtual-list']//*[text()='Cestão 01 - ']";
     public static string IncluirAlocacaoAtivo { get; set; } = "(//*[@data-testid='incluirAtivo'])[2]";
     public static string QuantidadeLojasPorAtivo { get; set; } = "//*[contains(text(),'Total de lojas')]";
