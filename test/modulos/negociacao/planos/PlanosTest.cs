@@ -67,14 +67,21 @@ public class PlanosTest
             .RealizarLogin(GlobalVariables.emailUsuarios[indiceUsuario], GlobalVariables.senhaUsuarios[indiceUsuario]);
 
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado");
-        if(!Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado").Contains("Plano"))
+        if (!Dsl.ObterTextoDoElemento(webDriver, GlobalVariables.UltimoCadastroAcessado, "Label Último Cadastro Acessado").Contains("Plano"))
         {
             new HomePage(webDriver, clienteUpSellAtual)
                 .AcessarCadastroPlanos(nomeTeste);
         }
         else
         {
-            Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TotalReceitaPlanos, "Label Total Receita Planos");
+            if (clienteUpSellAtual == ClienteUpSell.ClientePro)
+            {
+                Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadListaPlanos, "Load Lista Planos");
+            }
+            else
+            {
+                Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.TotalReceitaPlanos, "Label Total Receita Planos");
+            }
         }
     }
 

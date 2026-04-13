@@ -67,7 +67,7 @@ public class Dsl
     /// <param name="webDriver"></param>
     /// <param name="XPath"></param>
     /// <exception cref="Exception"></exception>
-    public static bool EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath, string elemento)
+    public static void EsperarVisibilidadeDoElemento(IWebDriver webDriver, string XPath, string elemento)
     {
         try
         {
@@ -80,8 +80,6 @@ public class Dsl
         { Console.WriteLine("Ocorreu o erro: " + ex.Message + " ao esperar a visibilidade do elemento " + elemento); }
         finally
         { webDriver.Manage().Timeouts().ImplicitWait = implicitWaitOriginal; }
-
-        return false;
     }
 
     /// <summary>

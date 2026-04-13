@@ -122,6 +122,7 @@ public class GlobalVariables
     public static string LoadListaPlanos { get; set; } = "//h1[text()='Gestão de Planos']/../../../../..//*[@class='ant-spin-dot ant-spin-dot-spin']/i[1]";
     public static string LoadModalPlano { get; set; } = "//div[contains(@class,'contrato-loading-overlay')]";
     public static string TabelaPlanos { get; set; } = "//h1[text()='Gestão de Planos']/../../../../..//tbody";
+    public static string ConlunaNumeroContrato { get; set; } = "//table//*[@aria-label='N° Contrato']";
     public static string FiltrarPlanosStatusVigencia { get; set; } = "//div[contains(@class,'select-selector')]/span[2]";
     public static string SelecionarTodosPlanos { get; set; } = "//div[@class='rc-virtual-list']//div[@title='Todos']";
     public static string FiltrarPlanoPorCampanha { get; set; } = "//thead//th[@title='Nome Campanha']//span[@role='button']";

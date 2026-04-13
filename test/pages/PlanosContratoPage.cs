@@ -95,6 +95,7 @@ public class PlanosContratosPage
         var mensagemConfirmacaoEsperadaReutilizarDadosSalvosAnteriormente = "Existemdadossalvosdaultimasimulação,desejareutiliza-los?";
 
         Dsl.Clicar(webDriver, GlobalVariables.CadastrarPlano, "Botão Novo Plano");
+        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadModalPlano, "Load Modal Plano");
 
         if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.TituloModalConfirmacao) > 0)
         {
