@@ -282,15 +282,20 @@ public class PlanosContratosPage
                 }
                 else
                 {
-                    Dsl.Clicar(webDriver, GlobalVariables.FiltrarInventarios, "Botão Filtrar Inventários");
+                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltrarInventarios, "Botão Filtrar Inventários");
                     Dsl.Esperar(500);
+                    
+                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.FiltroLoja, "Campo Loja Listar");
                     Dsl.DigitarNoCampoTexto(webDriver, GlobalVariables.FiltroLoja, Keys.Backspace);
                     Dsl.Esperar(500);
-                    Dsl.Clicar(webDriver, GlobalVariables.ConfirmarFiltroInventario, "Botão Confirmar Ativos Selecionados no Filtro");
+                    
+                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.ConfirmarFiltroInventario, "Botão Confirmar Ativos Selecionados no Filtro");
                     Dsl.Esperar();
-                    Dsl.Clicar(webDriver, GlobalVariables.EditarAtivoFisicoAlocacaoSimulacao, "Botão Editar Ativo Alocado na Simulação");
+                    
+                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoFisicoAlocacaoSimulacao, "Botão Editar Ativo Alocado na Simulação");
                     Dsl.Esperar(500);
-                    Dsl.Clicar(webDriver, GlobalVariables.EditarAtivoFisicoAlocadoSimulado, "Botão Editar Dados Ativo Alocado na Simulação");
+                    
+                    Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.EditarAtivoFisicoAlocadoSimulado, "Botão Editar Dados Ativo Alocado na Simulação");
                 }
 
                 //Depois de alocar o ativo clicando no botão "Cadeado", a quantidade de alocação é replicada para todas as lojas e endereços do ativos selecionados através da tela "Configuração de Vigências e Valores"
