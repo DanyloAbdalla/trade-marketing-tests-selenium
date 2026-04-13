@@ -71,8 +71,8 @@ public class Dsl
     {
         try
         {
-            var fluentWait = CreateFluentWait(webDriver);
-            fluentWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
+            WebDriverWait driverWait = new WebDriverWait(webDriver, GlobalVariables.ExplicitWait);
+            driverWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(XPath)));
         }
         catch (WebDriverTimeoutException)
         { Console.WriteLine("Tempo esgotado para espera da visibilidade do elemento: " + elemento); }
