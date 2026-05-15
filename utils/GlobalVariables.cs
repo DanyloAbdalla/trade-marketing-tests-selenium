@@ -169,7 +169,7 @@ public class GlobalVariables
     public static string PreencherUsuarioResponsavelEtapaWorkflow { get; set; } = "//*[@data-testid='selecionarResponsavel']//*/input";
     public static string SelecionarUsuarioResponsavelEtapaWorkflowPro { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02Pro']";
     public static string SelecionarUsuarioResponsavelEtapaWorkflowExpert { get; set; } = "//div[@class='rc-virtual-list']//*[text()='UserHomolog02Expert']";
-    public static string LoadProcurandoEtapa { get; set; } = "//div[text()='Procurando Etapa...']";
+    public static string LoadProcurandoEtapa { get; set; } = "//span[contains(text(),'Procurando Etapa')]";
     public static string MensagemIndisponibilidadeInventario { get; set; } = "//*[@class='form-action'][2]/div/span[3]";
     #endregion
 

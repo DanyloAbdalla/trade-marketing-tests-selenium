@@ -12,8 +12,8 @@
             { "TestName": "TestEditarPlanoExistenteAlterandoVigenciaDoTrade", "TestSkip": true },
             { "TestName": "TestEditarPlanoExistenteAlterandoQuantidadeAlocadaDoAtivoDisponivel", "TestSkip": true },
             { "TestName": "TestEditarPlanoExistenteIncluindoNovoAtivoDisponivel", "TestSkip": true },
-            { "TestName": "TestAprovarPlano", "TestSkip": true },
-            { "TestName": "TestCriarPlanoComAlertaDeInventario", "TestSkip": true },
+            { "TestName": "TestAprovarPlano", "TestSkip": false },
+            { "TestName": "TestCriarPlanoComAlertaDeInventario", "TestSkip": false },
             { "TestName": "TestEditarPlanoComAlertaDeInventario", "TestSkip": true },
             { "TestName": "TestCancelarPlano", "TestSkip": true },
             { "TestName": "TestExcluirPlano", "TestSkip": false }

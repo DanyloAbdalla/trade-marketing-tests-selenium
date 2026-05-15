@@ -341,8 +341,8 @@ public class PlanosTest
             .NovaSimulacaoDePlano()
             .PreencherCampoIndustria()
             .PreencherCampoCampanha()
-            .SelecionarVigenciaDoPlano()
             .SelecionarAtivos()
+            .PreencherQuantidadeAtivos()
             .SelecionarLojas()
             .ValidarIndisponibilidadeDeInventario()
             .FecharDadosDoPlano();
