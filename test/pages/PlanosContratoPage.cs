@@ -792,7 +792,7 @@ public class PlanosContratosPage
 
         SalvarAtivoAlocado();
 
-        if (clienteUpSellAtual == ClienteUpSell.ClienteExpert)
+        if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ConfirmarAlteracaoPeriodo) > 0)
         {
             Dsl.Clicar(webDriver, GlobalVariables.ConfirmarAlteracaoPeriodo, "Botão Entendi Modal Confirmar Alteração de Período no Ativo Alocado");
         }
@@ -845,6 +845,7 @@ public class PlanosContratosPage
         if (Dsl.ValidarMensagensDeErroOuAviso(webDriver))
             Assert.Fail("Ocorreu um erro ao criar o plano!");
 
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.AbaDadosPlano, "Aba Dados Plano");
         return this;
     }
 
