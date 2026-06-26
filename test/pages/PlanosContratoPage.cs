@@ -790,12 +790,7 @@ public class PlanosContratosPage
 
         EditarVigenciaLoja();
 
-        SalvarAtivoAlocado();
-
-        if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ConfirmarAlteracaoPeriodo) > 0)
-        {
-            Dsl.Clicar(webDriver, GlobalVariables.ConfirmarAlteracaoPeriodo, "Botão Entendi Modal Confirmar Alteração de Período no Ativo Alocado");
-        }
+        SalvarAlteracaoVigenciaAtivoAlocado();        
 
         return this;
     }
@@ -884,9 +879,9 @@ public class PlanosContratosPage
     /// Método para salvar os dados do ativo alocado
     /// </summary>
     /// <returns></returns>
-    public PlanosContratosPage SalvarAtivoAlocado()
+    public PlanosContratosPage SalvarNovosAtivosEAlteracaoQuantidadeAtivoAlocado()
     {
-        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Novo Ativo Ou Quantidade do Ativo Alocado");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner, "Load Tela Salvar Ativo Alocado");
         Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeFeedback, "Mensagem de Feedback Após Salvar Ativo Alocado");
 
@@ -898,6 +893,35 @@ public class PlanosContratosPage
         Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeFeedback, "Mensagem de Feedback Após Salvar Ativo Alocado");
 
         Dsl.Esperar(5000);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Método para salvar os dados do ativo alocado
+    /// </summary>
+    /// <returns></returns>
+    public PlanosContratosPage SalvarAlteracaoVigenciaAtivoAlocado()
+    {
+        Dsl.EsperarElementoParaClicar(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Vigência do Ativo Alocado");
+
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.ConfirmarAlteracaoVigencia, "Mensagem de Feedback Confirmar Alteração de Vigência no Ativo Alocado");
+        Dsl.Esperar();
+
+        if (Dsl.ContarExistenciaDoElemento(webDriver, GlobalVariables.ConfirmarAlteracaoVigencia) > 0)
+        {
+            Dsl.Clicar(webDriver, GlobalVariables.ConfirmarAlteracaoVigencia, "Botão Sim na Modal Confirmar Alteração de Vigência no Ativo Alocado");
+        }
+        
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner, "Load Tela Salvar Ativo Alocado");
+        Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeFeedback, "Mensagem de Feedback Após Salvar Ativo Alocado");
+
+        List<MensagemFeedback> mensagensAtuais = Dsl.ObterMensagensDeFeedback(webDriver, GlobalVariables.MensagemDeFeedback);
+
+        ValidarMensagensDoPlano(mensagensAtuais);
+
+        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.LoadDeTelaSpiner, "Load Tela Salvar Ativo Alocado");
+        Dsl.EsperarInvisibilidadeDoElemento(webDriver, GlobalVariables.MensagemDeFeedback, "Mensagem de Feedback Após Salvar Ativo Alocado");
 
         return this;
     }
@@ -978,7 +1002,7 @@ public class PlanosContratosPage
                     AumentarQuantidadeAtivosPorLoja();
 
                     Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
-                    SalvarAtivoAlocado();
+                    SalvarNovosAtivosEAlteracaoQuantidadeAtivoAlocado();
                 }
                 break;
             case ClienteUpSell.ClientePro:
@@ -1002,7 +1026,7 @@ public class PlanosContratosPage
 
                 Dsl.ScrollParaElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
                 Dsl.EsperarVisibilidadeDoElemento(webDriver, GlobalVariables.SalvarAlocacaoLoja, "Botão Salvar Quantidades Alocadas do Ativo por Loja");
-                SalvarAtivoAlocado();
+                SalvarNovosAtivosEAlteracaoQuantidadeAtivoAlocado();
                 break;
         }
 
@@ -1069,7 +1093,7 @@ public class PlanosContratosPage
                 break;
         }
 
-        SalvarAtivoAlocado();
+        SalvarNovosAtivosEAlteracaoQuantidadeAtivoAlocado();
 
         return this;
     }
