@@ -105,6 +105,10 @@
           "atributo": "Mc-message-success"
         },
         {
+          "mensagem": "Tarefas ajustadas com sucesso!",
+          "atributo": "Mc-message-success"
+        },
+        {
           "mensagem": "Nenhuma mudança detectada na disponibilidade!",
           "atributo": "Mc-message-info"
         },
