@@ -1,29 +1,23 @@
-# README #
+# 🧪 Testes Automatizados - Trade Marketing
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Este projeto contém a automação de testes para uma plataforma de **Trade Marketing**, utilizada por varejistas e indústrias para negociar e controlar alocação de espaços físicos e digitais.
 
-### What is this repository for? ###
+## 🎯 Objetivo
+Garantir a qualidade da aplicação através de testes automatizados de interface e validação de dados.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## 🛠️ Padrões de Projeto Utilizados
+- **Factory** – criação flexível de objetos de teste  
+- **Page Object** – organização e reutilização de páginas  
+- **Fluent Interface** – escrita de testes mais legível  
+- **Facade** – simplificação da interação com subsistemas  
+- **Data-Driven** – execução de testes com diferentes conjuntos de dados  
 
-### How do I get set up? ###
+## 🔧 Tecnologias
+- **C#**  
+- **Selenium**  
+- **CI/CD com GitHub Actions**  
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+## 🚀 Como executar
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/DanyloAbdalla/trade-marketing-tests.git
