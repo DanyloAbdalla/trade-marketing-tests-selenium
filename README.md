@@ -20,4 +20,4 @@ Garantir a qualidade da aplicação através de testes automatizados de interfac
 ## 🚀 Como executar
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/danyloabdalla/trade-marketing-tests.git
+   git clone https://github.com/DanyloAbdalla/trade-marketing-tests.git
