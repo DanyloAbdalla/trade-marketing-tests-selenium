@@ -53,7 +53,7 @@ public class PlanosTest
         if (testeAnteriorPulouFalhou)
             Assert.Ignore("Pular teste, o teste anterior falhou");
         if (runSettings.ToSkip(nomeClasse, contextoDeTeste, nomeTeste))
-            Assert.Ignore("Teste ignorado pelas configurações de execução\n");
+            Assert.Ignore("Teste ignorado pelas configurações de execução");
 
         int indiceUsuario = clienteUpSellAtual switch
         {
