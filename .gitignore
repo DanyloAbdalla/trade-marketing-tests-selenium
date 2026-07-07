@@ -57,8 +57,6 @@ Thumbs.db
 launch.json
 settings.json
 tasks.json
-MeuClienteWebTestProject.deps.json
-MeuClienteWebTestProject.runtimeconfig.json
 obj/
 bin/
 bin/Debug/net8.0/selenium-manager/linux/selenium-manager

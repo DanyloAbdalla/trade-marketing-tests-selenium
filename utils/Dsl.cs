@@ -847,7 +847,7 @@ public class Dsl
     {
         IWebElement imageInput = webDriver.FindElement(By.XPath(XPath));
 
-        imageInput.SendKeys("C:\\TestProjectMeuCliente\\logomeucliente.png");
+        imageInput.SendKeys("");
     }
 
     /// <summary>
